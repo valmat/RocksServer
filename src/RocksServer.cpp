@@ -81,6 +81,15 @@ int main(int argc, char **argv)
      *  
      */
     RocksServer::RocksDBWrapper rdb(cfg.get<std::string>("db_path", "/tmp/rdb"));
+    //Check RocksDB started
+    if (!rdb.status()) {
+        std::cerr << "RocksDB start error:" << std::endl << rdb.getStatus() << std::endl;
+        return 1;
+    }
+    
+
+    
+    
 
     /**
      *  

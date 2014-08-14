@@ -45,7 +45,6 @@ namespace RocksServer {
         /**
          *  Constructors
          *  @param      string value
-         *  @param      default value
          */
         IniValue(const std::string &value) : _value(value) {}
         IniValue(const std::string &&value) : _value(std::move(value)) {}

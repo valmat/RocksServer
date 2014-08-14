@@ -45,12 +45,6 @@ namespace RocksServer {
             _dboptions.create_if_missing = create_if_missing;
             _dboptions.merge_operator.reset(new Int64Incrementor);
             _status = rocksdb::DB::Open(_dboptions, _dbpath, &_db);
-
-            //std::cout << _status.ToString() << std::endl;
-
-            if (!_status.ok())  {
-                std::cerr << _status.ToString() << std::endl;
-            }
         }
 
         virtual ~RocksDBWrapper()
@@ -128,7 +122,6 @@ namespace RocksServer {
             return _db->KeyMayExist(rocksdb::ReadOptions(), key, &value, &value_found);
         }
 
-
         /**
          * remove key from db
          * @param string key
@@ -154,8 +147,6 @@ namespace RocksServer {
         {
             return _status.ok();
         }
-        
-
 
         /**
          * incriment value

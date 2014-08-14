@@ -3,28 +3,37 @@ This is a simple server for RocksDB.
 Supports the following operations:
 
 **Get**
+
 Get value by key
 
 **Multi get**
+
 Get values by keys
 
 **Set**
+
 Set value by key
 
 **Multi set**
+
 Set values by keys
 
 **Delete key**
+
 Delete key from DB
 
 **Multi delete keys**
+
 Delete keys from DB
 
 **Check key exist**
+
 Check key existing
 
 **Imcrement**
+
 Imcrement value by key
+
 
 For more details see: [protocol description](protocol.md)
 
