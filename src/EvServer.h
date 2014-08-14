@@ -76,7 +76,7 @@ namespace RocksServer {
                     return; 
                 }
                 EvRequest request(http_req);
-                RequestBase *pReq = (RequestBase *)cb_arg;
+                RequestBase *pReq = static_cast<RequestBase *>(cb_arg);
 
                 pReq->run(request, buf);
                 request.send(buf);

@@ -8,12 +8,11 @@ require "Rocks.php";
 $db = new Rocks\Client();
 
 # Test get
-/*
 var_export($db->get('key1'));
 var_export($db->get('noexist'));
 var_export($db->get(''));
 echo PHP_EOL, PHP_EOL, PHP_EOL;
-*/
+/**/
 //exit;
 
 # Test mget
@@ -84,7 +83,7 @@ echo PHP_EOL;
 */
 
 # Test mdel
-/*
+///*
 var_export($db->mget(['mdkey1','mdkey2','mdkey3']));
 echo PHP_EOL, PHP_EOL;
 
@@ -99,10 +98,10 @@ echo PHP_EOL, PHP_EOL;
 
 var_export($db->mget(['mdkey1','mdkey2','mdkey3']));
 echo PHP_EOL, PHP_EOL;
-*/
+//*/
 
 # Test incr
-
+/*
 var_export($db->get('incrtest'));
 echo PHP_EOL, PHP_EOL;
 
@@ -123,4 +122,4 @@ echo PHP_EOL, PHP_EOL;
 
 var_export($db->get('incrtest'));
 echo PHP_EOL, PHP_EOL;
-
+*/

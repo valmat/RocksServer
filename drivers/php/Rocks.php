@@ -80,7 +80,7 @@ class Client{
     }
     
     /**
-      *  
+      *  get value by key
       */
     public function get($key) {
 	return $this->parseGet($this->httpGet('/get', $key));
@@ -99,7 +99,7 @@ class Client{
     }
     
     /**
-      *  
+      *  multi get values by keys
       */
     public function mget($keys) {
 	$raw = $this->httpGet('/mget', implode('&', $keys));
@@ -135,21 +135,21 @@ class Client{
     }
     
     /**
-      *  
+      *  set value for key
       */
     public function set($key, $val) {
 	return 'OK' == $this->httpPost('/set', "$key\n".strlen($val)."\n$val");
     }
     
     /**
-      *  
+      *  multi set values for keys
       */
     public function mset($data) {
 	return 'OK' == $this->httpPost('/mset', $this->data2str($data) );
     }
     
     /**
-      *  
+      *  Check if key exist
       */
     public function keyExist($key, &$val = NULL) {
 	list($rez, $valRaw) = explode("\n", $this->httpGet('/exist', $key), 2);
@@ -160,21 +160,21 @@ class Client{
     }
     
     /**
-      *  
+      *  remove key from db
       */
     public function del($key) {
 	return 'OK' == $this->httpPost('/del', $key);
     }
     
     /**
-      *  
+      *  Multi remove keys from db
       */
     public function mdel($keys) {
-	return $this->httpPost('/mdel', implode('&', $keys) );
+	return $this->httpPost('/mdel', implode("\n", $keys) );
     }
     
     /**
-      *  
+      *  incriment value by key
       */
     public function incr($key, $value = NULL) {
 	return 'OK' == (

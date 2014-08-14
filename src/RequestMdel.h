@@ -33,14 +33,14 @@ namespace RocksServer {
             rocksdb::WriteBatch batch;
 
             std::string::size_type lpos = 0;
-            std::string::size_type rpos = raw.find('&');
+            std::string::size_type rpos = raw.find('\n');
             std::string::size_type len  = raw.size();
 
             // filling batch
             while(rpos < std::string::npos) {
                 batch.Delete(rocksdb::Slice(raw+lpos, rpos-lpos));
                 lpos = rpos+1;
-                rpos = raw.find('&', lpos);
+                rpos = raw.find('\n', lpos);
             }
             batch.Delete(rocksdb::Slice(raw+lpos, len-lpos));
 
