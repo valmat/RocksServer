@@ -19,6 +19,8 @@ ${BINFILE}:
 	$(CC) $(NAME).o $(CFLAGS) $(LIBEVENT) $(ROCKSP)/librocksdb.a $(ROCKSLIB) -o $(NAME).bin
 	@echo
 	@echo "Build complete."
+	@echo "For start server run ./$(NAME).bin config.ini"
+
 	
 run:
 	./$(NAME).bin

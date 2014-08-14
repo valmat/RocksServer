@@ -8,8 +8,15 @@
  */
 
 
-#include <vector>
 #include <iostream>
+#include <algorithm>
+#include <iostream>
+#include <fstream>
+#include <string>
+
+#include <vector>
+#include <unordered_map>
+
 
 // Libevent
 #include <event.h>
@@ -43,6 +50,8 @@
 #include "listeners/RequestMdel.h"
 #include "listeners/RequestIncr.h"
 
-
+// Configs
+#include "iniparse/IniValue.h"
+#include "iniparse/IniConfigs.h"
 
 #include "evhttp/EvServer.h"

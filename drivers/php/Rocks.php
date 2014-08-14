@@ -11,7 +11,7 @@ class Client{
     private $_host;
     private $_port;
     
-    function __construct($host='localhost', $port = 5577) {
+    function __construct($host='localhost', $port = 5533) {
 	$this->_host = $host;
 	$this->_port = $port;
     }
