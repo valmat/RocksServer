@@ -19,7 +19,7 @@ int main()
     }
   
     // Init event http server
-    EvServer server("127.0.0.1", 5555);
+    EvServer server("127.0.0.1", 5577);
   
     // Check server started
     if (!server.isValid()) {

@@ -9,9 +9,6 @@
 
 
 #include <vector>
-
-#include <memory>
-#include <cstdint>
 #include <iostream>
 
 // Libevent
@@ -20,33 +17,32 @@
 #include <event2/http_struct.h>
 #include <event2/http_compat.h>
 
-
-
 // RocksDB
 #include "rocksdb/db.h"
 #include "rocksdb/write_batch.h"
 #include "rocksdb/merge_operator.h"
 
-// RocksDB drivers
-#include "Int64Incrementor.h"
-#include "RocksDBWrapper.h"
+// RocksDB wrapper
+#include "rocks/Int64Incrementor.h"
+#include "rocks/RocksDBWrapper.h"
 
 // Server wrapper
-#include "EvBuffer.h"
-#include "PostData.h"
-#include "EvRequest.h"
+#include "evhttp/EvBuffer.h"
+#include "evhttp/PostData.h"
+#include "evhttp/EvRequest.h"
+#include "evhttp/EvServerOptions.h"
 
-#include "RequestBase.h"
-#include "RequestGet.h"
-#include "RequestMget.h"
-#include "RequestSet.h"
-#include "RequestMset.h"
-#include "RequestKeyExist.h"
-#include "RequestDel.h"
-#include "RequestMdel.h"
-#include "RequestIncr.h"
+// Listeners
+#include "listeners/RequestBase.h"
+#include "listeners/RequestGet.h"
+#include "listeners/RequestMget.h"
+#include "listeners/RequestSet.h"
+#include "listeners/RequestMset.h"
+#include "listeners/RequestKeyExist.h"
+#include "listeners/RequestDel.h"
+#include "listeners/RequestMdel.h"
+#include "listeners/RequestIncr.h"
 
 
-#include "EvServerOptions.h"
-#include "EvServer.h"
 
+#include "evhttp/EvServer.h"

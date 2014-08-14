@@ -65,8 +65,6 @@ namespace RocksServer {
          * @param string value
          */
          bool set(const rocksdb::Slice &key, const rocksdb::Slice &value) {
-            //std::cout << "set("<< key << ")=" << value << std::endl;
-
             _status = _db->Put(rocksdb::WriteOptions(), key, value);
             return _status.ok();
         }
