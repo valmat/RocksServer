@@ -38,7 +38,7 @@ Reply:
 If the keyN does not exist, then `<valueN_len> = -1`, `<valueN>` -- is empty
 
 
-###set
+###Set
 Set value by key
 
 Request:
@@ -91,7 +91,7 @@ FAIL
 ```
 on fail.
 
-###delete key
+###Delete key
 Delete key from DB
 
 Request:
@@ -114,7 +114,7 @@ on fail.
 
 
 ###Multi delete keys
-Set values by keys
+Delete keys from DB
 
 Request:
 ```
@@ -191,4 +191,3 @@ FAIL
 ```
 on fail.
 
-```
