@@ -48,12 +48,7 @@ int main(int argc, char **argv)
     EvServer server(cfg.get<const char *>("server_host", "127.0.0.1"), 
                     cfg.get<unsigned short>("server_port", 5577));
 
-  
-    /**
-     *  
-     *  Check server started
-     *  
-     */
+    // Check server started
     if (!server.isValid()) {
         std::cerr << "Failed to init http server." << std::endl;
         return 1;
@@ -81,16 +76,15 @@ int main(int argc, char **argv)
      *  
      */
     RocksServer::RocksDBWrapper rdb(cfg.get<std::string>("db_path", "/tmp/rdb"));
-    //Check RocksDB started
+    // Check RocksDB started
     if (!rdb.status()) {
         std::cerr << "RocksDB start error:" << std::endl << rdb.getStatus() << std::endl;
         return 1;
     }
-    
+    std::cout << "RocksServer version is " << ROCKSDB_MAJOR << "." << ROCKSDB_MINOR << "." << ROCKSDB_PATCH << std::endl;
+    std::cout << "RocksServer version is " << ROCKSSERVER_VERSION << std::endl;
 
     
-    
-
     /**
      *  
      *  Bind request listeners

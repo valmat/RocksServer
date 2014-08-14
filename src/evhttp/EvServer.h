@@ -22,6 +22,7 @@ namespace RocksServer {
             _http(evhttp_start(addr, port))
         {
             std::cout << "The server is successfully running on " << addr << " port " << port << "." << std::endl;
+            std::cout << "Libevent version is " << event_get_version() << " ( " << event_get_version_number() << " ) " << std::endl;
         }
 
         ~EvServer()

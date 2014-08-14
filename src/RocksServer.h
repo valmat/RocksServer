@@ -7,6 +7,7 @@
  *  @github https://github.com/valmat/rocksserver
  */
 
+#define ROCKSSERVER_VERSION "v.0.0.1"
 
 #include <iostream>
 #include <algorithm>
@@ -26,8 +27,10 @@
 
 // RocksDB
 #include "rocksdb/db.h"
+#include "rocksdb/version.h"
 #include "rocksdb/write_batch.h"
 #include "rocksdb/merge_operator.h"
+
 
 // RocksDB wrapper
 #include "rocks/Int64Incrementor.h"
