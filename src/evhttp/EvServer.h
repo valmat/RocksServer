@@ -21,14 +21,14 @@ namespace RocksServer {
         EvServer(const char addr[] = "127.0.0.1", unsigned short port = 5577) : 
             _http(evhttp_start(addr, port))
         {
-            std::cout << "The server is successfully running on " << addr << " port " << port << "." << std::endl;
             std::cout << "Libevent version is " << event_get_version() << " ( " << event_get_version_number() << " ) " << std::endl;
+            std::cout << "The server is successfully running on " << addr << " port " << port << "." << std::endl;
         }
 
         ~EvServer()
         {
             evhttp_free(_http);
-            //std::cout << "server closed" << std::endl;
+            std::cout << "EvServer closed" << std::endl;
         }
 
         /**

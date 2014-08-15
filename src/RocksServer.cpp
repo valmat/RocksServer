@@ -18,6 +18,7 @@ int main(int argc, char **argv)
         std::cout << "Run as:" << std::endl << argv[0] << " <config.ini file name>" << std::endl;
         return 1;
     }
+    std::cout << "RocksServer version is " << ROCKSSERVER_VERSION << std::endl;
 
     /**
      *  
@@ -38,6 +39,19 @@ int main(int argc, char **argv)
         std::cerr<<"Error with open file "<< argv[1] << std::endl;
         return 1;
     }
+
+    /**
+     *  
+     *  Init RocksDB
+     *  
+     */
+    RocksServer::RocksDBWrapper rdb(cfg.get<std::string>("db_path", "/tmp/rdb"));
+    // Check RocksDB started
+    if (!rdb.status()) {
+        std::cerr << "RocksDB start error:" << std::endl << rdb.getStatus() << std::endl;
+        return 1;
+    }
+    std::cout << "RocksDB version is " << ROCKSDB_MAJOR << "." << ROCKSDB_MINOR << "." << ROCKSDB_PATCH << std::endl;
 
     /**
      *  
@@ -78,21 +92,6 @@ int main(int argc, char **argv)
     // Limitations for headers size (limit in bytes. 0 - unlimited)    
     serverOptions.max_headers_size = cfg.get<size_t>("max_headers_size", 0);
     server.setOptions(serverOptions);
-
-    /**
-     *  
-     *  Init RocksDB
-     *  
-     */
-    RocksServer::RocksDBWrapper rdb(cfg.get<std::string>("db_path", "/tmp/rdb"));
-    // Check RocksDB started
-    if (!rdb.status()) {
-        std::cerr << "RocksDB start error:" << std::endl << rdb.getStatus() << std::endl;
-        return 1;
-    }
-    std::cout << "RocksDB version is " << ROCKSDB_MAJOR << "." << ROCKSDB_MINOR << "." << ROCKSDB_PATCH << std::endl;
-    std::cout << "RocksServer version is " << ROCKSSERVER_VERSION << std::endl;
-
     
     /**
      *  
@@ -108,7 +107,6 @@ int main(int argc, char **argv)
     server.onRequest("/mdel",  RequestMdel(rdb));
     server.onRequest("/incr",  RequestIncr(rdb));
 
-    
     /**
      *  
      *  Start the event loop
