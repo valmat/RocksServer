@@ -19,15 +19,44 @@ namespace RocksServer {
          *  @param  port       port, wich server will listen
          */
         EvServer(const char addr[] = "127.0.0.1", unsigned short port = 5577) : 
-            _http(evhttp_start(addr, port))
+            _base(event_base_new())
         {
+            if (!_base) {
+                std::cerr << "Couldn't create an event_base." << std::endl;
+                return;
+            }
+
+            // Create a new evhttp object.
+            _http = evhttp_new(_base);
+
+            if (!_http) {
+                std::cerr << "Couldn't create evhttp." << std::endl;
+                return;
+            }
+
+            if (evhttp_bind_socket(_http, addr, port) == -1) {
+                std::cerr << "Couldn't bind to host " << addr << " port " << port << "." << std::endl;
+                return;
+            }
+
+            // Print versions
             std::cout << "Libevent version is " << event_get_version() << " ( " << event_get_version_number() << " ) " << std::endl;
             std::cout << "The server is successfully running on " << addr << " port " << port << "." << std::endl;
+
+            // Set signal handlers to safely shut down.
+            auto sig_cb = [](evutil_socket_t fd, short what, void *arg) {
+                    event_base *_base = (event_base*)arg;
+                    event_base_loopexit(_base, NULL);
+            };
+            event_add(evsignal_new(_base, SIGINT, sig_cb, _base), NULL);    // handler for Ctrl+C
+            event_add(evsignal_new(_base, SIGTERM, sig_cb, _base), NULL);   // handler for command `kill <pid>`
+     
         }
 
         ~EvServer()
         {
-            evhttp_free(_http);
+            if(_http) evhttp_free(_http);
+            if(_base) event_base_free(_base);
             std::cout << "EvServer closed" << std::endl;
         }
 
@@ -56,9 +85,18 @@ namespace RocksServer {
         }
 
         /**
-         *  Check if server successfully created
+         *  Start the event loop
          */
-        bool isValid()
+        bool dispatch()
+        {
+            return (event_base_dispatch(_base) != -1);
+        }
+
+        /**
+         *  Cast to a bool 
+         *  For check if server successfully created
+         */
+        operator bool () const
         {
             return _http;
         }
@@ -100,7 +138,10 @@ namespace RocksServer {
 
     private:
 
-        evhttp* _http;
+        evhttp *_http = nullptr;
+        
+        // event_base - structure to hold information and state for a Libevent dispatch loop
+        event_base *_base;
         
     };
 
