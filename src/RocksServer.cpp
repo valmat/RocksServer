@@ -21,6 +21,15 @@ int main(int argc, char **argv)
 
     /**
      *  
+     *  Prevent server crash on signal SIGPIPE
+     *  
+     */    
+    if (signal(SIGPIPE, SIG_IGN) == SIG_ERR) {
+        return 1;
+    }
+
+    /**
+     *  
      *  Init config
      *  
      */

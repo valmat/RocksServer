@@ -9,6 +9,7 @@
 
 #define ROCKSSERVER_VERSION "v.0.0.1"
 
+// C++ headers
 #include <iostream>
 #include <algorithm>
 #include <iostream>
@@ -18,6 +19,8 @@
 #include <vector>
 #include <unordered_map>
 
+// C headers
+#include <signal.h>
 
 // Libevent
 #include <event.h>
