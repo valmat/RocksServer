@@ -22,7 +22,7 @@ namespace RocksServer {
 
         ~PostData()
         {
-            delete _data;
+            if(_data) delete _data;
         }
 
         /**

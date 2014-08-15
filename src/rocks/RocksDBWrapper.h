@@ -29,7 +29,6 @@ namespace RocksServer {
         virtual ~RocksDBWrapper()
         {
             //delete Incrementor; <-- not required : std::shared_ptr
-            printf( "~RocksDBWrapper...\n" );
             delete _db;
         }
 

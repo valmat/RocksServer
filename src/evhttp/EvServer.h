@@ -57,7 +57,7 @@ namespace RocksServer {
         {
             if(_http) evhttp_free(_http);
             if(_base) event_base_free(_base);
-            std::cout << "EvServer closed" << std::endl;
+            std::cout << "Server closed" << std::endl;
         }
 
         /**

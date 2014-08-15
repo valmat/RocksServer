@@ -30,20 +30,20 @@ After run command
 make
 ```
 
-After compiling run `./RocksServer.bin`
+After compiling run `./RocksServer.bin config.ini`
 
 ## Usage
 Exemple of usage: [driver for PHP](drivers/php/README.md)
-Or any your implementation by [protocol description](protocol.md)
+Or any your implementation by [protocol description](protocol.md).
 
 ## Note
 Currently under development.
 
-The RocksServer is workable but it needs many improvements.
-It has not yet been used in production, but I have plans to run it on a production server.
+The RocksServer is workable but it needs some improvements.
+
 
 Sorry for my english.
 
 ## License
-BSD
+[BSD](LICENSE)
 

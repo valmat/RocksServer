@@ -16,6 +16,12 @@ namespace RocksServer {
 
         EvBuffer() : _evb(evbuffer_new()) {}
 
+        ~EvBuffer()
+        {
+            // Free memory
+            if(_evb) evbuffer_free(_evb);
+        }
+
         /**
          *  Check if buffer successfully created
          */
@@ -67,12 +73,6 @@ namespace RocksServer {
         operator evbuffer* () const
         {
             return _evb;
-        }
-
-        ~EvBuffer()
-        {
-            // Free memory
-            if(_evb) evbuffer_free(_evb);
         }
 
     private:

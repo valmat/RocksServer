@@ -50,8 +50,9 @@ namespace RocksServer {
             return  evhttp_send_reply(_req, HTTP_OK, "OK", evBuf);
         }
 
-        ~EvRequest() {
-            //evhttp_request_free(_req);
+        ~EvRequest() 
+        {
+            //evhttp_request_free(_req); <-- not required
         }
 
     private:
