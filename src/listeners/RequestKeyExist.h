@@ -36,8 +36,6 @@ namespace RocksServer {
             bool value_found;
             bool result = _rdb.keyExist(rocksdb::Slice(uri.c_str() + pathlen + 1, len - pathlen - 1), value, value_found);
 
-            //key = uri.substr(pathlen + 1, len - pathlen - 1);
-            
             // Add buffer
             if(result) {
                 buf.add("OK\n", 3);
@@ -51,9 +49,6 @@ namespace RocksServer {
             } else {
                 buf.add("FAIL\n", 5);
             }
-
-
-            //std::cout << "------------RequestKeyExist" << std::endl;
         }
 
         virtual ~RequestKeyExist() {}

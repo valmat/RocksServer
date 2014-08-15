@@ -15,7 +15,6 @@ namespace RocksServer {
     public:
         /**
          *  Constructor
-         * 
          *  @param  data       raw string of post data
          *  @param  len        string length
          */
@@ -62,8 +61,6 @@ namespace RocksServer {
             for(; _data[pos] != s && pos < _len; pos++);
             return (pos < _len) ? pos : std::string::npos;
         }
-    //private:
-
 
     private:
         size_t _len;

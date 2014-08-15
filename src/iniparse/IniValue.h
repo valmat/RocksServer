@@ -66,21 +66,13 @@ namespace RocksServer {
         }
 
         /**
-         *  Cast to a size_t
+         *  Cast to a unsigned short
          */
          operator IniValue<unsigned short> () const
         {
             return std::strtoul(_value.c_str(), nullptr, 10);
         }
 
-        /**
-         *  Cast to a number
-         */
-        operator IniValue<int> () const
-        {
-            return 1;
-        }
-        
         /**
          *  Cast to a bool
          */

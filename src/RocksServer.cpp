@@ -81,7 +81,7 @@ int main(int argc, char **argv)
         std::cerr << "RocksDB start error:" << std::endl << rdb.getStatus() << std::endl;
         return 1;
     }
-    std::cout << "RocksServer version is " << ROCKSDB_MAJOR << "." << ROCKSDB_MINOR << "." << ROCKSDB_PATCH << std::endl;
+    std::cout << "RocksDB version is " << ROCKSDB_MAJOR << "." << ROCKSDB_MINOR << "." << ROCKSDB_PATCH << std::endl;
     std::cout << "RocksServer version is " << ROCKSSERVER_VERSION << std::endl;
 
     

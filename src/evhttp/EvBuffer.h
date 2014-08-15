@@ -51,6 +51,16 @@ namespace RocksServer {
         }
 
         /**
+         *  add string to buffer
+         *  @param      string
+         *  @param      string lenght
+         */
+        int add(const std::string &str) const
+        {
+            return evbuffer_add(_evb, str.c_str(), str.size());
+        }
+
+        /**
          *  Cast to a evbuffer pointer
          *  @return evbuffer*
          */

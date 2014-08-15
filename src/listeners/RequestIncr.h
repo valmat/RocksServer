@@ -38,7 +38,6 @@ namespace RocksServer {
                 rez = _rdb.incr( rocksdb::Slice(raw, raw.size()), "1" );
             }
             
-            
             if( rez ) {
                 buf.add("OK", 2);
             } else {

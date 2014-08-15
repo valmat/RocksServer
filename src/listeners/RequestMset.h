@@ -60,7 +60,6 @@ namespace RocksServer {
             } else {
                 buf.add("FAIL", 4); 
             }
-            //std::cout << "RequestMset" << std::endl;
         }
 
         virtual ~RequestMset() {}

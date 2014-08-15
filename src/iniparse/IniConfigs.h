@@ -60,7 +60,7 @@ namespace RocksServer {
         }
 
         /**
-         *  Check file successfully opened
+         *  Get ini entry
          *  @param      config name
          *  @param      config default value
          *  @param      config value string must be not empty
@@ -93,7 +93,7 @@ namespace RocksServer {
 
     private:
         /**
-         *  trim spaces
+         *  Trim spaces
          *  @param  strig
          */
         void trim(std::string &str) const

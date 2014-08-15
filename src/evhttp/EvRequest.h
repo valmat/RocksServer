@@ -16,12 +16,12 @@ namespace RocksServer {
     public:
         /**
          *  Constructor
-         *  @param  port       evhttp_request pointer
+         *  @param      evhttp_request pointer
          */
         EvRequest(evhttp_request *req) : _req(req) {}
 
         /**
-         *  get request URI
+         *  Get request URI string
          */
         std::string getUri() const
         {
@@ -29,13 +29,13 @@ namespace RocksServer {
         }
 
         /**
-         *  get raw post data wrapper
+         *  Get raw post data wrapper
          */
         PostData getPostData() const
         {
             struct evbuffer *in_evb = evhttp_request_get_input_buffer(_req);
             size_t len = evbuffer_get_length(in_evb);
-            char *data = new char[len+1];
+            char *data = new char[len];
             evbuffer_copyout(in_evb, data, len);
 
             return PostData(data, len);

@@ -11,36 +11,15 @@ namespace RocksServer {
 
     class RocksDBWrapper
     {
-    private:
-        /**
-         * db pointer
-         */
-        rocksdb::DB* _db;
-
-        /**
-         * db path distantion
-         */
-        std::string _dbpath;
-
-        /**
-         * db options
-         */
-        rocksdb::Options _dboptions;
-
-        /**
-         * last operation status
-         */
-        rocksdb::Status _status;
-
     public:
 
         /**
-         * function __construct
+         * Constructor
          * @param string path
          * @param bool create_if_missing
          */
         RocksDBWrapper(std::string dbpath, bool create_if_missing = true):
-        _dbpath(dbpath)
+            _dbpath(dbpath)
         {
             _dboptions.create_if_missing = create_if_missing;
             _dboptions.merge_operator.reset(new Int64Incrementor);
@@ -54,7 +33,7 @@ namespace RocksServer {
         }
 
         /**
-         * set value by key
+         * Get value by key
          * @param string key
          * @param string value
          */
@@ -74,7 +53,7 @@ namespace RocksServer {
         }
 
         /**
-         * get value by key
+         * Get value by key
          * @param string key
          * @return string value or NULL (if the key is not exist)
          */
@@ -90,7 +69,7 @@ namespace RocksServer {
         }
 
         /**
-         * get array values by array keys
+         * Get array values by array keys
          * @param  keys
          * @return statuses
          */
@@ -112,7 +91,7 @@ namespace RocksServer {
         }
 
         /**
-         * fast check exist key
+         * Fast check exist key
          * @param string key
          * @param string value. If the value exists, it can be retrieved. But there is no guarantee that it will be retrieved
          * @return bool (true if key exist)
@@ -123,7 +102,7 @@ namespace RocksServer {
         }
 
         /**
-         * remove key from db
+         * Remove key from db
          * @param string key
          */
         bool del(const rocksdb::Slice& key)
@@ -133,7 +112,7 @@ namespace RocksServer {
         }
 
         /**
-         * get last query status string
+         * Get last query status string
          */
         std::string getStatus()
         {
@@ -141,7 +120,7 @@ namespace RocksServer {
         }
 
         /**
-         * get last query status state
+         * Get last query status state
          */
         bool status()
         {
@@ -149,7 +128,7 @@ namespace RocksServer {
         }
 
         /**
-         * incriment value
+         * Incriment value
          * @param   string key
          * @param   incval, default: 1
          */
@@ -160,7 +139,7 @@ namespace RocksServer {
         }
 
         /**
-         * incriment value
+         * Incriment value
          * @param   string key
          * @param   string incval
          */
@@ -169,6 +148,19 @@ namespace RocksServer {
             _status = _db->Merge(rocksdb::WriteOptions(), key, incval);
             return _status.ok();
         }
+
+    private:
+        // DB pointer
+        rocksdb::DB* _db;
+
+        // DB path distantion
+        std::string _dbpath;
+
+        // DB options
+        rocksdb::Options _dboptions;
+
+        // Last operation status
+        rocksdb::Status _status;
 
     };
 }
