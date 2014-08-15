@@ -25,6 +25,7 @@ namespace RocksServer {
                 std::cerr << "Couldn't create an event_base." << std::endl;
                 return;
             }
+
             // Create a new evhttp object.
             _http = evhttp_new(_base);
 
@@ -38,8 +39,18 @@ namespace RocksServer {
                 return;
             }
 
+            // Print versions
             std::cout << "Libevent version is " << event_get_version() << " ( " << event_get_version_number() << " ) " << std::endl;
             std::cout << "The server is successfully running on " << addr << " port " << port << "." << std::endl;
+
+            // Set signal handlers to safely shut down.
+            auto sig_cb = [](evutil_socket_t fd, short what, void *arg) {
+                    event_base *_base = (event_base*)arg;
+                    event_base_loopexit(_base, NULL);
+            };
+            event_add(evsignal_new(_base, SIGINT, sig_cb, _base), NULL);    // handler for Ctrl+C
+            event_add(evsignal_new(_base, SIGTERM, sig_cb, _base), NULL);   // handler for command `kill <pid>`
+     
         }
 
         ~EvServer()
