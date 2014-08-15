@@ -72,7 +72,7 @@ int main(int argc, char **argv)
                     cfg.get<unsigned short>("server_port", 5577));
 
     // Check server started
-    if (!server.isValid()) {
+    if (!server) {
         std::cerr << "Failed to init http server." << std::endl;
         return 1;
     }
@@ -112,7 +112,7 @@ int main(int argc, char **argv)
      *  Start the event loop
      *  
      */
-    if (event_dispatch() == -1) {
+    if (!server.dispatch()) {
         std::cerr << "Failed to run messahe loop." << std::endl;
         return 1;
     }
