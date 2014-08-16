@@ -1,13 +1,25 @@
 #!/bin/bash
+### BEGIN INIT INFO
+# Provides:          rocksserver
+# Required-Start:    $local_fs $remote_fs $network $syslog $named
+# Required-Stop:     $local_fs $remote_fs $network $syslog $named
+# Default-Start:     2 3 4 5
+# Default-Stop:      0 1 6
+# Short-Description: starts the RocksDB server
+# Description:       startup script for RocksDB server
+### END INIT INFO
+
+
+#
+# Author: valmat <ufabiz@gmail.com>
+# Github: https://github.com/valmat/rocksserver
+# /etc/init.d/rocksserver -- startup script for RocksDB server
+#
 
 NAME=RocksServer
-
 OWNER=nobody
-
 BINEXEC="/usr/local/bin/rocksserver"
-
 PIDFILE="/var/run/rocksserver.pid"
-
 CONF="/etc/rocksserver/config.ini"
 
 

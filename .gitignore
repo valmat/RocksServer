@@ -1,4 +1,6 @@
 *.o
 *.bin
 *.txt
+*.tgz
+*.deb
 

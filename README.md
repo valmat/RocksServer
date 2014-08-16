@@ -30,7 +30,20 @@ After run command
 make
 ```
 
-After compiling run `./RocksServer.bin config.ini`
+After compiling run 
+
+```
+./RocksServer.bin config.ini
+```
+
+Or you can install it:
+```
+make
+```
+switch to root
+```
+make install
+```
 
 ## Usage
 Exemple of usage: [driver for PHP](drivers/php/README.md)

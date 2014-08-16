@@ -39,13 +39,16 @@ install:
 	cp -f config.ini /etc/rocksserver/config.ini
 	cp -f RocksServer.bin /usr/local/bin/rocksserver
 	cp -f ../init.d/rocksserver /etc/init.d/rocksserver
+	update-rc.d rocksserver defaults
 
 uninstall:
+	update-rc.d -f rocksserver remove
 	rm -fR /etc/rocksserver
 	rm -f /usr/local/bin/rocksserver
 	rm -f /etc/init.d/rocksserver
 
 uninstall-clean:
+	update-rc.d -f rocksserver remove
 	rm -fR /var/rocksserver
 	rm -fR /etc/rocksserver
 	rm -f /usr/local/bin/rocksserver
