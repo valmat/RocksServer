@@ -1,0 +1,87 @@
+#!/bin/bash
+
+NAME=RocksServer
+
+OWNER=nobody
+
+BINEXEC="/usr/local/bin/rocksserver"
+
+PIDFILE="/var/run/rocksserver.pid"
+
+CONF="/etc/rocksserver/config.ini"
+
+
+if [ "$UID" != "0" ]
+then
+    echo "You must be root"
+    exit;
+fi
+
+
+do_start() {
+    RUNCMD="$BINEXEC $CONF"
+    su -c "$RUNCMD &" nobody
+    ps -aef | grep $OWNER | grep "$RUNCMD" | grep -v grep | awk '{print $2}' > $PIDFILE
+}
+
+do_stop() {
+    PID=$(cat $PIDFILE)
+    echo "Stopping ..."
+    
+    kill $PID
+    
+    while [ -x /proc/${PID} ]
+    do
+        echo "Waiting for $NAME to shutdown."
+        sleep 0.5
+        echo -n ".."
+        sleep 0.5
+        echo -n ".."
+    done
+    
+    echo -e "\n$NAME stopped\n"
+}
+
+case "$1" in
+    start)
+        if [ -f $PIDFILE ]
+        then
+                echo "$PIDFILE exists, process is already running or crashed"
+                echo "You can run $0 force-start"
+        else
+                echo -e "Starting $NAME server...\n"
+                do_start
+        fi
+        ;;
+    force-start)
+        echo -e "Force starting $NAME server...\n"
+        do_start
+        ;;
+
+    stop)
+        if [ ! -f $PIDFILE ]
+        then
+                echo "$PIDFILE does not exist, process is not running"
+        else
+                PID=$(cat $PIDFILE)
+
+                # If PID is empty
+                if [ -z $PID ]
+                then
+                        echo "$PIDFILE is empty, process is not running"
+                else
+                        do_stop
+                fi
+                
+                rm $PIDFILE
+        fi
+        ;;
+    restart)
+	$0 stop
+	$0 start
+        ;;
+    *)
+        echo "Please use start, stop or restart as first argument"
+        ;;
+esac
+

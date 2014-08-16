@@ -31,3 +31,24 @@ run:
 
 clean:
 	rm -f $(NAME).o $(NAME).bin
+
+install:
+	mkdir -p /var/rocksserver
+	chown nobody /var/rocksserver
+	mkdir -p /etc/rocksserver
+	cp -f config.ini /etc/rocksserver/config.ini
+	cp -f RocksServer.bin /usr/local/bin/rocksserver
+	cp -f ../init.d/rocksserver /etc/init.d/rocksserver
+
+uninstall:
+	rm -fR /etc/rocksserver
+	rm -f /usr/local/bin/rocksserver
+	rm -f /etc/init.d/rocksserver
+
+uninstall-clean:
+	rm -fR /var/rocksserver
+	rm -fR /etc/rocksserver
+	rm -f /usr/local/bin/rocksserver
+	rm -f /etc/init.d/rocksserver
+
+
