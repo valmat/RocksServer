@@ -18,6 +18,7 @@
 
 #include <vector>
 #include <unordered_map>
+#include <forward_list>
 
 // C headers
 #include <signal.h>

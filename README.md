@@ -18,10 +18,10 @@ operations  | description
 For more details see: [protocol description](protocol.md)
 
 ##Dependency
-[RocksDB](https://github.com/facebook/rocksdb/)
+[RocksDB](https://github.com/facebook/rocksdb/) 
 [LibEvent](http://libevent.org/)
-The recommended compiler: `clang`
-the compiler must support `C++11`
+
+The compiler should support `C++11`
 
 ## Run
 First install libevend and compile or install RocksDB.

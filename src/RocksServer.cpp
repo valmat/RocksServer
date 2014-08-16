@@ -98,14 +98,14 @@ int main(int argc, char **argv)
      *  Bind request listeners
      *  
      */
-    server.onRequest("/get",   RequestGet(rdb));
-    server.onRequest("/mget",  RequestMget(rdb));
-    server.onRequest("/set",   RequestSet(rdb));
-    server.onRequest("/mset",  RequestMset(rdb));
-    server.onRequest("/exist", RequestKeyExist(rdb));
-    server.onRequest("/del",   RequestDel(rdb));
-    server.onRequest("/mdel",  RequestMdel(rdb));
-    server.onRequest("/incr",  RequestIncr(rdb));
+    server.onRequest("/get",   new RequestGet(rdb));
+    server.onRequest("/mget",  new RequestMget(rdb));
+    server.onRequest("/set",   new RequestSet(rdb));
+    server.onRequest("/mset",  new RequestMset(rdb));
+    server.onRequest("/exist", new RequestKeyExist(rdb));
+    server.onRequest("/del",   new RequestDel(rdb));
+    server.onRequest("/mdel",  new RequestMdel(rdb));
+    server.onRequest("/incr",  new RequestIncr(rdb));
 
     /**
      *  

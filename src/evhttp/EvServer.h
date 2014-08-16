@@ -57,6 +57,9 @@ namespace RocksServer {
         {
             if(_http) evhttp_free(_http);
             if(_base) event_base_free(_base);
+            for(auto &pReq: _reqList) {
+                delete pReq;
+            }
             std::cout << "Server closed" << std::endl;
         }
 
@@ -106,21 +109,23 @@ namespace RocksServer {
          *  @param  path       path to listen
          *  @param  req        listener
          */
-        void onRequest(const char *path, RequestBase &&req)
+        void onRequest(const char *path, RequestBase *pReq)
         {
+            // Store pointer in scope
+            _reqList.push_front(pReq);
+            
             evhttp_set_cb(_http, path, [] (evhttp_request *http_req, void *cb_arg) {
 
                 EvBuffer buf;
-                if (!buf) {
-                    return; 
-                }
+                if (!buf) return; 
                 EvRequest request(http_req);
-                RequestBase *pReq = static_cast<RequestBase *>(cb_arg);
+                
+                RequestBase *pReq = reinterpret_cast<RequestBase *>(cb_arg);
 
                 pReq->run(request, buf);
                 request.send(buf);
 
-            }, &req) ;
+            }, pReq) ;
 
         }
 
@@ -129,10 +134,10 @@ namespace RocksServer {
          *  @param  paths       paths to listen
          *  @param  req        listener
          */
-        void onRequest(std::initializer_list<const char *> paths, RequestBase &&req)
+        void onRequest(std::initializer_list<const char *> paths, RequestBase *pReq)
         {
             for(auto &path: paths) {
-                onRequest(path, std::move(req));
+                onRequest(path, pReq);
             }
         }
 
@@ -142,6 +147,9 @@ namespace RocksServer {
         
         // event_base - structure to hold information and state for a Libevent dispatch loop
         event_base *_base;
+
+        // The container for storing a requests listeners
+        std::forward_list<RequestBase *> _reqList;
         
     };
 
