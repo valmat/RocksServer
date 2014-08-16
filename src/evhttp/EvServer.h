@@ -18,7 +18,7 @@ namespace RocksServer {
          *  @param  addr       IP addres, wich server will listen
          *  @param  port       port, wich server will listen
          */
-        EvServer(const char addr[] = "127.0.0.1", unsigned short port = 5577) : 
+        EvServer(const char *addr = "127.0.0.1", unsigned short port = 5577) : 
             _base(event_base_new())
         {
             if (!_base) {

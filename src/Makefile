@@ -6,6 +6,9 @@ NAME	 = RocksServer
 #CFLAGS	 = -std=c++11 -O3 -Wall 
 CFLAGS	 = -std=c++11 -g -Wall 
 
+#LINKEROPT = -static
+LINKEROPT = 
+
 BINFILE  = $(NAME).bin
 
 # path to RocksDB source
@@ -17,7 +20,7 @@ all: ${BINFILE}
 
 ${BINFILE}: 
 	$(CC) $(NAME).cpp $(CFLAGS) -I. -I$(ROCKSPATH)/include -c -o $(NAME).o
-	$(CC) $(NAME).o $(CFLAGS) -levent -L$(ROCKSPATH) $(ROCKSLIB) -o $(NAME).bin
+	$(CC) $(NAME).o $(CFLAGS) -levent -L$(ROCKSPATH) $(ROCKSLIB) $(LINKEROPT) -o $(NAME).bin
 	@echo
 	@echo "Build complete."
 	@echo "For start server run ./$(NAME).bin config.ini"

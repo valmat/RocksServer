@@ -22,7 +22,7 @@ namespace RocksServer {
 
         ~PostData()
         {
-            if(_data) delete _data;
+            if(_data) delete [] _data;
         }
 
         /**
@@ -58,7 +58,7 @@ namespace RocksServer {
         size_t find(char s, size_t start = 0)
         {
             size_t pos = start;
-            for(; _data[pos] != s && pos < _len; pos++);
+            for(; pos < _len && _data[pos] != s ; pos++);
             return (pos < _len) ? pos : std::string::npos;
         }
 
