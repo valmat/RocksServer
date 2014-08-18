@@ -1,4 +1,4 @@
-#This is a simple server for RocksDB.
+#Simple, but flexible and fast server for RocksDB
 
 Supports the following operations:
 
@@ -18,7 +18,7 @@ operations  | description
 For more details see: [protocol description](protocol.md)
 
 ##Dependency
-[RocksDB](https://github.com/facebook/rocksdb/) 
+[RocksDB](https://github.com/facebook/rocksdb/), 
 [LibEvent](http://libevent.org/)
 
 The compiler should support `C++11`

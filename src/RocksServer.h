@@ -27,7 +27,6 @@
 #include <event.h>
 #include <event2/http.h>
 #include <event2/http_struct.h>
-#include <event2/http_compat.h>
 
 // RocksDB
 #include "rocksdb/db.h"
@@ -45,6 +44,7 @@
 #include "evhttp/PostData.h"
 #include "evhttp/EvRequest.h"
 #include "evhttp/EvServerOptions.h"
+#include "evhttp/EvLogger.h"
 
 // Listeners
 #include "listeners/RequestBase.h"

@@ -53,6 +53,22 @@ int main(int argc, char **argv)
     }
     std::cout << "RocksDB version is " << ROCKSDB_MAJOR << "." << ROCKSDB_MINOR << "." << ROCKSDB_PATCH << std::endl;
 
+
+    /**
+     *  
+     *  Init logging http server
+     *  
+     */
+    EvLogger logger(cfg.get("log_level", EvLogger::Level::none), 
+                    cfg.get<std::string>("error_log", "/var/log/rocksserver/error.log"));
+
+    // Check if logger started
+    if (!logger) {
+        std::cerr<<"Can't open log file" << std::endl;
+        return 1;
+    }
+
+
     /**
      *  
      *  Init libevent
@@ -62,7 +78,8 @@ int main(int argc, char **argv)
         std::cerr << "Failed to init libevent." << std::endl;
         return 1;
     }
-  
+
+
     /**
      *  
      *  Init event http server
@@ -71,11 +88,12 @@ int main(int argc, char **argv)
     EvServer server(cfg.get<const char *>("server_host", "127.0.0.1"), 
                     cfg.get<unsigned short>("server_port", 5577));
 
-    // Check server started
+    // Check if server started
     if (!server) {
         std::cerr << "Failed to init http server." << std::endl;
         return 1;
     }
+
 
     /**
      *  
@@ -92,6 +110,7 @@ int main(int argc, char **argv)
     // Limitations for headers size (limit in bytes. 0 - unlimited)    
     serverOptions.max_headers_size = cfg.get<size_t>("max_headers_size", 0);
     server.setOptions(serverOptions);
+
     
     /**
      *  
@@ -106,6 +125,7 @@ int main(int argc, char **argv)
     server.onRequest("/del",   new RequestDel(rdb));
     server.onRequest("/mdel",  new RequestMdel(rdb));
     server.onRequest("/incr",  new RequestIncr(rdb));
+
 
     /**
      *  

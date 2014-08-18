@@ -31,7 +31,7 @@ namespace RocksServer {
             
             lpos = rpos+1;
             rpos = raw.find('\n', lpos);
-            long vallen = std::atol(raw + lpos);
+            auto vallen = std::atoll(raw + lpos);
             lpos = rpos+1;
             rocksdb::Slice value(raw + lpos, vallen);
 

@@ -74,6 +74,20 @@ namespace RocksServer {
         }
 
         /**
+         *  Cast to a EvLogger::Level
+         */
+        operator IniValue<EvLogger::Level> () const
+        {
+            if("debug" == _value) return EvLogger::Level::debug;
+            if("msg"   == _value) return EvLogger::Level::msg;
+            if("warn"  == _value) return EvLogger::Level::warn;
+            if("error" == _value) return EvLogger::Level::error;
+            if("fatal" == _value) return EvLogger::Level::fatal;
+            
+            return EvLogger::Level::none;
+        }
+
+        /**
          *  Cast to a bool
          */
         operator IniValue<bool> () const

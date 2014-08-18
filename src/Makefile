@@ -3,8 +3,9 @@ CC 	 = clang++
 
 NAME	 = RocksServer
 
-#CFLAGS	 = -std=c++11 -O3 -Wall 
-CFLAGS	 = -std=c++11 -g -Wall 
+#CFLAGS	 = -std=c++11 -O3 -Wall
+CFLAGS	 = -std=c++11 -g -Wall
+
 
 #LINKEROPT = -static
 LINKEROPT = 

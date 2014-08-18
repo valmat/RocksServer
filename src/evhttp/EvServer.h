@@ -46,10 +46,10 @@ namespace RocksServer {
             // Set signal handlers to safely shut down.
             auto sig_cb = [](evutil_socket_t fd, short what, void *arg) {
                     event_base *_base = (event_base*)arg;
-                    event_base_loopexit(_base, NULL);
+                    event_base_loopexit(_base, nullptr);
             };
-            event_add(evsignal_new(_base, SIGINT, sig_cb, _base), NULL);    // handler for Ctrl+C
-            event_add(evsignal_new(_base, SIGTERM, sig_cb, _base), NULL);   // handler for command `kill <pid>`
+            event_add(evsignal_new(_base, SIGINT, sig_cb, _base), nullptr);    // handler for Ctrl+C
+            event_add(evsignal_new(_base, SIGTERM, sig_cb, _base), nullptr);   // handler for command `kill <pid>`
      
         }
 
@@ -60,7 +60,8 @@ namespace RocksServer {
             for(auto &pReq: _reqList) {
                 delete pReq;
             }
-            std::cout << "Server closed" << std::endl;
+            libevent_global_shutdown();
+            std::cerr << "Server closed" << std::endl;
         }
 
         /**
