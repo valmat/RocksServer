@@ -22,6 +22,8 @@
 
 // C headers
 #include <signal.h>
+// C headers for `getrlimit()`
+#include <sys/resource.h>
 
 // Libevent
 #include <event.h>

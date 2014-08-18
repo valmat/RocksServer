@@ -34,18 +34,49 @@ int main(int argc, char **argv)
      *  Init config
      *  
      */
-    RocksServer::IniConfigs cfg(argv[1]);
+    IniConfigs cfg(argv[1]);
     if(!cfg) {
         std::cerr<<"Error with open file "<< argv[1] << std::endl;
         return 1;
     }
+
+
+
+    /**
+     *  
+     *  Set nofile soft limit
+     *   
+     *  This option sets the soft limit on the number of simultaneously opened files
+     *  (including sockets, pipe, log files, etc).
+     *  You can see your current soft limit by command `ulimit -Sn` and your hard limit by command `ulimit -Hn`
+     *  The value of the soft of limit must not exceed the value of hard limit.
+     *  If for some reason the server will take a lot of connections,
+     *  the number of which exceeds nofile_limit, then part of the connections will not be processed.
+     *  Increase nofile_limit can solve the problem.
+     *  
+     *  
+     */
+    auto nofile_limit = cfg.get<unsigned short>("nofile_limit", 0);
+    // if 0 then leave as default
+    if(nofile_limit) {
+        rlimit rlim;
+        getrlimit(RLIMIT_NOFILE, &rlim);
+        const rlimit i_rlimit {nofile_limit, rlim.rlim_max};
+        if(-1 == setrlimit(RLIMIT_NOFILE, &i_rlimit)) {
+            std::cerr << "You tried to set the nofile soft limit to " << nofile_limit << "." << std::endl;
+            std::cerr << "Current  nofile soft limit value is " << rlim.rlim_cur << "." << std::endl;
+            std::cerr << "Current  nofile hard limit value is " << rlim.rlim_max << "." << std::endl;
+            
+        }
+    }
+
 
     /**
      *  
      *  Init RocksDB
      *  
      */
-    RocksServer::RocksDBWrapper rdb(cfg.get<std::string>("db_path", "/var/rocksserver/db"));
+    RocksDBWrapper rdb(cfg.get<std::string>("db_path", "/var/rocksserver/db"));
     // Check RocksDB started
     if (!rdb.status()) {
         std::cerr << "RocksDB start error:" << std::endl << rdb.getStatus() << std::endl;
