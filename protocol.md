@@ -191,3 +191,23 @@ FAIL
 ```
 on fail.
 
+###Backup
+Backup database
+
+Request:
+```
+POST /backup
+```
+
+Reply:
+```
+OK
+```
+If successful.
+Or reply:
+```
+<Error message>
+```
+on fail.
+
+
