@@ -32,6 +32,16 @@ namespace RocksServer {
             delete _db;
         }
 
+        
+
+        /**
+         *  Cast to a rocksdb::DB pointer
+         */
+        operator rocksdb::DB * () const
+        {
+            return _db;
+        }
+
         /**
          * Get value by key
          * @param string key

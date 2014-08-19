@@ -20,6 +20,7 @@ int main(int argc, char **argv)
     }
     std::cout << "RocksServer version is " << ROCKSSERVER_VERSION << std::endl;
 
+
     /**
      *  
      *  Prevent server crash on signal SIGPIPE
@@ -28,6 +29,7 @@ int main(int argc, char **argv)
     if (signal(SIGPIPE, SIG_IGN) == SIG_ERR) {
         return 1;
     }
+
 
     /**
      *  
@@ -39,7 +41,6 @@ int main(int argc, char **argv)
         std::cerr<<"Error with open file "<< argv[1] << std::endl;
         return 1;
     }
-
 
 
     /**
@@ -148,14 +149,16 @@ int main(int argc, char **argv)
      *  Bind request listeners
      *  
      */
-    server.onRequest("/get",   new RequestGet(rdb));
-    server.onRequest("/mget",  new RequestMget(rdb));
-    server.onRequest("/set",   new RequestSet(rdb));
-    server.onRequest("/mset",  new RequestMset(rdb));
-    server.onRequest("/exist", new RequestKeyExist(rdb));
-    server.onRequest("/del",   new RequestDel(rdb));
-    server.onRequest("/mdel",  new RequestMdel(rdb));
-    server.onRequest("/incr",  new RequestIncr(rdb));
+    server.onRequest("/get",    new RequestGet(rdb));
+    server.onRequest("/mget",   new RequestMget(rdb));
+    server.onRequest("/set",    new RequestSet(rdb));
+    server.onRequest("/mset",   new RequestMset(rdb));
+    server.onRequest("/exist",  new RequestKeyExist(rdb));
+    server.onRequest("/del",    new RequestDel(rdb));
+    server.onRequest("/mdel",   new RequestMdel(rdb));
+    server.onRequest("/incr",   new RequestIncr(rdb));
+    server.onRequest("/backup", new RequestBackup(rdb, 
+                    cfg.get<std::string>("backup_path", "/var/rocksserver/backup")));
 
 
     /**

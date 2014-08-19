@@ -20,6 +20,11 @@ namespace RocksServer {
          */
         EvRequest(evhttp_request *req) : _req(req) {}
 
+        ~EvRequest() 
+        {
+            //evhttp_request_free(_req); <-- not required
+        }
+
         /**
          *  Get request URI string
          */
@@ -33,12 +38,30 @@ namespace RocksServer {
          */
         PostData getPostData() const
         {
-            struct evbuffer *in_evb = evhttp_request_get_input_buffer(_req);
+            evbuffer *in_evb = evhttp_request_get_input_buffer(_req);
             size_t len = evbuffer_get_length(in_evb);
             char *data = new char[len];
             evbuffer_copyout(in_evb, data, len);
 
             return PostData(data, len);
+            //if(in_evb) evbuffer_free(in_evb);
+        }
+
+        /**
+         *  Get response code
+         */
+        int getCode() const
+        {
+            return evhttp_request_get_response_code(_req);
+        }
+
+        /**
+         *  Get request method
+         *  see: http://www.wangafu.net/~nickm/libevent-2.1/doxygen/html/http_8h.html
+         */
+        evhttp_cmd_type getMethod() const
+        {
+            return evhttp_request_get_command(_req);
         }
 
         /**
@@ -48,11 +71,6 @@ namespace RocksServer {
         void send(const EvBuffer &evBuf) const
         {
             return  evhttp_send_reply(_req, HTTP_OK, "OK", evBuf);
-        }
-
-        ~EvRequest() 
-        {
-            //evhttp_request_free(_req); <-- not required
         }
 
     private:

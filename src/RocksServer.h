@@ -35,11 +35,14 @@
 #include "rocksdb/version.h"
 #include "rocksdb/write_batch.h"
 #include "rocksdb/merge_operator.h"
+#include "rocksdb/utilities/backupable_db.h"
 
 
 // RocksDB wrapper
 #include "rocks/Int64Incrementor.h"
 #include "rocks/RocksDBWrapper.h"
+#include "rocks/BackupEngine.h"
+
 
 // Server wrapper
 #include "evhttp/EvBuffer.h"
@@ -58,6 +61,7 @@
 #include "listeners/RequestDel.h"
 #include "listeners/RequestMdel.h"
 #include "listeners/RequestIncr.h"
+#include "listeners/RequestBackup.h"
 
 // Configs
 #include "iniparse/IniValue.h"

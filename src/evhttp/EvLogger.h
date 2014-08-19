@@ -109,13 +109,10 @@ namespace RocksServer {
             write(severityName, msg);
         }
 
-
-        //static void write(int severity, std::string msg)
         static void write(const std::string &severity, const char * msg)
         {
-            time_t now = time(NULL);
-            
             // see http://www.cplusplus.com/reference/ctime/tm/
+            time_t now = time(NULL);
             auto t = localtime(&now);
 
             _file   << 1900+t->tm_year << "/" 
@@ -124,7 +121,6 @@ namespace RocksServer {
                     << t->tm_hour << ":" 
                     << t->tm_min << ":" 
                     << t->tm_sec << " [" << severity << "] " << msg << std::endl;
-
         }
 
         static std::ofstream _file;
