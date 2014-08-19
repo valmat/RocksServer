@@ -42,6 +42,11 @@ namespace RocksServer {
             return _db;
         }
 
+        rocksdb::DB* operator->()
+        { 
+            return _db; 
+        }
+
         /**
          * Get value by key
          * @param string key
