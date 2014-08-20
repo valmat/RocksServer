@@ -22,6 +22,12 @@ namespace RocksServer {
          */
         virtual void run(const EvRequest &request, const EvBuffer &buf) override
         {
+            // Detect if current method is POST
+            if( !request.isPost() ) {
+                buf.add("Request method should be POST");
+                return;
+            }
+            
             auto raw = request.getPostData();
 
             // create a RocksDB write batch

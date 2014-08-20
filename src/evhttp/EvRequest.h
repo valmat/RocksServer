@@ -65,6 +65,14 @@ namespace RocksServer {
         }
 
         /**
+         *  Check if current method is POST
+         */
+        bool isPost() const
+        {
+            return ( EVHTTP_REQ_POST == getMethod() );
+        }
+
+        /**
          *  Send buffer as server reply
          *  @param       event buffer wrapper
          */

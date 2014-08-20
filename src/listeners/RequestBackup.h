@@ -25,7 +25,7 @@ namespace RocksServer {
         virtual void run(const EvRequest &request, const EvBuffer &buf) override
         {
             // Detect if current method is POST
-            if( EVHTTP_REQ_POST != request.getMethod() ) {
+            if( !request.isPost() ) {
                 buf.add("Request method should be POST");
                 return;
             }

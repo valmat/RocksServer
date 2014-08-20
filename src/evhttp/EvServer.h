@@ -48,18 +48,27 @@ namespace RocksServer {
                     event_base *_base = (event_base*)arg;
                     event_base_loopexit(_base, nullptr);
             };
-            event_add(evsignal_new(_base, SIGINT, sig_cb, _base), nullptr);    // handler for Ctrl+C
-            event_add(evsignal_new(_base, SIGTERM, sig_cb, _base), nullptr);   // handler for command `kill <pid>`
+            event_add(_sigint = evsignal_new(_base, SIGINT, sig_cb, _base), nullptr);    // handler for Ctrl+C
+            event_add(_sigterm = evsignal_new(_base, SIGTERM, sig_cb, _base), nullptr);   // handler for command `kill <pid>`
      
         }
 
         ~EvServer()
         {
-            if(_http) evhttp_free(_http);
-            if(_base) event_base_free(_base);
+            // free event handler for SIGINT signal
+            if(_sigint) event_free(_sigint);
+            // free  event handler for SIGTERM signal
+            if(_sigterm) event_free(_sigterm);
+
+            // freeing request objects
             for(auto &pReq: _reqList) {
                 delete pReq;
             }
+            
+            if(_http) evhttp_free(_http);
+            if(_base) event_base_free(_base);
+
+            // freeing libevent global variables
             libevent_global_shutdown();
             std::cerr << "Server closed" << std::endl;
         }
@@ -151,6 +160,11 @@ namespace RocksServer {
 
         // The container for storing a requests listeners
         std::forward_list<RequestBase *> _reqList;
+
+        // event handler for SIGINT signal
+        event *_sigint = nullptr;
+        // event handler for SIGTERM signal
+        event *_sigterm = nullptr;
         
     };
 
