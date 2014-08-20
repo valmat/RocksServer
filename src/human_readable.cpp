@@ -77,19 +77,19 @@ int main(int argc, char **argv)
     }
     
 
-    std::ofstream out;
-    std::streambuf *coutbuf;
+
+
+
+
+    // Redirected stdout to file
+    FILE *fp = nullptr;
     if(output_fname.size()) {
-        out.open(output_fname);
-        if(!out) {
-            std::cerr<<"Error with open file "<< output_fname << std::endl;
+        if ( !(fp = freopen(output_fname.c_str(), "w", stdout)) ) {
+            std::cerr<<"Can't open file "<< output_fname << std::endl;
             return 1;
         }
-        coutbuf = std::cout.rdbuf();  //save old buf
-        std::cout.rdbuf(out.rdbuf()); //redirect std::cout to out
     }
-
-
+    
     /*
      * Iterate over all db keys
      */
@@ -110,10 +110,7 @@ int main(int argc, char **argv)
     //assert(it->status().ok()); // Check for any errors found during the scan
     
     delete it;
-    if(output_fname.size()) {
-        std::cout.rdbuf(coutbuf); //reset to standard output again
-        out.close();
-    }
+    if(fp) fclose(fp);
 
     return 0;
 }
