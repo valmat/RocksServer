@@ -47,7 +47,7 @@ namespace RocksServer {
 
             event_set_fatal_callback([](int err){
                 std::string msg = "fatal error: " + std::to_string(err);
-                EvLogger::write("fatal", msg.c_str());
+                write("fatal", msg.c_str());
                 exit(1);
             });
             
