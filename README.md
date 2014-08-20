@@ -23,24 +23,39 @@ For more details see: [protocol description](protocol.md)
 
 The compiler should support `C++11`
 
-## Run
-First install libevend and compile or install RocksDB.
-After run command 
+## Install & Run
+Clone the repository:
 ```
+git clone --recursive git@github.com:valmat/RocksServer.git
+cd RocksServer
+```
+or
+```
+git clone git@github.com:valmat/RocksServer.git
+cd RocksServer
+git submodule update
+```
+Then compile dependencies:
+```
+./deps/make.sh
+```
+
+
+Compile:
+```
+cd src
 make
 ```
 
-After compiling run 
+After:
+edit config.ini and run
 
 ```
 ./RocksServer.bin config.ini
 ```
 
 Or you can install it:
-```
-make
-```
-switch to root
+switch to root and run
 ```
 make install
 ```
