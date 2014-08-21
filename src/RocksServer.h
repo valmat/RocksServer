@@ -7,7 +7,7 @@
  *  @github https://github.com/valmat/rocksserver
  */
 
-#define ROCKSSERVER_VERSION "v.0.0.3"
+#define ROCKSSERVER_VERSION "v.0.1.0"
 
 // C++ headers
 #include <iostream>
