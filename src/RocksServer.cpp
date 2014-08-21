@@ -41,6 +41,7 @@ int main(int argc, char **argv)
         std::cerr<<"Error with open file "<< argv[1] << std::endl;
         return 1;
     }
+    DefaultConfigs dfCfg;
 
 
     /**
@@ -57,7 +58,7 @@ int main(int argc, char **argv)
      *  
      *  
      */
-    auto nofile_limit = cfg.get<unsigned short>("nofile_limit", 0);
+    auto nofile_limit = cfg.get("nofile_limit", dfCfg.nofile_limit);
     // if 0 then leave as default
     if(nofile_limit) {
         rlimit rlim;
@@ -77,7 +78,7 @@ int main(int argc, char **argv)
      *  Init RocksDB
      *  
      */
-    RocksDBWrapper rdb(cfg.get<std::string>("db_path", "/var/rocksserver/db"));
+    RocksDBWrapper rdb(cfg.get("db_path", dfCfg.db_path));
     // Check RocksDB started
     if (!rdb.status()) {
         std::cerr << "RocksDB start error:" << std::endl << rdb.getStatus() << std::endl;
@@ -91,8 +92,8 @@ int main(int argc, char **argv)
      *  Init logging http server
      *  
      */
-    EvLogger logger(cfg.get("log_level", EvLogger::Level::none), 
-                    cfg.get<std::string>("error_log", "/var/log/rocksserver/error.log"));
+    EvLogger logger(cfg.get("log_level", dfCfg.log_level), 
+                    cfg.get("error_log", dfCfg.error_log));
 
     // Check if logger started
     if (!logger) {
@@ -117,8 +118,8 @@ int main(int argc, char **argv)
      *  Init event http server
      *  
      */
-    EvServer server(cfg.get<const char *>("server_host", "127.0.0.1"), 
-                    cfg.get<unsigned short>("server_port", 5577));
+    EvServer server(cfg.get("server_host", dfCfg.server_host), 
+                    cfg.get("server_port", dfCfg.server_port));
 
     // Check if server started
     if (!server) {
@@ -134,13 +135,13 @@ int main(int argc, char **argv)
      */
     EvServerOptions serverOptions;
     //Set the value to use for the Content-Type header when none was provided. 
-    serverOptions.content_type = cfg.get<const char *>("content_type", "text/plain; charset=UTF-8");
+    serverOptions.content_type = cfg.get("content_type", dfCfg.content_type);
     // Sets the what HTTP methods are supported in requests accepted by this server
     serverOptions.allowed_methods = EVHTTP_REQ_POST | EVHTTP_REQ_GET;
     // Limitations for body size (limit in bytes. 0 - unlimited)    
-    serverOptions.max_body_size = cfg.get<size_t>("max_body_size", 0);
+    serverOptions.max_body_size = cfg.get("max_body_size", dfCfg.max_body_size);
     // Limitations for headers size (limit in bytes. 0 - unlimited)    
-    serverOptions.max_headers_size = cfg.get<size_t>("max_headers_size", 0);
+    serverOptions.max_headers_size = cfg.get("max_headers_size", dfCfg.max_headers_size);
     server.setOptions(serverOptions);
 
     
@@ -157,8 +158,7 @@ int main(int argc, char **argv)
     server.onRequest("/del",    new RequestDel(rdb));
     server.onRequest("/mdel",   new RequestMdel(rdb));
     server.onRequest("/incr",   new RequestIncr(rdb));
-    server.onRequest("/backup", new RequestBackup(rdb, 
-                    cfg.get<std::string>("backup_path", "/var/rocksserver/backup")));
+    server.onRequest("/backup", new RequestBackup(rdb, cfg.get("backup_path", dfCfg.backup_path)));
 
 
     /**

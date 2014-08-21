@@ -46,7 +46,6 @@ namespace RocksServer {
     private:
         RocksDBWrapper& _rdb;
 
-        //BackupEngine _bkdb;
         std::string _bk_path;
 
     };

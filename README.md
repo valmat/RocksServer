@@ -55,6 +55,7 @@ edit config.ini and run
 ```
 
 Or you can install it:
+
 switch to root and run
 ```
 make install
@@ -64,13 +65,6 @@ make install
 Exemple of usage: [driver for PHP](drivers/php/README.md)
 Or any your implementation by [protocol description](protocol.md).
 
-## Note
-Currently under development.
-
-The RocksServer is workable but it needs some improvements.
-
-
-Sorry for my english.
 
 ## License
 [BSD](LICENSE)

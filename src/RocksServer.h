@@ -65,5 +65,7 @@
 // Configs
 #include "iniparse/IniValue.h"
 #include "iniparse/IniConfigs.h"
+#include "iniparse/DefaultConfigs.h"
+
 
 #include "evhttp/EvServer.h"
