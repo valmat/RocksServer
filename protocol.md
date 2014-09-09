@@ -28,10 +28,13 @@ GET /mget?key1&key2&key3 HTTP/1.1
 Reply:
 
 ```
+<key1>\n
 <value1_len>\n
 <value1>\n
+<key2>\n
 <value2_len>\n
 <value2>\n
+<key3>\n
 <value3_len>\n
 <value3>\n
 ```

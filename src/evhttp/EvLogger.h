@@ -70,7 +70,6 @@ namespace RocksServer {
          *  For check if logger successfully created
          */
         operator bool () const
-        //bool isUsable() const
         {
             return (_logLevel == Level::none) || _file;
         }
@@ -78,7 +77,6 @@ namespace RocksServer {
 
     private:
 
-        //static void write(int severity, std::string msg)
         static void writeLog(int severity, const char * msg)
         {
             

@@ -1,7 +1,7 @@
 /**
  *  EvRequest.h
  *
- *  This is a simple wrapper around EvRequest_* functions
+ *  This is a simple wrapper around evhttp_request_* functions
  *
  *  @author valmat <ufabiz@gmail.com>
  *  @github https://github.com/valmat/rocksserver
