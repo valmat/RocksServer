@@ -1,8 +1,13 @@
 <?php
 /**
-  *  API for RocksServer 
-  */
-namespace Rocks;
+ *  API for RocksServer
+ *
+ *  @author valmat <ufabiz@gmail.com>
+ *  @github https://github.com/valmat/rocksserver
+ */
+namespace RocksServer;
+
+class Exception extends \Exception {}
 
 class Client{
     /**
@@ -17,60 +22,123 @@ class Client{
     }
     
     /**
-      *   
+      *  get value by key
       */
-    private function request($path, $method, $data = '') {
-        
-        if ($path{0} != '/') {
-            $url = "http://{$this->_host}:{$this->_port}/" . $path;
-        } else {
-            $url = "http://{$this->_host}:{$this->_port}" . $path;
-        }
-        
-        return ('POST' == $method) ? $this->httpPost($url, $data) : $this->httpGet($url, $data);
+    public function get($key) {
+        return $this->httpGet('/get', $key)->getValue();
+    }
+    
+    /**
+      *  Check if key exist
+      */
+    public function keyExist($key, &$val = NULL) {
+        $resp = $this->httpGet('/exist', $key);
+        $rez = $resp->isOk();
+        $val = $rez ? $resp->getValue() : NULL;
+        return $rez;
+    }
+    
+    /**
+      *  multi get values by keys
+      */
+    public function mget($keys) {
+        return $this->httpGet('/mget', implode('&', $keys))->getMultiValue();
+    }
+    
+    /**
+      *  set value for key
+      */
+    public function set($key, $val) {
+        return $this->httpPost('/set', "$key\n".strlen($val)."\n$val")->isOk();
+    }
+    
+    /**
+      *  multi set values for keys
+      */
+    public function mset($data) {
+        return $this->httpPost('/mset', $this->data2str($data) )->isOk();
+    }
+    
+    /**
+      *  remove key from db
+      */
+    public function del($key) {
+        return $this->httpPost('/del', $key)->isOk();
+    }
+    
+    /**
+      *  Multi remove keys from db
+      */
+    public function mdel($keys) {
+        return $this->httpPost('/mdel', implode("\n", $keys) )->isOk();
+    }
+    
+    /**
+      *  incriment value by key
+      */
+    public function incr($key, $value = NULL) {
+        return  (
+                    $value ?
+                    $this->httpPost('/incr', "$key&$value" )->isOk() :
+                    $this->httpPost('/incr', $key )->isOk()
+                );
+    }
+    
+    /**
+      *  backup database
+      */
+    public function backup() {
+        return $this->httpPost('/backup');
+        //return $this->httpPost('/backup')->isOk();
     }
     
     /**
       *  POST request
       */
     private function httpPost($path, $data = NULL) {
-        if(NULL != $data) {
-            $opts = array(
-                'http'=>array(
-                    'method'=> "POST",
-                    'header'=> "Host:{$this->_host}\r\n" .
-                               "Content-Type:application/x-www-form-urlencoded; charset=UTF-8\r\n" .
-                               "Content-Length: " . strlen($data) . "\r\n",
-                    'content' => $data
-                )
-            );
+        $buf  = "POST $path HTTP/1.1\r\n";
+        $buf .= "Host:{$this->_host}\r\n";
+        
+        if(NULL !== $data) {
+            $buf .= "Content-Type:application/x-www-form-urlencoded; charset=UTF-8\r\n";
+            $buf .= "Content-Length: " . strlen($data) . "\r\n";
+            $buf .= "Connection: Close\r\n\r\n";
+            $buf .= $data;
         } else {
-            $opts = array(
-                'http'=>array(
-                    'method'=> "POST",
-                    'header'=> "Host:{$this->_host}\r\n" .
-                               "Content-Type: charset=UTF-8\r\n"
-                )
-            );
+            $buf .= "Content-Type: charset=UTF-8\r\n";
+            $buf .= "Connection: Close\r\n\r\n";
         }
-        return file_get_contents("http://{$this->_host}:{$this->_port}$path", false, stream_context_create($opts));
+        return $this->request($buf);
     }
     
     /**
       *  GET request
       */
     private function httpGet($path, $data) {
-        $opts = array(
-            'http'=>array(
-                'method'=>"GET",
-                'header'=>  "Host:{$this->_host}\r\n" .
-                            "Content-Type:charset=UTF-8\r\n"
-            )
-        );
-        
-        return file_get_contents("http://{$this->_host}:{$this->_port}$path?$data", false, stream_context_create($opts));
+        $buf  = "GET $path?$data HTTP/1.1\r\n";
+        $buf .= "Host:{$this->_host}\r\n";
+        $buf .= "Content-Type:charset=UTF-8\r\n";
+        $buf .= "Connection: Close\r\n\r\n";
+        return $this->request($buf);
     }
     
+    /**
+      *  @param string request
+      */
+    private function request(&$req) {
+        if( !($this->sock = fsockopen($this->_host, $this->_port, $errno, $errstr)) ){
+            throw new Exception("Unable to create socket: $errstr ($errno)");
+        }
+        fwrite($this->sock, $req);
+        
+        // skip headers
+        $s = '';
+        while (!feof($this->sock) && "\r\n" !== $s) {
+            $s =  fgets($this->sock);
+        }
+        
+        return new Response($this->sock);
+    }
     
     /**
       *  Encodes data to send in a POST request
@@ -82,126 +150,5 @@ class Client{
         }
         return $ret;
     }
-    /**
-      *  Encodes data to send in a GET request
-      */
-    private function keys2str(array $keys) {
-        return implode('&', $keys);
-    }
-    
-    /**
-      *  get value by key
-      */
-    public function get($key) {
-        return $this->parseGet($this->httpGet('/get', $key));
-    }
-    
-    private function parseGet(&$data) {
-        list($rezlen, $rez) = explode("\n", $data, 2);
-        $rezlen = (int) $rezlen;
-        if($rezlen < 0) {
-            return NULL;
-        }
-        if(strlen($rez) > $rezlen) {
-            $rez = substr($rez, 0, $rezlen);
-        }
-        return $rez;
-    }
-    
-    /**
-      *  multi get values by keys
-      */
-    public function mget($keys) {
-        $raw = $this->httpGet('/mget', implode('&', $keys));
-        $rawlen = strlen($raw);
-        if(!$rawlen) {
-            return [];
-        }
-        
-        $lpos = 0;
-        $rez = [];
-        while($lpos < $rawlen) {
-            
-            // retrive key
-            $rpos = strpos($raw, "\n", $lpos );
-            $key = substr($raw, $lpos, $rpos - $lpos);
-            
-            // retrive value lenght
-            $lpos = $rpos+1;
-            $rpos = strpos($raw, "\n", $lpos );
-            $vallen = (int)substr($raw, $lpos, $rpos - $lpos);
-            $lpos = $rpos+1;
-            
-            // retrive value
-            if(($vallen > 0)) {
-                $rez[$key] = substr($raw, $lpos, $vallen);
-                $lpos += $vallen+1;
-            } else {
-                $rez[$key] = NULL;
-            }
-        }
-        
-        return $rez;
-    }
-    
-    /**
-      *  set value for key
-      */
-    public function set($key, $val) {
-        return 'OK' == $this->httpPost('/set', "$key\n".strlen($val)."\n$val");
-    }
-    
-    /**
-      *  multi set values for keys
-      */
-    public function mset($data) {
-        return 'OK' == $this->httpPost('/mset', $this->data2str($data) );
-    }
-    
-    /**
-      *  Check if key exist
-      */
-    public function keyExist($key, &$val = NULL) {
-        list($rez, $valRaw) = explode("\n", $this->httpGet('/exist', $key), 2);
-        $rez = 'OK' == $rez;
-        //return [$rez, $valRaw];
-        $val = $rez ? $this->parseGet($valRaw) : NULL;
-        return $rez;
-    }
-    
-    /**
-      *  remove key from db
-      */
-    public function del($key) {
-        return 'OK' == $this->httpPost('/del', $key);
-    }
-    
-    /**
-      *  Multi remove keys from db
-      */
-    public function mdel($keys) {
-        return $this->httpPost('/mdel', implode("\n", $keys) );
-    }
-    
-    /**
-      *  incriment value by key
-      */
-    public function incr($key, $value = NULL) {
-        return 'OK' == (
-                    $value ?
-                    $this->httpPost('/incr', "$key&$value" ) :
-                    $this->httpPost('/incr', $key )
-                );
-    }
-    
-    /**
-      *  backup database
-      */
-    public function backup() {
-        return $this->httpPost('/backup');
-        return 'OK' == $this->httpPost('/backup');
-    }
-    
     
 }
-

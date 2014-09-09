@@ -1,9 +1,11 @@
 ## Usage
 ```php    
     require "Rocks.php";
+    require 'MgetIterator.php';
+    require 'Response.php';
 
     // Init
-    $rocks = new Rocks\Client();
+    $rocks = new RocksServer\Client();
     
     // get
     // if key not exist, return NULL
