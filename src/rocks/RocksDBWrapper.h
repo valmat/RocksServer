@@ -26,9 +26,25 @@ namespace RocksServer {
             // DB options
             rocksdb::Options dbOptions;
 
+            // Set options from ini-config
+            dbOptions.max_background_compactions = cfg.get("max_background_compactions", dbOptions.max_background_compactions);
+            dbOptions.max_background_flushes     = cfg.get("max_background_flushes", dbOptions.max_background_flushes);
+            dbOptions.allow_os_buffer            = cfg.get("allow_os_buffer", dbOptions.allow_os_buffer);
+            dbOptions.max_open_files             = cfg.get("max_open_files", dbOptions.max_open_files);
 
-            dbOptions.create_if_missing = true;
+            dbOptions.write_buffer_size          = cfg.get("write_buffer_size", dbOptions.write_buffer_size);
+            dbOptions.max_write_buffer_number    = cfg.get("max_write_buffer_number", dbOptions.max_write_buffer_number);
+            dbOptions
+              .min_write_buffer_number_to_merge  = cfg.get("min_write_buffer_number_to_merge", dbOptions.min_write_buffer_number_to_merge);
+
+            dbOptions.allow_mmap_reads           = cfg.get("allow_mmap_reads", dbOptions.allow_mmap_reads);
+            dbOptions.allow_mmap_writes          = cfg.get("allow_mmap_writes", dbOptions.allow_mmap_writes);
+            dbOptions.block_size                 = cfg.get("block_size", dbOptions.block_size);
+
+            dbOptions.create_if_missing          = true;
+
             dbOptions.merge_operator.reset(new Int64Incrementor);
+
             _status = rocksdb::DB::Open(dbOptions, dbpath, &_db);
         }
 

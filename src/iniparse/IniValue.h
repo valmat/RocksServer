@@ -74,6 +74,14 @@ namespace RocksServer {
         }
 
         /**
+         *  Cast to a int
+         */
+         operator IniValue<int> () const
+        {
+            return std::strtoul(_value.c_str(), nullptr, 10);
+        }
+
+        /**
          *  Cast to a EvLogger::Level
          */
         operator IniValue<EvLogger::Level> () const
