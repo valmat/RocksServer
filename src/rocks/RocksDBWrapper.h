@@ -18,13 +18,20 @@ namespace RocksServer {
          * @param string path
          * @param bool create_if_missing
          */
-        RocksDBWrapper(std::string dbpath, bool create_if_missing = true):
-            _dbpath(dbpath)
+        RocksDBWrapper(const IniConfigs &cfg, const DefaultConfigs &dfCfg)
         {
-            _dboptions.create_if_missing = create_if_missing;
-            _dboptions.merge_operator.reset(new Int64Incrementor);
-            _status = rocksdb::DB::Open(_dboptions, _dbpath, &_db);
+            // DB path distantion
+            std::string dbpath = cfg.get("db_path", dfCfg.db_path);
+
+            // DB options
+            rocksdb::Options dbOptions;
+
+
+            dbOptions.create_if_missing = true;
+            dbOptions.merge_operator.reset(new Int64Incrementor);
+            _status = rocksdb::DB::Open(dbOptions, dbpath, &_db);
         }
+
 
         virtual ~RocksDBWrapper()
         {
@@ -168,14 +175,7 @@ namespace RocksServer {
         // DB pointer
         rocksdb::DB* _db;
 
-        // DB path distantion
-        std::string _dbpath;
-
-        // DB options
-        rocksdb::Options _dboptions;
-
         // Last operation status
         rocksdb::Status _status;
-
     };
 }

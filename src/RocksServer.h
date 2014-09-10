@@ -20,6 +20,7 @@
 #include <forward_list>
 
 // C headers
+#include <string.h>
 #include <signal.h>
 // C headers for `getrlimit()`
 #include <sys/resource.h>
@@ -28,6 +29,18 @@
 #include <event.h>
 #include <event2/http.h>
 #include <event2/http_struct.h>
+
+// Server wrapper
+#include "evhttp/EvBuffer.h"
+#include "evhttp/PostData.h"
+#include "evhttp/EvRequest.h"
+#include "evhttp/EvServerOptions.h"
+#include "evhttp/EvLogger.h"
+
+// Configs
+#include "iniparse/IniValue.h"
+#include "iniparse/IniConfigs.h"
+#include "iniparse/DefaultConfigs.h"
 
 // RocksDB
 #include "rocksdb/db.h"
@@ -42,14 +55,6 @@
 #include "rocks/RocksDBWrapper.h"
 #include "rocks/BackupEngine.h"
 
-
-// Server wrapper
-#include "evhttp/EvBuffer.h"
-#include "evhttp/PostData.h"
-#include "evhttp/EvRequest.h"
-#include "evhttp/EvServerOptions.h"
-#include "evhttp/EvLogger.h"
-
 // Listeners
 #include "listeners/RequestBase.h"
 #include "listeners/RequestGet.h"
@@ -62,12 +67,7 @@
 #include "listeners/RequestIncr.h"
 #include "listeners/RequestTailing.h"
 #include "listeners/RequestBackup.h"
- #include "listeners/RequestStat.h"
-
-// Configs
-#include "iniparse/IniValue.h"
-#include "iniparse/IniConfigs.h"
-#include "iniparse/DefaultConfigs.h"
+#include "listeners/RequestStat.h"
 
 
 #include "evhttp/EvServer.h"

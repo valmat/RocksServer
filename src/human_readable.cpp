@@ -16,9 +16,8 @@
 #include "rocksdb/write_batch.h"
 #include "rocksdb/merge_operator.h"
 
-// RocksDB wrapper
+// RocksDB Incrementor
 #include "rocks/Int64Incrementor.h"
-#include "rocks/RocksDBWrapper.h"
 
 
 #define HELP_EXIT()  print_help(*argv); return 0;
@@ -68,17 +67,24 @@ int main(int argc, char **argv)
     /*
      * Init RocksDB
      */
-    RocksServer::RocksDBWrapper rdb(database_dir);
+
+    // DB pointer
+    rocksdb::DB* rdb;
+    // DB options
+    rocksdb::Options dbOptions;
+
+    dbOptions.create_if_missing = true;
+    dbOptions.merge_operator.reset(new RocksServer::Int64Incrementor);
+
+    auto status = rocksdb::DB::Open(dbOptions, database_dir, &rdb);
+
     // Check RocksDB started
-    if (!rdb.status()) {
-        std::cerr << "RocksDB start error:" << std::endl << rdb.getStatus() << std::endl;
+    if (!status.ok()) {
+        std::cerr << "RocksDB start error:" << std::endl << status.ToString() << std::endl;
         std::cout << "RocksDB version is " << ROCKSDB_MAJOR << "." << ROCKSDB_MINOR << "." << ROCKSDB_PATCH << std::endl;
         return 1;
     }
     
-
-
-
 
 
     // Redirected stdout to file
