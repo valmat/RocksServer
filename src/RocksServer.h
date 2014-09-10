@@ -62,6 +62,7 @@
 #include "listeners/RequestIncr.h"
 #include "listeners/RequestTailing.h"
 #include "listeners/RequestBackup.h"
+ #include "listeners/RequestStat.h"
 
 // Configs
 #include "iniparse/IniValue.h"
