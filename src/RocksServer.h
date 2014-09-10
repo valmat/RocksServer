@@ -60,6 +60,7 @@
 #include "listeners/RequestDel.h"
 #include "listeners/RequestMdel.h"
 #include "listeners/RequestIncr.h"
+#include "listeners/RequestTailing.h"
 #include "listeners/RequestBackup.h"
 
 // Configs

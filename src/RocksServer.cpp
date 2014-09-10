@@ -158,6 +158,7 @@ int main(int argc, char **argv)
     server.onRequest("/del",    new RequestDel(rdb));
     server.onRequest("/mdel",   new RequestMdel(rdb));
     server.onRequest("/incr",   new RequestIncr(rdb));
+    server.onRequest("/tail",   new RequestTailing(rdb));
     server.onRequest("/backup", new RequestBackup(rdb, cfg.get("backup_path", dfCfg.backup_path)));
 
 

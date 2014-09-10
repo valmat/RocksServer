@@ -30,6 +30,7 @@ class Client{
     
     /**
       *  Check if key exist
+      *  @return bool
       */
     public function keyExist($key, &$val = NULL) {
         $resp = $this->httpGet('/exist', $key);
@@ -40,6 +41,7 @@ class Client{
     
     /**
       *  multi get values by keys
+      *  @return MgetIterator
       */
     public function mget($keys) {
         return $this->httpGet('/mget', implode('&', $keys))->getMultiValue();
@@ -47,6 +49,7 @@ class Client{
     
     /**
       *  set value for key
+      *  @return bool
       */
     public function set($key, $val) {
         return $this->httpPost('/set', "$key\n".strlen($val)."\n$val")->isOk();
@@ -54,6 +57,7 @@ class Client{
     
     /**
       *  multi set values for keys
+      *  @return bool
       */
     public function mset($data) {
         return $this->httpPost('/mset', $this->data2str($data) )->isOk();
@@ -61,6 +65,7 @@ class Client{
     
     /**
       *  remove key from db
+      *  @return bool
       */
     public function del($key) {
         return $this->httpPost('/del', $key)->isOk();
@@ -68,6 +73,7 @@ class Client{
     
     /**
       *  Multi remove keys from db
+      *  @return bool
       */
     public function mdel($keys) {
         return $this->httpPost('/mdel', implode("\n", $keys) )->isOk();
@@ -75,6 +81,7 @@ class Client{
     
     /**
       *  incriment value by key
+      *  @return bool
       */
     public function incr($key, $value = NULL) {
         return  (
@@ -85,7 +92,16 @@ class Client{
     }
     
     /**
+      *  multi get values by keys
+      *  @return MgetIterator
+      */
+    public function tailing() {
+        return $this->httpPost('/tail')->getMultiValue();
+    }
+    
+    /**
       *  backup database
+      *  @return Response
       */
     public function backup() {
         return $this->httpPost('/backup');
