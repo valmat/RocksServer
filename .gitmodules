@@ -1,9 +1,9 @@
 [submodule "rocksdb"]
 	path = deps/rocksdb
-	url = git@github.com:facebook/rocksdb.git
+	url = https://github.com/facebook/rocksdb
 	branch = 3.4.fb
 [submodule "libevent"]
 	path = deps/libevent
-	url = git@github.com:libevent/libevent.git
+	url = https://github.com/libevent/libevent
 	branch = release-2.1.4-alpha
 
