@@ -31,7 +31,7 @@
 #include <event2/http_struct.h>
 
 // Server wrapper
-#include "evhttp/EvBuffer.h"
+#include "evhttp/EvResponse.h"
 #include "evhttp/PostData.h"
 #include "evhttp/EvRequest.h"
 #include "evhttp/EvServerOptions.h"

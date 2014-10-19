@@ -7,6 +7,7 @@
  *  @github https://github.com/valmat/rocksserver
  */
 
+#pragma once
 
 namespace RocksServer {
 
@@ -22,7 +23,8 @@ namespace RocksServer {
 
         ~EvRequest() 
         {
-            //evhttp_request_free(_req); <-- not required
+            //if(_req) evhttp_request_free(_req); //<-- not required, 
+                                                  // because it was called in the function evhttp_send (through evhttp_send_done)
         }
 
         /**
@@ -31,6 +33,21 @@ namespace RocksServer {
         std::string getUri() const
         {
             return  evhttp_request_get_uri(_req);
+        }
+
+        /**
+         *  Get request query string
+         */
+        std::string getUriQuery() const
+        {
+            std::string uri = getUri();
+            std::string::size_type pathlen = uri.find('?');   // length of "/path"
+            std::string::size_type len = uri.size();
+            
+            if(len-1 <= pathlen) {
+                return "";
+            }
+            return uri.substr(pathlen + 1, len - pathlen - 1);
         }
 
         /**
@@ -44,7 +61,6 @@ namespace RocksServer {
             evbuffer_copyout(in_evb, data, len);
 
             return PostData(data, len);
-            //if(in_evb) evbuffer_free(in_evb);
         }
 
         /**
@@ -73,16 +89,16 @@ namespace RocksServer {
         }
 
         /**
-         *  Send buffer as server reply
-         *  @param       event buffer wrapper
+         *  Cast to a evhttp_request pointer
+         *  @return evhttp_request*
          */
-        void send(const EvBuffer &evBuf) const
+        operator evhttp_request* () const
         {
-            return  evhttp_send_reply(_req, HTTP_OK, "OK", evBuf);
+            return _req;
         }
 
     private:
-         evhttp_request *_req;
+        evhttp_request *_req;
     };
 
 }

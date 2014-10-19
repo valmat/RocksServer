@@ -7,6 +7,7 @@
  *  @github https://github.com/valmat/rocksserver
  */
 
+#pragma once
 
 namespace RocksServer {
 
@@ -49,7 +50,7 @@ namespace RocksServer {
                     event_base_loopexit(_base, nullptr);
             };
             event_add(_sigint = evsignal_new(_base, SIGINT, sig_cb, _base), nullptr);    // handler for Ctrl+C
-            event_add(_sigterm = evsignal_new(_base, SIGTERM, sig_cb, _base), nullptr);   // handler for command `kill <pid>`
+            event_add(_sigterm = evsignal_new(_base, SIGTERM, sig_cb, _base), nullptr);  // handler for command `kill <pid>`
      
         }
 
@@ -121,22 +122,22 @@ namespace RocksServer {
          */
         void onRequest(const char *path, RequestBase *pReq)
         {
-            // Store pointer in scope
+            // Store a pointer in the scope
             _reqList.push_front(pReq);
             
             evhttp_set_cb(_http, path, [] (evhttp_request *http_req, void *cb_arg) {
 
-                EvBuffer buf;
-                if (!buf) return; 
                 EvRequest request(http_req);
+
+                EvResponse response(http_req);
+
+                if (!response) {
+                    evhttp_send_error(http_req, 500, "Buffer not allocated");
+                    return;
+                }
                 
-                RequestBase *pReq = reinterpret_cast<RequestBase *>(cb_arg);
-
-                pReq->run(request, buf);
-                request.send(buf);
-
+                reinterpret_cast<RequestBase *>(cb_arg)->run(request, response);
             }, pReq) ;
-
         }
 
         /**
