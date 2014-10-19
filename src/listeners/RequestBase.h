@@ -18,9 +18,10 @@ namespace RocksServer {
         /**
          *  Runs request listener
          *  @param       event request object
-         *  @param       event buffer object
+         *  @param       protocol object
          */
-        virtual void run(const EvRequest &, const EvBuffer &) = 0;
+        virtual void run(const EvRequest &, const Protocol &) = 0;
+        
     };
 
 }

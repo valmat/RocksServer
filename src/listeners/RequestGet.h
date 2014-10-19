@@ -18,9 +18,9 @@ namespace RocksServer {
         /**
          *  Runs request listener
          *  @param       event request object
-         *  @param       event buffer object
+         *  @param       protocol object
          */
-        virtual void run(const EvRequest &request, const EvBuffer &buf) override
+        virtual void run(const EvRequest &request, const Protocol &prot) override
         {
             std::string uri = request.getUri();
             const std::string::size_type pathlen = uri.find('?');   // length of "/get"
@@ -29,7 +29,7 @@ namespace RocksServer {
             std::string key;
 
             if(len-1 <= pathlen) {
-                buf.add("-1\n", 3);
+                prot.setFailValue();
                 return;
             }
                 
@@ -37,9 +37,9 @@ namespace RocksServer {
             std::string val = _rdb.get(key);
 
             if(!_rdb.status()) {
-                buf.add("-1\n", 3);
+                prot.setFailValue();
             } else {
-                buf.add_printf("%lu\n%s", val.size(), val.c_str());
+                prot.setValue(val);
             }
         }
 

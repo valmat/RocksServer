@@ -18,9 +18,9 @@ namespace RocksServer {
         /**
          *  Runs request listener
          *  @param       event request object
-         *  @param       event buffer object
+         *  @param       protocol object
          */
-        virtual void run(const EvRequest &request, const EvBuffer &buf) override
+        virtual void run(const EvRequest &request, const Protocol &prot) override
         {
             rocksdb::Slice key, value;
             auto rOpt = rocksdb::ReadOptions();

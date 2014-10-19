@@ -20,13 +20,21 @@ namespace RocksServer {
         /**
          *  Runs request listener
          *  @param       event request object
-         *  @param       event buffer object
+         *  @param       protocol object
          */
-        virtual void run(const EvRequest &request, const EvBuffer &buf) override
+        virtual void run(const EvRequest &request, const Protocol &prot) override
         {
             // Detect if current method is POST
             if( !request.isPost() ) {
-                buf.add("Request method should be POST");
+                
+
+
+                //buf.add("Request method should be POST");
+                prot.fail();
+
+
+
+
                 return;
             }
 
@@ -34,10 +42,18 @@ namespace RocksServer {
             auto status = bk.createBackup(_rdb);
 
             if( status.ok() ) {
-                buf.add("OK", 2);
+                //buf.add("OK", 2);
+                prot.ok();
             } else {
-                buf.add("FAIL\n", 5);
+                //buf.add("FAIL\n", 5);
+                prot.fail();
+                
+
+
                 buf.add(status.ToString());
+
+
+                
             }
 
         }

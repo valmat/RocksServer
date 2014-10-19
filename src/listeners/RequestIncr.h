@@ -14,23 +14,32 @@ namespace RocksServer {
     {
     public:
         RequestIncr(RocksDBWrapper &rdb) : _rdb(rdb) {}
-
+        
         /**
          *  Runs request listener
          *  @param       event request object
-         *  @param       event buffer object
+         *  @param       protocol object
          */
-        virtual void run(const EvRequest &request, const EvBuffer &buf) override
+        virtual void run(const EvRequest &request, const Protocol &prot) override
         {
             // Detect if current method is POST
             if( !request.isPost() ) {
-                buf.add("Request method should be POST");
+                
+
+
+
+                //buf.add("Request method should be POST");
+                prot.fail();
+
+
+
                 return;
             }
 
             auto raw = request.getPostData();
             if(!raw.size()) {
-                buf.add("FAIL", 4);
+                //buf.add("FAIL", 4);
+                prot.fail();
                 return;
             }
 
@@ -45,9 +54,11 @@ namespace RocksServer {
             }
             
             if( rez ) {
-                buf.add("OK", 2);
+                //buf.add("OK", 2);
+                prot.ok();
             } else {
-                buf.add("FAIL", 4);
+                //buf.add("FAIL", 4);
+                prot.fail();
             }
         }
 

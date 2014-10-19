@@ -18,17 +18,17 @@ namespace RocksServer {
         /**
          *  Runs request listener
          *  @param       event request object
-         *  @param       event buffer object
+         *  @param       protocol object
          */
-        virtual void run(const EvRequest &request, const EvBuffer &buf) override
+        virtual void run(const EvRequest &request, const Protocol &prot) override
         {
             std::string uri = request.getUri();
             const std::string::size_type pathlen = uri.find('?');   // length of "/exist"
             std::string::size_type len = uri.size();
 
             if(len-1 <= pathlen) {
-                // Add buffer
-                buf.add("FAIL\n", 5);
+                //buf.add("FAIL\n", 5);
+                prot.fail();
                 return;
             }
                 
@@ -38,16 +38,20 @@ namespace RocksServer {
 
             // Add buffer
             if(result) {
-                buf.add("OK\n", 3);
+                //buf.add("OK\n", 3);
+                prot.ok();
 
                 if(value_found) {
-                    buf.add_printf("%lu\n%s", value.size(), value.c_str());
+                    //buf.add_printf("%lu\n%s", value.size(), value.c_str());
+                    prot.setValue(val);
                 } else {
-                    buf.add("-1\n", 3);
+                    //buf.add("-1\n", 3);
+                    prot.setFailValue();
                 }
 
             } else {
-                buf.add("FAIL\n", 5);
+                //buf.add("FAIL\n", 5);
+                prot.fail();
             }
         }
 

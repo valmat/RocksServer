@@ -116,6 +116,6 @@ namespace RocksServer {
         
     };
 
-    typedef EvResponse EvBuffer;
+    //typedef EvResponse EvBuffer;
 
 }
