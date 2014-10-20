@@ -194,6 +194,16 @@ FAIL
 ```
 on fail.
 
+###Get all keys and values
+
+Request:
+```
+POST /tail
+```
+
+Reply: same (multi get)[https://github.com/valmat/RocksServer/blob/master/protocol.md#multi-get]
+
+
 ###Backup
 Backup database
 
@@ -213,4 +223,18 @@ Or reply:
 ```
 on fail.
 
+
+###Stats
+Usage statistics
+
+Request:
+```
+GET /stats
+```
+
+Reply: stats output
+
+
+--
+more details see  [src/Protocol.h](https://github.com/valmat/RocksServer/blob/master/src/Protocol.h)
 
