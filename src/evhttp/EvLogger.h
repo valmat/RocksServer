@@ -43,11 +43,11 @@ namespace RocksServer {
             return (_logLevel == Level::none) || _file;
         }
 
-        static void writeLog(Level severity, const char * msg)
+        static void writeLog(const char * msg, Level severity = Level::warn)
         {
             writeLog(static_cast<int>(severity), msg);
         }
-        
+
     private:
         static void writeLog(int severity, const char * msg);
         static void write(const std::string &severity, const char * msg);

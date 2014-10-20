@@ -24,7 +24,7 @@ namespace RocksServer {
         {
             // Detect if current method is POST
             if( !request.isPost() ) {
-                EvLogger::writeLog(EvLogger::Level::warn, "Request method should be POST");
+                EvLogger::writeLog("Request method should be POST");
                 prot.fail();
                 return;
             }
@@ -49,7 +49,7 @@ namespace RocksServer {
                 prot.ok();
             } else {
                 prot.fail();
-                EvLogger::writeLog(EvLogger::Level::warn, _rdb.getStatus().data());
+                EvLogger::writeLog(_rdb.getStatus().data());
             }
         }
 

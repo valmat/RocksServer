@@ -27,7 +27,7 @@ namespace RocksServer {
                 prot.setStr(stat);
             } else {
                 prot.fail();
-                EvLogger::writeLog(EvLogger::Level::warn, _rdb.getStatus().data());
+                EvLogger::writeLog(_rdb.getStatus().data());
             }
         }
 
