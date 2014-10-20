@@ -24,7 +24,8 @@ namespace RocksServer {
         {
             // Detect if current method is POST
             if( !request.isPost() ) {
-                buf.add("Request method should be POST");
+                //buf.add("Request method should be POST");
+                prot.fail();
                 return;
             }
             
@@ -43,9 +44,9 @@ namespace RocksServer {
 
             // set and filling buffer
             if(_rdb.set(key, value)) {
-                buf.add("OK", 2); 
+                prot.ok();
             } else {
-                buf.add("FAIL", 4); 
+                prot.fail();
             }
         }
 

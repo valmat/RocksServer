@@ -29,12 +29,7 @@ namespace RocksServer {
             for (it->SeekToFirst(); it->Valid(); it->Next()) {
                 key   = it->key();
                 value = it->value();
-
-                // Add to buffer
-                buf.add(key.data(), key.size());
-                buf.add_printf("\n%lu\n", value.size());
-                buf.add(value.data(), value.size());
-                buf.add("\n", 1);
+                prot.setPair(key, value);
             }
         }
 

@@ -1,5 +1,5 @@
 /**
- *  RequestStat.h
+ *  RequestStats.h
  *
  *  Request listener for command "stats" (Get statistics)
  *
@@ -10,10 +10,10 @@
 
 namespace RocksServer {
 
-    class RequestStat : public RequestBase
+    class RequestStats : public RequestBase
     {
     public:
-        RequestStat(RocksDBWrapper &rdb) : _rdb(rdb) {}
+        RequestStats(RocksDBWrapper &rdb) : _rdb(rdb) {}
 
         /**
          *  Runs request listener
@@ -24,13 +24,14 @@ namespace RocksServer {
         {
             std::string stat;
             if(_rdb->GetProperty("rocksdb.stats", &stat)) {
-                buf.add(stat);
+                //buf.add(stat);
+                prot.setStr(stat);
             } else {
-                buf.add("FAIL", 4);
+                prot.fail();
             }
         }
 
-        virtual ~RequestStat() {}
+        virtual ~RequestStats() {}
     private:
         RocksDBWrapper& _rdb;
     };

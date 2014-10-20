@@ -24,19 +24,14 @@ namespace RocksServer {
         {
             // Detect if current method is POST
             if( !request.isPost() ) {
-                
-
                 //buf.add("Request method should be POST");
                 prot.fail();
-
-
                 return;
             }
             
             auto raw = request.getPostData();
 
             if(!raw.size()) {
-                //buf.add("FAIL", 4);
                 prot.fail();
                 return;
             }
@@ -57,10 +52,8 @@ namespace RocksServer {
             batch.Delete(rocksdb::Slice(raw+lpos, len-lpos));
 
             if(_rdb.mset(batch)) {
-                //buf.add("OK", 2);
                 prot.ok();
             } else {
-                //buf.add("FAIL", 4);
                 prot.fail();
             }
         }

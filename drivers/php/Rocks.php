@@ -109,6 +109,14 @@ class Client{
     }
     
     /**
+      *  retrive server statistic
+      *  @return Response
+      */
+    public function stats() {
+        return $this->httpPost('/stats');
+    }
+    
+    /**
       *  POST request
       */
     private function httpPost($path, $data = NULL) {

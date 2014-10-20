@@ -23,7 +23,7 @@ namespace RocksServer {
         virtual void run(const EvRequest &request, const Protocol &prot) override
         {
             std::string uri = request.getUri();
-            const std::string::size_type pathlen = uri.find('?');   // length of "/get"
+            const std::string::size_type pathlen = uri.find('?');
             
             std::string::size_type len = uri.size();
             std::string key;

@@ -28,8 +28,6 @@ namespace RocksServer {
 
             // If no key is not transferred
             if(len-1 <= pathlen) {
-                // Add buffer
-                buf.add("", 0);
                 return;
             }
             
@@ -53,15 +51,10 @@ namespace RocksServer {
 
             // filling buffer
             for(unsigned i=0; i < keys.size(); i++) {
-                // Add buffer
-                buf.add(keys[i].data(), keys[i].size());
                 if(statuses[i].ok()) {
-                    buf.add_printf("\n%lu\n", values[i].size());
-                    buf.add(values[i]);
-                    buf.add("\n", 1);
+                    prot.setPair(keys[i], values[i]);
                 } else {
-                    // push NULL
-                    buf.add("\n-1\n", 4);
+                    prot.setFailPair(keys[i]);
                 }
             }
         }

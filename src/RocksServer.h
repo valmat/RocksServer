@@ -37,6 +37,9 @@
 #include "evhttp/EvServerOptions.h"
 #include "evhttp/EvLogger.h"
 
+// Protocol
+#include "Protocol.h"
+
 // Configs
 #include "iniparse/IniValue.h"
 #include "iniparse/IniConfigs.h"
@@ -67,7 +70,7 @@
 #include "listeners/RequestIncr.h"
 #include "listeners/RequestTailing.h"
 #include "listeners/RequestBackup.h"
-#include "listeners/RequestStat.h"
+#include "listeners/RequestStats.h"
 
 
 #include "evhttp/EvServer.h"

@@ -27,10 +27,39 @@ namespace RocksServer {
             resp.add("-1\n", 3);
         }
 
+        template<typename KeyType, typename ValueType>
+        void setPair(const KeyType &key, const ValueType &val) const
+        {
+            resp.add(key.data(), key.size())
+                .add_printf("\n%lu\n", val.size())
+                .add(val.data(), val.size())
+                .endl();
+        }
+        
+        template<typename KeyType>
+        void setFailPair(const KeyType &key) const
+        {
+            resp.add(key.data(), key.size())
+                .add("\n-1\n", 4);
+        }
+
+        template<typename ValueType>
+        void setStr(ValueType val) const
+        {
+            resp.add(val);
+        }
+
+        /*
         void setStr(size_t val) const
         {
             resp.add_printf("%lu\n", val);
         }
+
+        void setStr(std::string &val) const
+        {
+            resp.add(val);
+        }
+        */
 
         void ok() const
         {

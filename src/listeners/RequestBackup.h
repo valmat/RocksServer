@@ -26,15 +26,8 @@ namespace RocksServer {
         {
             // Detect if current method is POST
             if( !request.isPost() ) {
-                
-
-
                 //buf.add("Request method should be POST");
                 prot.fail();
-
-
-
-
                 return;
             }
 
@@ -42,18 +35,11 @@ namespace RocksServer {
             auto status = bk.createBackup(_rdb);
 
             if( status.ok() ) {
-                //buf.add("OK", 2);
                 prot.ok();
             } else {
-                //buf.add("FAIL\n", 5);
                 prot.fail();
-                
-
-
-                buf.add(status.ToString());
-
-
-                
+                //buf.add(status.ToString());
+                prot.setStr(status.ToString());
             }
 
         }

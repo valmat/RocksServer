@@ -160,7 +160,7 @@ int main(int argc, char **argv)
     server.onRequest("/incr",   new RequestIncr(rdb));
     server.onRequest("/tail",   new RequestTailing(rdb));
     server.onRequest("/backup", new RequestBackup(rdb, cfg.get("backup_path", dfCfg.backup_path)));
-    server.onRequest("/stat",   new RequestStat(rdb));
+    server.onRequest("/stats",  new RequestStats(rdb));
     
 
     /**
