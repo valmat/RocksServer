@@ -236,5 +236,5 @@ Reply: stats output
 
 
 --
-more details see  [src/Protocol.h](https://github.com/valmat/RocksServer/blob/master/src/Protocol.h)
+more details see  (src/Protocol.h)[https://github.com/valmat/RocksServer/blob/master/src/Protocol.h]
 
