@@ -76,6 +76,12 @@ namespace RocksServer {
             return add(str.c_str(), str.size());
         }
 
+        const EvResponse& add(const std::string *pstr) const
+        {
+            evbuffer_add_reference(_evb, pstr->c_str(), pstr->size(), nullptr, nullptr);
+            return *this;
+        }
+
         const EvResponse& add(size_t val) const
         {
             add_printf("%lu", val);
