@@ -201,7 +201,7 @@ Request:
 POST /tail
 ```
 
-Reply: same (multi get)[https://github.com/valmat/RocksServer/blob/master/protocol.md#multi-get]
+Reply: same [multi get](https://github.com/valmat/RocksServer/blob/master/protocol.md#multi-get)
 
 
 ###Backup
@@ -236,5 +236,6 @@ Reply: stats output
 
 
 --
-more details see  (src/Protocol.h)[https://github.com/valmat/RocksServer/blob/master/src/Protocol.h]
+more details see  [src/Protocol.h](https://github.com/valmat/RocksServer/blob/master/src/Protocol.h)
+
 
