@@ -44,22 +44,10 @@ namespace RocksServer {
         }
 
         template<typename ValueType>
-        void setStr(ValueType val) const
+        void setStr(ValueType &&val) const
         {
-            resp.add(val);
+            resp.add(std::forward<ValueType>(val));
         }
-
-        /*
-        void setStr(size_t val) const
-        {
-            resp.add_printf("%lu\n", val);
-        }
-
-        void setStr(std::string &val) const
-        {
-            resp.add(val);
-        }
-        */
 
         void ok() const
         {

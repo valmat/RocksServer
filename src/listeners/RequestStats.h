@@ -24,10 +24,10 @@ namespace RocksServer {
         {
             std::string stat;
             if(_rdb->GetProperty("rocksdb.stats", &stat)) {
-                //buf.add(stat);
                 prot.setStr(stat);
             } else {
                 prot.fail();
+                EvLogger::writeLog(EvLogger::Level::warn, _rdb.getStatus().data());
             }
         }
 

@@ -89,7 +89,7 @@ namespace RocksServer {
                 << t->tm_mday << " " 
                 << t->tm_hour << ":" 
                 << t->tm_min << ":" 
-                << t->tm_sec << " [" << severity << "] " << msg << std::endl;
+                << t->tm_sec << "\t[" << severity << "] " << msg << std::endl;
     }
 
 }

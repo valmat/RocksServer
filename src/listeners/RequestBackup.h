@@ -26,7 +26,7 @@ namespace RocksServer {
         {
             // Detect if current method is POST
             if( !request.isPost() ) {
-                //buf.add("Request method should be POST");
+                EvLogger::writeLog(EvLogger::Level::warn, "Request method should be POST");
                 prot.fail();
                 return;
             }
@@ -38,10 +38,8 @@ namespace RocksServer {
                 prot.ok();
             } else {
                 prot.fail();
-                //buf.add(status.ToString());
-                prot.setStr(status.ToString());
+                EvLogger::writeLog(EvLogger::Level::warn, status.ToString().data());
             }
-
         }
 
         virtual ~RequestBackup() {}
