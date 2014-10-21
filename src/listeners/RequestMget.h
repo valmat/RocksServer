@@ -20,7 +20,7 @@ namespace RocksServer {
          *  @param       event request object
          *  @param       protocol object
          */
-        virtual void run(const EvRequest &request, const Protocol &prot) override
+        virtual void run(const EvRequest &request, const ProtocolOut &out) override
         {
             std::string uri = request.getUri();
             const size_t pathlen = uri.find('?');   // length of "/mget?"
@@ -52,9 +52,9 @@ namespace RocksServer {
             // filling buffer
             for(unsigned i=0; i < keys.size(); i++) {
                 if(statuses[i].ok()) {
-                    prot.setPair(keys[i], values[i]);
+                    out.setPair(keys[i], values[i]);
                 } else {
-                    prot.setFailPair(keys[i]);
+                    out.setFailPair(keys[i]);
                 }
             }
         }

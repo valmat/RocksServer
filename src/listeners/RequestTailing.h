@@ -20,7 +20,7 @@ namespace RocksServer {
          *  @param       event request object
          *  @param       protocol object
          */
-        virtual void run(const EvRequest &request, const Protocol &prot) override
+        virtual void run(const EvRequest &request, const ProtocolOut &out) override
         {
             rocksdb::Slice key, value;
             auto rOpt = rocksdb::ReadOptions();
@@ -29,7 +29,7 @@ namespace RocksServer {
             for (it->SeekToFirst(); it->Valid(); it->Next()) {
                 key   = it->key();
                 value = it->value();
-                prot.setPair(key, value);
+                out.setPair(key, value);
             }
         }
 

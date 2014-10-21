@@ -20,13 +20,13 @@ namespace RocksServer {
          *  @param       event request object
          *  @param       protocol object
          */
-        virtual void run(const EvRequest &request, const Protocol &prot) override
+        virtual void run(const EvRequest &request, const ProtocolOut &out) override
         {
             std::string stat;
             if(_rdb->GetProperty("rocksdb.stats", &stat)) {
-                prot.setStr(stat);
+                out.setStr(stat);
             } else {
-                prot.fail();
+                out.fail();
                 EvLogger::writeLog(_rdb.getStatus().data());
             }
         }

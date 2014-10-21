@@ -20,7 +20,7 @@ namespace RocksServer {
          *  @param       event request object
          *  @param       protocol object
          */
-        virtual void run(const EvRequest &, const Protocol &) = 0;
+        virtual void run(const EvRequest &, const ProtocolOut &) = 0;
         
     };
 

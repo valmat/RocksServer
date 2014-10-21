@@ -20,19 +20,19 @@ namespace RocksServer {
          *  @param       event request object
          *  @param       protocol object
          */
-        virtual void run(const EvRequest &request, const Protocol &prot) override
+        virtual void run(const EvRequest &request, const ProtocolOut &out) override
         {
             // Detect if current method is POST
             if( !request.isPost() ) {
                 EvLogger::writeLog("Request method should be POST");
-                prot.fail();
+                out.fail();
                 return;
             }
             
             auto raw = request.getPostData();
 
             if(!raw.size()) {
-                prot.fail();
+                out.fail();
                 return;
             }
 
@@ -52,9 +52,9 @@ namespace RocksServer {
             batch.Delete(rocksdb::Slice(raw+lpos, len-lpos));
 
             if(_rdb.mset(batch)) {
-                prot.ok();
+                out.ok();
             } else {
-                prot.fail();
+                out.fail();
                 EvLogger::writeLog(_rdb.getStatus().data());
             }
         }

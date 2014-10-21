@@ -38,7 +38,7 @@
 #include "evhttp/EvLogger.h"
 
 // Protocol
-#include "Protocol.h"
+#include "Protocol/ProtocolOut.h"
 
 // Configs
 #include "iniparse/IniValue.h"

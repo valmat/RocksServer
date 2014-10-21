@@ -22,12 +22,12 @@ namespace RocksServer {
          *  @param       event request object
          *  @param       protocol object
          */
-        virtual void run(const EvRequest &request, const Protocol &prot) override
+        virtual void run(const EvRequest &request, const ProtocolOut &out) override
         {
             // Detect if current method is POST
             if( !request.isPost() ) {
                 EvLogger::writeLog("Request method should be POST");
-                prot.fail();
+                out.fail();
                 return;
             }
 
@@ -35,9 +35,9 @@ namespace RocksServer {
             auto status = bk.createBackup(_rdb);
 
             if( status.ok() ) {
-                prot.ok();
+                out.ok();
             } else {
-                prot.fail();
+                out.fail();
                 EvLogger::writeLog(status.ToString().data());
             }
         }

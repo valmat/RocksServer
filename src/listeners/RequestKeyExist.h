@@ -20,14 +20,14 @@ namespace RocksServer {
          *  @param       event request object
          *  @param       protocol object
          */
-        virtual void run(const EvRequest &request, const Protocol &prot) override
+        virtual void run(const EvRequest &request, const ProtocolOut &out) override
         {
             std::string uri = request.getUri();
             const std::string::size_type pathlen = uri.find('?');   // length of "/exist"
             std::string::size_type len = uri.size();
 
             if(len-1 <= pathlen) {
-                prot.fail();
+                out.fail();
                 return;
             }
                 
@@ -36,14 +36,14 @@ namespace RocksServer {
             bool result = _rdb.keyExist(rocksdb::Slice(uri.c_str() + pathlen + 1, len - pathlen - 1), value, value_found);
 
             if(result) {
-                prot.ok();
+                out.ok();
                 if(value_found) {
-                    prot.setValue(value);
+                    out.setValue(value);
                 } else {
-                    prot.setFailValue();
+                    out.setFailValue();
                 }
             } else {
-                prot.fail();
+                out.fail();
             }
         }
 
