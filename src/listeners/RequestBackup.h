@@ -19,10 +19,10 @@ namespace RocksServer {
 
         /**
          *  Runs request listener
-         *  @param       event request object
-         *  @param       protocol object
+         *  @param       protocol in object
+         *  @param       protocol out object
          */
-        virtual void run(const EvRequest &request, const ProtocolOut &out) override
+        virtual void run(const ProtocolIn &in, const ProtocolOut &out) override
         {
             // Detect if current method is POST
             if( !request.isPost() ) {

@@ -17,10 +17,10 @@ namespace RocksServer {
 
         /**
          *  Runs request listener
-         *  @param       event request object
-         *  @param       protocol object
+         *  @param       protocol in object
+         *  @param       protocol out object
          */
-        virtual void run(const EvRequest &request, const ProtocolOut &out) override
+        virtual void run(const ProtocolIn &in, const ProtocolOut &out) override
         {
             std::string uri = request.getUri();
             const size_t pathlen = uri.find('?');   // length of "/mget?"

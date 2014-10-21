@@ -17,10 +17,10 @@ namespace RocksServer {
 
         /**
          *  Runs request listener
-         *  @param       event request object
-         *  @param       protocol object
+         *  @param       protocol in object
+         *  @param       protocol out object
          */
-        virtual void run(const EvRequest &, const ProtocolOut &) = 0;
+        virtual void run(const ProtocolIn &, const ProtocolOut &) = 0;
         
     };
 
