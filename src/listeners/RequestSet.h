@@ -23,13 +23,11 @@ namespace RocksServer {
         virtual void run(const ProtocolIn &in, const ProtocolOut &out) override
         {
             // Detect if current method is POST
-            if( !request.isPost() ) {
-                EvLogger::writeLog("Request method should be POST");
-                out.fail();
+            if( !in.checkPost(out) || !in.checkPostSize(out) ) {
                 return;
             }
             
-            auto raw = request.getPostData();
+            auto raw = in.getRawPost();
 
             // retrive key and value
             std::string::size_type lpos = 0;
@@ -38,9 +36,9 @@ namespace RocksServer {
             
             lpos = rpos+1;
             rpos = raw.find('\n', lpos);
-            auto vallen = std::atoll(raw + lpos);
+            auto vallen = std::atoll((const char *)raw + lpos);
             lpos = rpos+1;
-            rocksdb::Slice value(raw + lpos, vallen);
+            rocksdb::Slice value((const char *)raw + lpos, vallen);
 
             // set and filling buffer
             if(_rdb.set(key, value)) {

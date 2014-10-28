@@ -22,7 +22,7 @@ namespace RocksServer {
          */
         virtual void run(const ProtocolIn &in, const ProtocolOut &out) override
         {
-            std::string uri = request.getUri();
+            std::string uri = in.getUri();
             const std::string::size_type pathlen = uri.find('?');
             
             std::string::size_type len = uri.size();

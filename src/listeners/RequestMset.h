@@ -23,13 +23,11 @@ namespace RocksServer {
         virtual void run(const ProtocolIn &in, const ProtocolOut &out) override
         {
             // Detect if current method is POST
-            if( !request.isPost() ) {
-                EvLogger::writeLog("Request method should be POST");
-                out.fail();
+            if( !in.checkPost(out) || !in.checkPostSize(out) ) {
                 return;
             }
             
-            auto raw = request.getPostData();
+            auto raw = in.getRawPost();
 
             // create a RocksDB write batch
             rocksdb::WriteBatch batch;
@@ -51,11 +49,11 @@ namespace RocksServer {
                 // retrive value
                 lpos = rpos+1;
                 rpos = raw.find('\n', lpos);
-                long vallen = std::atol(raw + lpos);
+                long vallen = std::atol((const char *)raw + lpos);
                 lpos = rpos+1;
                 
                 // filling batch
-                batch.Put(rocksdb::Slice(raw + key_star, key_len), rocksdb::Slice(raw + lpos, vallen));
+                batch.Put(rocksdb::Slice((const char *)raw + key_star, key_len), rocksdb::Slice(raw + lpos, vallen));
 
                 //to next iteration
                 lpos += vallen + 1;

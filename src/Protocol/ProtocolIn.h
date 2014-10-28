@@ -16,8 +16,45 @@ namespace RocksServer {
         ProtocolIn(const EvRequest &r) :request(r) {}
         ProtocolIn(EvRequest &&r) :request(std::move(r)) {}
 
+        // Detect if current method is POST
+        bool checkPost(const ProtocolOut &out) const
+        {
+            if(!request.isPost()) {
+                EvLogger::writeLog("Request method should be POST");
+                out.fail();
+                return false;
+            }
+            return true;
+        }
 
-        void fail() const
+        // Check if POST data is empty
+        bool checkPostSize(const ProtocolOut &out) const
+        {
+            if(!getRawPost().size()) {
+                EvLogger::writeLog("Request POST data is empty");
+                out.fail();
+                return false;
+            }
+            return true;
+        }
+
+        //const PostData& getRawPost() const
+        PostData& getRawPost() const
+        {
+            if(!raw.isValid()) {
+            //if(!raw) {
+                //raw = request.getPostData();
+                raw = std::move(request.getPostData());
+            }
+            return raw;
+        }
+
+        std::string getUri() const
+        {
+            return request.getUri();
+        }
+
+        void isPost() const
         {
             //request.add("FAIL\n", 5);
         }
@@ -25,6 +62,9 @@ namespace RocksServer {
         ~ProtocolIn() {}
     private:
         const EvRequest &request;
+        mutable PostData raw;
+
+        //const char sep = '\n';
     };
 
 }

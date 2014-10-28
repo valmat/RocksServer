@@ -39,6 +39,7 @@
 
 // Protocol
 #include "Protocol/ProtocolOut.h"
+#include "Protocol/ProtocolIn.h"
 
 // Configs
 #include "iniparse/IniValue.h"

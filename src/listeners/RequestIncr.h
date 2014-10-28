@@ -23,17 +23,11 @@ namespace RocksServer {
         virtual void run(const ProtocolIn &in, const ProtocolOut &out) override
         {
             // Detect if current method is POST
-            if( !request.isPost() ) {
-                EvLogger::writeLog("Request method should be POST");
-                out.fail();
+            if( !in.checkPost(out) || !in.checkPostSize(out) ) {
                 return;
             }
 
-            auto raw = request.getPostData();
-            if(!raw.size()) {
-                out.fail();
-                return;
-            }
+            auto raw = in.getRawPost();
 
             bool rez;
             auto seppos = raw.find('&');
