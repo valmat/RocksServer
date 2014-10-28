@@ -10,7 +10,7 @@
 
 namespace RocksServer {
 
-    class RequestTailing : public RequestBase<ProtocolIn, ProtocolOut>
+    class RequestTailing : public RequestBase<ProtocolInTrivial, ProtocolOut>
     {
     public:
         RequestTailing(RocksDBWrapper &rdb) : _rdb(rdb) {}
@@ -20,7 +20,7 @@ namespace RocksServer {
          *  @param       protocol in object
          *  @param       protocol out object
          */
-        virtual void run(const ProtocolIn &in, const ProtocolOut &out) override
+        virtual void run(const ProtocolInTrivial &in, const ProtocolOut &out) override
         {
             rocksdb::Slice key, value;
             auto rOpt = rocksdb::ReadOptions();

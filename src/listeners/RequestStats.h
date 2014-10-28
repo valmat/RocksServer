@@ -10,7 +10,7 @@
 
 namespace RocksServer {
 
-    class RequestStats : public RequestBase<ProtocolIn, ProtocolOut>
+    class RequestStats : public RequestBase<ProtocolInTrivial, ProtocolOut>
     {
     public:
         RequestStats(RocksDBWrapper &rdb) : _rdb(rdb) {}
@@ -20,7 +20,7 @@ namespace RocksServer {
          *  @param       protocol in object
          *  @param       protocol out object
          */
-        virtual void run(const ProtocolIn &in, const ProtocolOut &out) override
+        virtual void run(const ProtocolInTrivial &in, const ProtocolOut &out) override
         {
             std::string stat;
             if(_rdb->GetProperty("rocksdb.stats", &stat)) {

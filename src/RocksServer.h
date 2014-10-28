@@ -37,10 +37,6 @@
 #include "evhttp/EvServerOptions.h"
 #include "evhttp/EvLogger.h"
 
-// Protocol
-#include "Protocol/ProtocolOut.h"
-#include "Protocol/ProtocolIn.h"
-
 // Configs
 #include "iniparse/IniValue.h"
 #include "iniparse/IniConfigs.h"
@@ -53,11 +49,19 @@
 #include "rocksdb/merge_operator.h"
 #include "rocksdb/utilities/backupable_db.h"
 
-
 // RocksDB wrapper
 #include "rocks/Int64Incrementor.h"
 #include "rocks/RocksDBWrapper.h"
 #include "rocks/BackupEngine.h"
+
+// Protocol
+#include "Protocol/ProtocolOut.h"
+#include "Protocol/ProtocolIn.h"
+
+#include "Protocol/ProtocolInPostSimple.h"
+#include "Protocol/ProtocolInTrivial.h"
+#include "Protocol/ProtocolInGetIterator.h"
+#include "Protocol/ProtocolInGet.h"
 
 // Listeners
 #include "listeners/RequestBase.h"

@@ -95,6 +95,17 @@ namespace RocksServer {
          * @param string key
          * @return string value or NULL (if the key is not exist)
          */
+        std::string get(const rocksdb::Slice &key)
+        {
+            std::string value;
+
+            _status = _db->Get(rocksdb::ReadOptions(), key, &value);
+            if (!_status.ok()) {
+                return "";
+            }
+            return value;
+        }
+        /*
         std::string get(const std::string &key)
         {
             std::string value;
@@ -105,6 +116,7 @@ namespace RocksServer {
             }
             return value;
         }
+        */
 
         /**
          * Get array values by array keys

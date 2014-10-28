@@ -10,7 +10,7 @@
 
 namespace RocksServer {
 
-    class RequestKeyExist : public RequestBase<ProtocolIn, ProtocolOut>
+    class RequestKeyExist : public RequestBase<ProtocolInGet, ProtocolOut>
     {
     public:
         RequestKeyExist(RocksDBWrapper &rdb) : _rdb(rdb) {}
@@ -20,20 +20,16 @@ namespace RocksServer {
          *  @param       protocol in object
          *  @param       protocol out object
          */
-        virtual void run(const ProtocolIn &in, const ProtocolOut &out) override
+        virtual void run(const ProtocolInGet &in, const ProtocolOut &out) override
         {
-            std::string uri = in.getUri();
-            const std::string::size_type pathlen = uri.find('?');   // length of "/exist"
-            std::string::size_type len = uri.size();
-
-            if(len-1 <= pathlen) {
+            if(!in.check()) {
                 out.fail();
                 return;
             }
                 
             std::string value;
             bool value_found;
-            bool result = _rdb.keyExist(rocksdb::Slice(uri.c_str() + pathlen + 1, len - pathlen - 1), value, value_found);
+            bool result = _rdb.keyExist(in.key(), value, value_found);
 
             if(result) {
                 out.ok();

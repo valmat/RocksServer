@@ -11,7 +11,7 @@
 
 namespace RocksServer {
 
-    class RequestBackup : public RequestBase<ProtocolIn, ProtocolOut>
+    class RequestBackup : public RequestBase<ProtocolInPostSimple, ProtocolOut>
     {
     public:
         
@@ -22,10 +22,10 @@ namespace RocksServer {
          *  @param       protocol in object
          *  @param       protocol out object
          */
-        virtual void run(const ProtocolIn &in, const ProtocolOut &out) override
+        virtual void run(const ProtocolInPostSimple &in, const ProtocolOut &out) override
         {
             // Detect if current method is POST
-            if( !in.checkPost(out) ) {
+            if( !in.check(out) ) {
                 return;
             }
 
