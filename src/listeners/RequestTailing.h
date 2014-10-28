@@ -10,7 +10,7 @@
 
 namespace RocksServer {
 
-    class RequestTailing : public RequestBase
+    class RequestTailing : public RequestBase<ProtocolIn, ProtocolOut>
     {
     public:
         RequestTailing(RocksDBWrapper &rdb) : _rdb(rdb) {}

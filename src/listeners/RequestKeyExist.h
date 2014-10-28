@@ -10,7 +10,7 @@
 
 namespace RocksServer {
 
-    class RequestKeyExist : public RequestBase
+    class RequestKeyExist : public RequestBase<ProtocolIn, ProtocolOut>
     {
     public:
         RequestKeyExist(RocksDBWrapper &rdb) : _rdb(rdb) {}

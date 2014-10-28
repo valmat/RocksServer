@@ -120,7 +120,7 @@ namespace RocksServer {
          *  @param  path       path to listen
          *  @param  req        listener
          */
-        void onRequest(const char *path, RequestBase *pReq)
+        void onRequest(const char *path, RequestSuperBase *pReq)
         {
             // Store a pointer in the scope
             _reqList.push_front(pReq);
@@ -136,7 +136,7 @@ namespace RocksServer {
                     return;
                 }
                 
-                reinterpret_cast<RequestBase *>(cb_arg)->run(request, response);
+                reinterpret_cast<RequestSuperBase *>(cb_arg)->run(request, response);
             }, pReq) ;
         }
 
@@ -145,7 +145,7 @@ namespace RocksServer {
          *  @param  paths       paths to listen
          *  @param  req        listener
          */
-        void onRequest(std::initializer_list<const char *> paths, RequestBase *pReq)
+        void onRequest(std::initializer_list<const char *> paths, RequestSuperBase *pReq)
         {
             for(auto &path: paths) {
                 onRequest(path, pReq);
@@ -160,7 +160,7 @@ namespace RocksServer {
         event_base *_base;
 
         // The container for storing a requests listeners
-        std::forward_list<RequestBase *> _reqList;
+        std::forward_list<RequestSuperBase *> _reqList;
 
         // event handler for SIGINT signal
         event *_sigint = nullptr;

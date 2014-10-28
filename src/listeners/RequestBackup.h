@@ -11,7 +11,7 @@
 
 namespace RocksServer {
 
-    class RequestBackup : public RequestBase
+    class RequestBackup : public RequestBase<ProtocolIn, ProtocolOut>
     {
     public:
         

@@ -19,12 +19,13 @@ namespace RocksServer {
          *  @param  data       raw string of post data
          *  @param  len        string length
          */
-        PostData(const char *data, size_t len) : _len(len), _data(data) {}
+        //PostData(const char *data, size_t len) : _len(len), _data(std::make_shared<const char>(data)) {}
+         PostData(const char *data, size_t len) : _len(len), _data(data) {}
 
         /**
          *  Trivial constructor
          */
-        PostData() : _len(0), _data(nullptr) {}
+        PostData() : _len(0)/*, _data(nullptr)*/ {}
 
         /**
          *  Copy constructor
@@ -43,20 +44,22 @@ namespace RocksServer {
         {
             if(this != &that) {
                 
-                //_len  = std::move(that._len);
-                //_data = std::move(that._data);
+                _len  = std::move(that._len);
+                _data = std::move(that._data);
 
+                /*
                 _len  = that._len;
                 _data = that._data;
 
 
                 that._data = nullptr;
                 that._len = 0;
+                */
             }
             std::cout << "Move assignment" << std::endl;
             std::cout << "(" << std::endl;
-            std::cout << "data:\t"       << (size_t)_data << std::endl;
-            std::cout << "that._data:\t" << (size_t)that._data << std::endl;
+            std::cout << "data:\t"       << (size_t)_data.get() << std::endl;
+            std::cout << "that._data:\t" << (size_t)that._data.get() << std::endl;
             std::cout << ")" << std::endl;
             return *this;
         }
@@ -66,11 +69,11 @@ namespace RocksServer {
          */
         PostData &operator=(const PostData &that)// = default;
         {
+            std::cout << "Copy assignment" << std::endl;
             if(this != &that) {
                 _len  = that._len;
                 _data = that._data;
             }
-            std::cout << "Copy assignment" << std::endl;
             return *this;
         }
 
@@ -88,7 +91,7 @@ namespace RocksServer {
          */
         std::string toString() const
         {
-            return std::string(_data, _len);
+            return std::string(_data.get(), _len);
         }
 
         /**
@@ -96,7 +99,15 @@ namespace RocksServer {
          */
         operator const char * () const
         {
-            return _data;
+            
+            if(isValid ()) {
+                std::cout << "\n isValid \n" << std::endl;
+            } else {
+                std::cout << "\n isInValid \n" << std::endl;
+            }
+
+            std::cout << "\n< \n"<< toString() << "\n >\n" << std::endl;
+            return _data.get();
         }
 
         /**
@@ -115,7 +126,7 @@ namespace RocksServer {
         size_t find(char s, size_t start = 0) const
         {
             size_t pos = start;
-            for(; pos < _len && _data[pos] != s ; pos++);
+            for(; pos < _len && _data.get()[pos] != s ; pos++);
             return (pos < _len) ? pos : std::string::npos;
         }
 
@@ -124,15 +135,15 @@ namespace RocksServer {
          */
         bool isValid () const
         {
-            return _data;
+            return _data.get();
         }
 
     private:
         size_t _len;
-        const char *_data;
-        //std::shared_ptr<const char> _data;
+        //const char *_data;
+        std::shared_ptr<const char> _data;
 
-        //const char sep = '\n';
+        
     };
 
 }

@@ -10,7 +10,7 @@
 
 namespace RocksServer {
 
-    class RequestSet : public RequestBase
+    class RequestSet : public RequestBase<ProtocolIn, ProtocolOut>
     {
     public:
         RequestSet(RocksDBWrapper &rdb) : _rdb(rdb) {}

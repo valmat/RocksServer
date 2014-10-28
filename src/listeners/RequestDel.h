@@ -10,7 +10,7 @@
 
 namespace RocksServer {
 
-    class RequestDel : public RequestBase
+    class RequestDel : public RequestBase<ProtocolIn, ProtocolOut>
     {
     public:
         RequestDel(RocksDBWrapper &rdb) : _rdb(rdb) {}
