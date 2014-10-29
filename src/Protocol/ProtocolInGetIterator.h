@@ -18,9 +18,8 @@ namespace RocksServer {
 
         typedef std::string::size_type size_type;
 
-        ProtocolInGetIterator(const std::string &uri, size_type len,size_type startpos) :
+        ProtocolInGetIterator(const std::string &uri, size_type startpos) :
             str(uri),
-            strlen(len),
             lpos(startpos),
             rpos(str.find('&', lpos))
         {
@@ -31,10 +30,8 @@ namespace RocksServer {
          *  Trivial constructor (for returning in method ProtocolInGet::end())
          */
         ProtocolInGetIterator() :
-            str(""),
-            strlen(0),
-            lpos(npos),
-            rpos(npos)
+            str(std::string()),
+            lpos(npos)
         {}
 
         /**
@@ -101,15 +98,13 @@ namespace RocksServer {
         void setCurrent()
         {
             current = (rpos == npos) ?
-                rocksdb::Slice(str.data()+lpos, strlen-lpos) :
+                rocksdb::Slice(str.data()+lpos, str.size()-lpos) :
                 rocksdb::Slice(str.data()+lpos, rpos-lpos);
         }
 
         const size_type &npos = std::string::npos;
         
         const std::string &str;
-
-        const size_type strlen;
 
         // startpos
         size_type lpos;

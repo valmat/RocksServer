@@ -16,24 +16,23 @@ namespace RocksServer {
         ProtocolInGet(const EvRequest &r) :
             request(r),
             uri(r.getUri()),
-            pathlen(uri.find('?')),
-            len(uri.size())
+            pathlen(uri.find('?'))
         {}
 
         // Detect if current query is valid
         bool check() const
         {
-            return (len-1 > pathlen);
+            return (uri.size()-1 > pathlen);
         }
 
         rocksdb::Slice key() const
         {
-            return rocksdb::Slice(uri.data() + pathlen + 1, len - pathlen - 1);
+            return rocksdb::Slice(uri.data() + pathlen + 1, uri.size() - pathlen - 1);
         }
 
         ProtocolInGetIterator begin() const
         {
-            return ProtocolInGetIterator(uri, len, pathlen+1);
+            return ProtocolInGetIterator(uri, pathlen+1);
         }
 
         ProtocolInGetIterator end() const
@@ -46,8 +45,6 @@ namespace RocksServer {
         const std::string uri;
         // length of "/path"
         const std::string::size_type pathlen;
-
-        const std::string::size_type len;
     };
 
 }
