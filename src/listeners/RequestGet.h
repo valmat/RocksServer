@@ -10,36 +10,29 @@
 
 namespace RocksServer {
 
-    class RequestGet : public RequestBase
+    class RequestGet : public RequestBase<ProtocolInGet, ProtocolOut>
     {
     public:
         RequestGet(RocksDBWrapper &rdb) : _rdb(rdb) {}
 
         /**
          *  Runs request listener
-         *  @param       event request object
-         *  @param       protocol object
+         *  @param       protocol in object
+         *  @param       protocol out object
          */
-        virtual void run(const EvRequest &request, const Protocol &prot) override
+        virtual void run(const ProtocolInGet &in, const ProtocolOut &out) override
         {
-            std::string uri = request.getUri();
-            const std::string::size_type pathlen = uri.find('?');
-            
-            std::string::size_type len = uri.size();
-            std::string key;
-
-            if(len-1 <= pathlen) {
-                prot.setFailValue();
+            if(!in.check()) {
+                out.setFailValue();
                 return;
             }
-                
-            key = uri.substr(pathlen + 1, len - pathlen - 1);
-            std::string val = _rdb.get(key);
+
+            std::string val = _rdb.get(in.key());
 
             if(!_rdb.status()) {
-                prot.setFailValue();
+                out.setFailValue();
             } else {
-                prot.setValue(val);
+                out.setValue(val);
             }
         }
 

@@ -10,40 +10,27 @@
 
 namespace RocksServer {
 
-    class RequestMget : public RequestBase
+    class RequestMget : public RequestBase<ProtocolInGet, ProtocolOut>
     {
     public:
         RequestMget(RocksDBWrapper &rdb) : _rdb(rdb) {}
 
         /**
          *  Runs request listener
-         *  @param       event request object
-         *  @param       protocol object
+         *  @param       protocol in object
+         *  @param       protocol out object
          */
-        virtual void run(const EvRequest &request, const Protocol &prot) override
+        virtual void run(const ProtocolInGet &in, const ProtocolOut &out) override
         {
-            std::string uri = request.getUri();
-            const size_t pathlen = uri.find('?');   // length of "/mget?"
-            const size_t len = uri.size();
-
             // If no key is not transferred
-            if(len-1 <= pathlen) {
+            if(!in.check()) {
                 return;
             }
             
-            std::string::size_type lpos = pathlen+1;
-            std::string::size_type rpos = uri.find('&', lpos);
-
-            const char * uri_str = uri.c_str();
-
-            // filling keys
             std::vector<rocksdb::Slice> keys;
-            while(rpos < std::string::npos) {
-                keys.emplace_back( rocksdb::Slice(uri_str+lpos, rpos-lpos) );
-                lpos = rpos+1;
-                rpos = uri.find('&', lpos);
+            for (auto &it : in) {
+                keys.emplace_back( it );
             }
-            keys.emplace_back( rocksdb::Slice(uri_str+lpos, len-lpos) );
 
             // Retrive result
             std::vector<rocksdb::Status> statuses;
@@ -52,9 +39,9 @@ namespace RocksServer {
             // filling buffer
             for(unsigned i=0; i < keys.size(); i++) {
                 if(statuses[i].ok()) {
-                    prot.setPair(keys[i], values[i]);
+                    out.setPair(keys[i], values[i]);
                 } else {
-                    prot.setFailPair(keys[i]);
+                    out.setFailPair(keys[i]);
                 }
             }
         }

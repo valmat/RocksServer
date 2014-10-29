@@ -10,35 +10,27 @@
 
 namespace RocksServer {
 
-    class RequestDel : public RequestBase
+    class RequestDel : public RequestBase<ProtocolInPost, ProtocolOut>
     {
     public:
         RequestDel(RocksDBWrapper &rdb) : _rdb(rdb) {}
 
         /**
          *  Runs request listener
-         *  @param       event request object
-         *  @param       protocol object
+         *  @param       protocol in object
+         *  @param       protocol out object
          */
-        virtual void run(const EvRequest &request, const Protocol &prot) override
+        virtual void run(const ProtocolInPost &in, const ProtocolOut &out) override
         {
             // Detect if current method is POST
-            if( !request.isPost() ) {
-                EvLogger::writeLog("Request method should be POST");
-                prot.fail();
+            if( !in.check(out) ) {
                 return;
             }
             
-            auto raw = request.getPostData();
-            if(!raw.size()) {
-                prot.fail();
-                return;
-            }
-                
-            if( _rdb.del(rocksdb::Slice(raw, raw.size())) ) {
-                prot.ok();
+            if( _rdb.del(in.key()) ) {
+                out.ok();
             } else {
-                prot.fail();
+                out.fail();
                 EvLogger::writeLog(_rdb.getStatus().data());
             }
         }

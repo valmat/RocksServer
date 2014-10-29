@@ -10,51 +10,34 @@
 
 namespace RocksServer {
 
-    class RequestMdel : public RequestBase
+    class RequestMdel : public RequestBase<ProtocolInPostKeys, ProtocolOut>
     {
     public:
         RequestMdel(RocksDBWrapper &rdb) : _rdb(rdb) {}
 
         /**
          *  Runs request listener
-         *  @param       event request object
-         *  @param       protocol object
+         *  @param       protocol in object
+         *  @param       protocol out object
          */
-        virtual void run(const EvRequest &request, const Protocol &prot) override
+        virtual void run(const ProtocolInPostKeys &in, const ProtocolOut &out) override
         {
             // Detect if current method is POST
-            if( !request.isPost() ) {
-                EvLogger::writeLog("Request method should be POST");
-                prot.fail();
+            if(!in.check(out)) {
                 return;
             }
             
-            auto raw = request.getPostData();
-
-            if(!raw.size()) {
-                prot.fail();
-                return;
-            }
-
             // create a RocksDB delete batch
             rocksdb::WriteBatch batch;
-
-            std::string::size_type lpos = 0;
-            std::string::size_type rpos = raw.find('\n');
-            std::string::size_type len  = raw.size();
-
-            // filling batch
-            while(rpos < std::string::npos) {
-                batch.Delete(rocksdb::Slice(raw+lpos, rpos-lpos));
-                lpos = rpos+1;
-                rpos = raw.find('\n', lpos);
+            for (auto &it : in) {
+                batch.Delete(it);
             }
-            batch.Delete(rocksdb::Slice(raw+lpos, len-lpos));
 
+            // Apply the delete-batch to the RocksDB
             if(_rdb.mset(batch)) {
-                prot.ok();
+                out.ok();
             } else {
-                prot.fail();
+                out.fail();
                 EvLogger::writeLog(_rdb.getStatus().data());
             }
         }

@@ -10,45 +10,34 @@
 
 namespace RocksServer {
 
-    class RequestIncr : public RequestBase
+    class RequestIncr : public RequestBase<ProtocolInPostKeys, ProtocolOut>
     {
     public:
         RequestIncr(RocksDBWrapper &rdb) : _rdb(rdb) {}
         
         /**
          *  Runs request listener
-         *  @param       event request object
-         *  @param       protocol object
+         *  @param       protocol in object
+         *  @param       protocol out object
          */
-        virtual void run(const EvRequest &request, const Protocol &prot) override
+        virtual void run(const ProtocolInPostKeys &in, const ProtocolOut &out) override
         {
             // Detect if current method is POST
-            if( !request.isPost() ) {
-                EvLogger::writeLog("Request method should be POST");
-                prot.fail();
-                return;
-            }
-
-            auto raw = request.getPostData();
-            if(!raw.size()) {
-                prot.fail();
+            if( !in.check(out) ) {
                 return;
             }
 
             bool rez;
-            auto seppos = raw.find('&');
-            auto len = raw.size();
+            auto it = in.begin();
+            auto key = *it;
+            ++it;
 
-            if( seppos < len-1 ) {
-                rez = _rdb.incr( rocksdb::Slice( raw, seppos ),  rocksdb::Slice( raw+seppos+1, len - seppos - 1 ) );
-            } else {
-                rez = _rdb.incr( rocksdb::Slice(raw, raw.size()), "1" );
-            }
+            rez = ( in.end() !=  it) ? _rdb.incr( key,  *it ) : _rdb.incr( key );
             
             if( rez ) {
-                prot.ok();
+                out.ok();
             } else {
-                prot.fail();
+                out.fail();
                 EvLogger::writeLog(_rdb.getStatus().data());
             }
         }

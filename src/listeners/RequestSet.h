@@ -10,43 +10,29 @@
 
 namespace RocksServer {
 
-    class RequestSet : public RequestBase
+    class RequestSet : public RequestBase<ProtocolInPost, ProtocolOut>
     {
     public:
         RequestSet(RocksDBWrapper &rdb) : _rdb(rdb) {}
 
         /**
          *  Runs request listener
-         *  @param       event request object
-         *  @param       protocol object
+         *  @param       protocol in object
+         *  @param       protocol out object
          */
-        virtual void run(const EvRequest &request, const Protocol &prot) override
+        virtual void run(const ProtocolInPost &in, const ProtocolOut &out) override
         {
-            // Detect if current method is POST
-            if( !request.isPost() ) {
-                EvLogger::writeLog("Request method should be POST");
-                prot.fail();
+            // Detect if current method is correct POST
+            if( !in.check(out) ) {
                 return;
             }
             
-            auto raw = request.getPostData();
+            auto pair = in.pair();
 
-            // retrive key and value
-            std::string::size_type lpos = 0;
-            std::string::size_type rpos = raw.find('\n');
-            rocksdb::Slice key(raw, rpos);
-            
-            lpos = rpos+1;
-            rpos = raw.find('\n', lpos);
-            auto vallen = std::atoll(raw + lpos);
-            lpos = rpos+1;
-            rocksdb::Slice value(raw + lpos, vallen);
-
-            // set and filling buffer
-            if(_rdb.set(key, value)) {
-                prot.ok();
+            if(_rdb.set(pair.first, pair.second)) {
+                out.ok();
             } else {
-                prot.fail();
+                out.fail();
                 EvLogger::writeLog(_rdb.getStatus().data());
             }
         }

@@ -21,22 +21,29 @@ namespace RocksServer {
          */
         PostData(const char *data, size_t len) : _len(len), _data(data) {}
 
+        /**
+         *  Trivial constructor
+         */
+        PostData() : _len(0), _data(nullptr) {}
+
         ~PostData()
         {
-            if(_data) delete [] _data;
+            if(_data) {
+                delete [] _data;
+                _data = nullptr;
+            }
         }
 
         /**
          *  Cast to a std::string
          */
-        std::string toString()
+        std::string toString() const
         {
             return std::string(_data, _len);
         }
 
         /**
          *  Cast to a const char *
-         *  @return evbuffer*
          */
         operator const char * () const
         {
@@ -44,9 +51,17 @@ namespace RocksServer {
         }
 
         /**
-         *  Cast to a std::string
+         *  Cast to a const char *
          */
-        size_t size()
+        const char * data() const
+        {
+            return _data;
+        }
+
+        /**
+         *  Buffer size
+         */
+        size_t size() const
         {
             return _len;
         }
@@ -56,17 +71,24 @@ namespace RocksServer {
          *  @param  s       searching character
          *  @param  start   start position
          */
-        size_t find(char s, size_t start = 0)
+        size_t find(char s, size_t start = 0) const
         {
             size_t pos = start;
             for(; pos < _len && _data[pos] != s ; pos++);
             return (pos < _len) ? pos : std::string::npos;
         }
 
+        /**
+         *  Cast to a bool
+         */
+        bool isValid () const
+        {
+            return _data;
+        }
+
     private:
         size_t _len;
         const char *_data;
-        const char sep = '\n';
     };
 
 }

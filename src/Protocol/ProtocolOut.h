@@ -1,8 +1,8 @@
  /**
- *  Protocol.h
+ *  ProtocolOut.h
  *
  *  Bridge to work with the message buffer.
- *  All messages go through the Protocol, but not on a straight line in the buffer.
+ *  All messages go through the ProtocolOut, but not on a straight line in the buffer.
  *
  *  @author valmat <ufabiz@gmail.com>
  *  @github https://github.com/valmat/rocksserver
@@ -11,11 +11,11 @@
 
 namespace RocksServer {
 
-    class Protocol
+    class ProtocolOut
     {
     public:
-        Protocol(const EvResponse &r) :resp(r) {}
-        Protocol(EvResponse &&r) :resp(std::move(r)) {}
+        ProtocolOut(const EvResponse &r) :resp(r) {}
+        ProtocolOut(EvResponse &&r) :resp(std::move(r)) {}
 
         void setValue(const std::string &val) const
         {
@@ -58,7 +58,6 @@ namespace RocksServer {
             resp.add("FAIL\n", 5);
         }
 
-        ~Protocol() {}
     private:
         const EvResponse &resp;
     };

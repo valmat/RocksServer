@@ -86,7 +86,7 @@ class Client{
     public function incr($key, $value = NULL) {
         return  (
                     $value ?
-                    $this->httpPost('/incr', "$key&$value" )->isOk() :
+                    $this->httpPost('/incr', "$key\n$value" )->isOk() :
                     $this->httpPost('/incr', $key )->isOk()
                 );
     }

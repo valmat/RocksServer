@@ -59,7 +59,6 @@ namespace RocksServer {
             size_t len = evbuffer_get_length(in_evb);
             char *data = new char[len];
             evbuffer_copyout(in_evb, data, len);
-
             return PostData(data, len);
         }
 

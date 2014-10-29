@@ -10,17 +10,17 @@
 
 namespace RocksServer {
 
-    class RequestTailing : public RequestBase
+    class RequestTailing : public RequestBase<ProtocolInTrivial, ProtocolOut>
     {
     public:
         RequestTailing(RocksDBWrapper &rdb) : _rdb(rdb) {}
 
         /**
          *  Runs request listener
-         *  @param       event request object
-         *  @param       protocol object
+         *  @param       protocol in object
+         *  @param       protocol out object
          */
-        virtual void run(const EvRequest &request, const Protocol &prot) override
+        virtual void run(const ProtocolInTrivial &in, const ProtocolOut &out) override
         {
             rocksdb::Slice key, value;
             auto rOpt = rocksdb::ReadOptions();
@@ -29,7 +29,7 @@ namespace RocksServer {
             for (it->SeekToFirst(); it->Valid(); it->Next()) {
                 key   = it->key();
                 value = it->value();
-                prot.setPair(key, value);
+                out.setPair(key, value);
             }
         }
 
