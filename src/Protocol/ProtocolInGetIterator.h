@@ -40,8 +40,8 @@ namespace RocksServer {
         ProtocolInGetIterator() :
             str(""),
             strlen(0),
-            lpos(std::string::npos),
-            rpos(std::string::npos)
+            lpos(npos),
+            rpos(npos)
         {}
 
         ~ProtocolInGetIterator() {}
@@ -51,8 +51,8 @@ namespace RocksServer {
          */
         ProtocolInGetIterator &operator++()
         {
-            if(rpos == std::string::npos) {
-                lpos = std::string::npos;
+            if(rpos == npos) {
+                lpos = npos;
                 return *this;
             }
 
@@ -109,12 +109,13 @@ namespace RocksServer {
          */
         void setCurrent()
         {
-            current = (rpos == std::string::npos) ?
+            current = (rpos == npos) ?
                 rocksdb::Slice(str.data()+lpos, strlen-lpos) :
                 rocksdb::Slice(str.data()+lpos, rpos-lpos);
         }
 
-
+        const size_type &npos = std::string::npos;
+        
         const std::string &str;
 
         const size_type strlen;

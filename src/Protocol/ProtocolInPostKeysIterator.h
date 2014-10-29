@@ -33,7 +33,6 @@ namespace RocksServer {
             rpos(raw.find('\n'))
 
         {
-            std::cout << "[[[\t\t\t\t\t\t\x1b[1;34;47m ProtocolInPostKeysIterator(const PostData &raw) : " << npos << "\t" << lpos << "\x1b[0m" << std::endl;
             setCurrent();
         }
 
@@ -42,9 +41,7 @@ namespace RocksServer {
             raw(PostData(nullptr, 0)),
             lpos(npos),
             rpos(npos)
-        {
-            std::cout << "[[[\t\t\t\t\t\t\x1b[1;34;47m ProtocolInPostKeysIterator() : " << npos << "\t" << lpos << "\x1b[0m" << std::endl;
-        }
+        {}
 
         ~ProtocolInPostKeysIterator() {}
 
@@ -53,8 +50,6 @@ namespace RocksServer {
          */
         ProtocolInPostKeysIterator &operator++()
         {
-            ++cntr;
-            std::cout << "{{{{\t\t\tlpos:"<<lpos<<"\trpos:" << rpos << std::endl;
             if(rpos == npos) {
                 lpos = npos;
                 return *this;
@@ -63,8 +58,6 @@ namespace RocksServer {
             lpos = rpos+1;
             rpos = raw.find('\n', lpos);
             
-            std::cout << "{{{{\t\t\t\tlpos:"<<lpos<<"\trpos:" << rpos << std::endl;
-
             setCurrent();
             return *this;
         }
@@ -89,11 +82,7 @@ namespace RocksServer {
          */
         bool operator!=(const ProtocolInPostKeysIterator &that) const
         {
-            std::cout << "[[[\t\t\t\t\t\t\x1b[1;31;47m"<< lpos << "!= that."<< that.lpos << "\x1b[0m" << std::endl;
-            std::cout << "[[[\t\t\t\t\t\t\x1b[31m"<< this << "\t&that:"<< &that << "\x1b[0m" << std::endl;
-            std::cout << "[[[\t\t\t\t\t\t\x1b[1;34;47m npos: "<< npos << "\tstd::string::npos:"<< std::string::npos << "\x1b[0m" << std::endl;
-
-            return (cntr < 6) && (lpos != that.lpos);
+            return (lpos != that.lpos);
         }
 
         /**
@@ -101,8 +90,6 @@ namespace RocksServer {
          */
         const rocksdb::Slice & operator*() const
         {
-            //std::cout << "{{{{\t\t\t\t\t\t"<<(const char *)raw<<"\t:"<<current.ToString() << std::endl;
-            std::cout << "{{{{\t\t\t\t\t\t"<< current.ToString() << std::endl;
             return current;
         }
         
@@ -129,16 +116,11 @@ namespace RocksServer {
         const size_type &npos = std::string::npos;
 
         const PostData &raw;
-
-        //const size_type strlen;
-
-        // startpos
+        
         size_type lpos;
         size_type rpos;
 
         rocksdb::Slice current;
-
-        int cntr = 0;
     };
 
 }
