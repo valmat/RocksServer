@@ -21,7 +21,6 @@ namespace RocksServer {
         ProtocolInPostPairsIterator(const PostData &raw) :
             raw(raw),
             rawlen(raw.size())
-
         {
             if(lpos < rawlen) {
                 next();
@@ -43,31 +42,7 @@ namespace RocksServer {
          */
         ProtocolInPostPairsIterator &operator++()
         {
-            cntr++;
-
-            std::cout << "\t\x1b[1;30m NEXT \x1b[0m" << std::endl;
-
-            /*
-            if(rpos == npos) {
-                lpos = npos;
-                return *this;
-            }
-            */
-
-            //std::cout << "[[[\t\t\t\t\t\t\x1b[1;31;47m lpos:"<< lpos << "\trpos:"<< that.lpos << "\x1b[0m" << std::endl;
-
-            // retrive current pair
             next();
-
-
-
-
-
-
-
-            //std::cout << "[[[\t\t\t\t\t\t\x1b[1;34;47m lpos:"<< lpos << "\trpos:"<< that.lpos << "\x1b[0m" << std::endl;
-            
-            
             return *this;
         }
         
@@ -91,11 +66,7 @@ namespace RocksServer {
          */
         bool operator!=(const ProtocolInPostPairsIterator &that) const
         {
-            std::cout << "\t\x1b[1;30m CHECK \x1b[0m" << std::endl;
-
-            std::cout << "[[[\t\t\t\t\t\t\x1b[1;34m"<< lpos << "!= that."<< that.lpos << "\x1b[0m" << std::endl;
-            return (cntr < 10) && (lpos != that.lpos);
-            //return (cntr < 10) && (lpos < that.lpos);
+            return (lpos != that.lpos);
         }
 
         /**
@@ -103,10 +74,6 @@ namespace RocksServer {
          */
         const std::pair<rocksdb::Slice, rocksdb::Slice> & operator*() const
         {
-            std::cout << "\t\x1b[1;30m RETRIVE \x1b[0m" << std::endl;
-            //std::cout << "{{{{\t\t\t\t\t\t"<<(const char *)raw<<"\t:"<<current.ToString() << std::endl;
-            std::cout << "{{{{\t\t\t\t\t\t\x1b[1;31;47m"<< current.first.ToString() << "\t"<< current.second.ToString()  << "\x1b[0m" << std::endl;
-
             return current;
         }
         
@@ -125,10 +92,7 @@ namespace RocksServer {
          */
         void next()
         {
-            std::cout << "\t\x1b[1;32m "<< lpos <<" \x1b[0m" << std::endl;
-
             if(lpos >= rawlen) {
-                std::cout << "\t\x1b[1;32m (lpos >= rawlen)  \x1b[0m" << std::endl;
                 lpos = npos;
                 return;
             }
@@ -141,22 +105,17 @@ namespace RocksServer {
             
             // retrive value
             lpos = rpos+1;
-            std::cout << "\t\x1b[1;32m "<< lpos <<" \x1b[0m" << std::endl;
 
             rpos = raw.find('\n', lpos);
             vallen = std::atol(raw.data() + lpos);
             lpos = rpos+1;
-            std::cout << "\t\x1b[1;32m "<< lpos <<" \x1b[0m" << std::endl;
 
             // set pair
             current = std::make_pair(rocksdb::Slice(raw.data() + key_star, key_len), rocksdb::Slice(raw.data() + lpos, vallen));
 
             //to next iteration
             lpos += vallen + 1;
-            std::cout << "\t\x1b[1;32m "<< lpos << "\t" << rawlen <<" \x1b[0m" << std::endl;
         }
-
-        int cntr = 0;
 
         const size_type &npos = std::string::npos;
 
@@ -174,33 +133,3 @@ namespace RocksServer {
     };
 
 }
-
-
-/*
-
-            
-
-            while(lpos < rawlen) {
-                
-                // retrive key
-                size_type key_star, key_len;
-                rpos = raw.find('\n', lpos);
-                key_star = lpos;
-                key_len  = rpos - lpos;
-
-                
-                // retrive value
-                lpos = rpos+1;
-                rpos = raw.find('\n', lpos);
-                long vallen = std::atol((const char *)raw + lpos);
-                lpos = rpos+1;
-                
-                // filling batch
-                batch.Put(rocksdb::Slice((const char *)raw + key_star, key_len), rocksdb::Slice(raw + lpos, vallen));
-
-                //to next iteration
-                lpos += vallen + 1;
-            }
-*/
-
-
