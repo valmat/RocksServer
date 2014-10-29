@@ -173,13 +173,20 @@ Imcrement value by key
 
 Request:
 ```
-GET /incr?key HTTP/1.1
+POST /incr HTTP/1.1
+Content-Length: <content_length>\r\n
+\r\n
+<key>
 ```
 to increase the value on 1.
 
 Or request:
 ```
-GET /incr?key&value HTTP/1.1
+POST /incr HTTP/1.1
+Content-Length: <content_length>\r\n
+\r\n
+<key>\n
+<value>
 ```
 to increase the value on `<value>`.
 
