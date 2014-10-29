@@ -53,11 +53,11 @@ namespace RocksServer {
                 that._data = nullptr;
                 that._len = 0;
             }
-            std::cout << "Move assignment" << std::endl;
-            std::cout << "(" << std::endl;
-            std::cout << "data:\t"       << (size_t)_data << std::endl;
-            std::cout << "that._data:\t" << (size_t)that._data << std::endl;
-            std::cout << ")" << std::endl;
+            //std::cout << "Move assignment" << std::endl;
+            //std::cout << "(" << std::endl;
+            //std::cout << "data:\t"       << (size_t)_data << std::endl;
+            //std::cout << "that._data:\t" << (size_t)that._data << std::endl;
+            //std::cout << ")" << std::endl;
             return *this;
         }
 
@@ -70,16 +70,16 @@ namespace RocksServer {
                 _len  = that._len;
                 _data = that._data;
             }
-            std::cout << "Copy assignment" << std::endl;
+            //std::cout << "Copy assignment" << std::endl;
             return *this;
         }
 
         ~PostData()
         {
             //if(_data) delete [] _data;
-            std::cout << "data: " << (size_t)_data << std::endl;
+            //std::cout << "data: " << (size_t)_data << std::endl;
             if(_data) {
-                std::cout << "will be deleted" << std::endl;
+                //std::cout << "will be deleted" << std::endl;
             }
         }
 

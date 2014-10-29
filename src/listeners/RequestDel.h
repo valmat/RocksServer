@@ -10,7 +10,7 @@
 
 namespace RocksServer {
 
-    class RequestDel : public RequestBase<ProtocolIn, ProtocolOut>
+    class RequestDel : public RequestBase<ProtocolInPost, ProtocolOut>
     {
     public:
         RequestDel(RocksDBWrapper &rdb) : _rdb(rdb) {}
@@ -20,16 +20,14 @@ namespace RocksServer {
          *  @param       protocol in object
          *  @param       protocol out object
          */
-        virtual void run(const ProtocolIn &in, const ProtocolOut &out) override
+        virtual void run(const ProtocolInPost &in, const ProtocolOut &out) override
         {
             // Detect if current method is POST
-            if( !in.checkPost(out) || !in.checkPostSize(out) ) {
+            if( !in.check(out) ) {
                 return;
             }
             
-            auto raw = in.getRawPost();
-                
-            if( _rdb.del(rocksdb::Slice(raw, raw.size())) ) {
+            if( _rdb.del(in.key()) ) {
                 out.ok();
             } else {
                 out.fail();

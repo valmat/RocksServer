@@ -3,7 +3,7 @@
  *
  *  This is an internal helper class that is used when iterating over a keys
  *
- *  Thus, when you do c++ things like "for (auto &iter : value)", internally
+ *  Thus, when you do c++ things like "for (auto &iter : prot_in)", internally
  *  a ProtocolInGetIterator object is being used.
  *
  *  @author valmat <ufabiz@gmail.com>
@@ -27,19 +27,19 @@ namespace RocksServer {
          *  Constructor
          *  @param  impl        Implementation iterator
          */
-        ProtocolInGetIterator(const std::string &uri, size_type len,size_type startpos) : 
-            str(uri), 
-            strlen(len), 
+        ProtocolInGetIterator(const std::string &uri, size_type len,size_type startpos) :
+            str(uri),
+            strlen(len),
             lpos(startpos),
             rpos(str.find('&', lpos))
         {
-            get();
+            setCurrent();
         }
 
         // trivial constructor
-        ProtocolInGetIterator() : 
-            str(""), 
-            strlen(0), 
+        ProtocolInGetIterator() :
+            str(""),
+            strlen(0),
             lpos(std::string::npos),
             rpos(std::string::npos)
         {}
@@ -59,7 +59,7 @@ namespace RocksServer {
             lpos = rpos+1;
             rpos = str.find('&', lpos);
 
-            get();
+            setCurrent();
             return *this;
         }
         
@@ -107,10 +107,10 @@ namespace RocksServer {
         /**
          *  Retrive current
          */
-        void get()
+        void setCurrent()
         {
-            current = (rpos == std::string::npos) ? 
-                rocksdb::Slice(str.data()+lpos, strlen-lpos) : 
+            current = (rpos == std::string::npos) ?
+                rocksdb::Slice(str.data()+lpos, strlen-lpos) :
                 rocksdb::Slice(str.data()+lpos, rpos-lpos);
         }
 

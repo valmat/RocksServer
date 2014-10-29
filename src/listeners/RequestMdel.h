@@ -10,7 +10,7 @@
 
 namespace RocksServer {
 
-    class RequestMdel : public RequestBase<ProtocolIn, ProtocolOut>
+    class RequestMdel : public RequestBase<ProtocolInPostKeys, ProtocolOut>
     {
     public:
         RequestMdel(RocksDBWrapper &rdb) : _rdb(rdb) {}
@@ -20,17 +20,24 @@ namespace RocksServer {
          *  @param       protocol in object
          *  @param       protocol out object
          */
-        virtual void run(const ProtocolIn &in, const ProtocolOut &out) override
+        virtual void run(const ProtocolInPostKeys &in, const ProtocolOut &out) override
         {
+            
+            //std::cout << "\t  RequestMdel :" << in.raw.size()  << std::endl;
+            //std::cout << "\t          :\n" << in.raw  << std::endl;
+
+
             // Detect if current method is POST
-            if( !in.checkPost(out) || !in.checkPostSize(out) ) {
+            //if( !in.checkPost(out) || !in.checkPostSize(out) ) {
+            if(!in.check(out)) {
                 return;
             }
             
-            auto raw = in.getRawPost();
-
             // create a RocksDB delete batch
             rocksdb::WriteBatch batch;
+
+            /*
+            auto raw = in.getRawPost();
 
             std::string::size_type lpos = 0;
             std::string::size_type rpos = raw.find('\n');
@@ -43,6 +50,15 @@ namespace RocksServer {
                 rpos = raw.find('\n', lpos);
             }
             batch.Delete(rocksdb::Slice(raw+lpos, len-lpos));
+            */
+
+            //int i = 0;
+            for (auto &it : in) {
+                //std::cout << i++ << "\t" << it.ToString() << std::endl;
+                batch.Delete(it);
+            }
+
+
 
             if(_rdb.mset(batch)) {
                 out.ok();

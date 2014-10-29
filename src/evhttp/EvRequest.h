@@ -53,14 +53,13 @@ namespace RocksServer {
         /**
          *  Get raw post data wrapper
          */
-        PostData && getPostData() const
+        PostData getPostData() const
         {
             evbuffer *in_evb = evhttp_request_get_input_buffer(_req);
             size_t len = evbuffer_get_length(in_evb);
             char *data = new char[len];
             evbuffer_copyout(in_evb, data, len);
-
-            return std::move(PostData(data, len));
+            return PostData(data, len);
         }
 
         /**

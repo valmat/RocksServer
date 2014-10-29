@@ -10,7 +10,7 @@
 
 namespace RocksServer {
 
-    class RequestSet : public RequestBase<ProtocolIn, ProtocolOut>
+    class RequestSet : public RequestBase<ProtocolInPost, ProtocolOut>
     {
     public:
         RequestSet(RocksDBWrapper &rdb) : _rdb(rdb) {}
@@ -20,28 +20,16 @@ namespace RocksServer {
          *  @param       protocol in object
          *  @param       protocol out object
          */
-        virtual void run(const ProtocolIn &in, const ProtocolOut &out) override
+        virtual void run(const ProtocolInPost &in, const ProtocolOut &out) override
         {
-            // Detect if current method is POST
-            if( !in.checkPost(out) || !in.checkPostSize(out) ) {
+            // Detect if current method is correct POST
+            if( !in.check(out) ) {
                 return;
             }
             
-            auto raw = in.getRawPost();
+            auto pair = in.pair();
 
-            // retrive key and value
-            std::string::size_type lpos = 0;
-            std::string::size_type rpos = raw.find('\n');
-            rocksdb::Slice key(raw, rpos);
-            
-            lpos = rpos+1;
-            rpos = raw.find('\n', lpos);
-            auto vallen = std::atoll((const char *)raw + lpos);
-            lpos = rpos+1;
-            rocksdb::Slice value((const char *)raw + lpos, vallen);
-
-            // set and filling buffer
-            if(_rdb.set(key, value)) {
+            if(_rdb.set(pair.first, pair.second)) {
                 out.ok();
             } else {
                 out.fail();

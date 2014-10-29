@@ -13,9 +13,9 @@ namespace RocksServer {
     class ProtocolInGet
     {
     public:
-        ProtocolInGet(const EvRequest &r) : 
-            request(r), 
-            uri(r.getUri()), 
+        ProtocolInGet(const EvRequest &r) :
+            request(r),
+            uri(r.getUri()),
             pathlen(uri.find('?')),
             len(uri.size())
         {}

@@ -62,6 +62,9 @@
 #include "Protocol/ProtocolInTrivial.h"
 #include "Protocol/ProtocolInGetIterator.h"
 #include "Protocol/ProtocolInGet.h"
+#include "Protocol/ProtocolInPost.h"
+#include "Protocol/ProtocolInPostKeysIterator.h"
+#include "Protocol/ProtocolInPostKeys.h"
 
 // Listeners
 #include "listeners/RequestBase.h"
