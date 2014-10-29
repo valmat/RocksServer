@@ -22,7 +22,7 @@ namespace RocksServer {
 
         ProtocolInPostPairsIterator end() const
         {
-            return ProtocolInPostPairsIterator(raw.size());
+            return ProtocolInPostPairsIterator();
         }
 
         ~ProtocolInPostPairs() {}

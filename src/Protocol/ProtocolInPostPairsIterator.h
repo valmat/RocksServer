@@ -31,9 +31,9 @@ namespace RocksServer {
         /**
          *  Trivial constructor (for returning in method ProtocolInPostPairs::end())
          */
-        ProtocolInPostPairsIterator(size_type rawlen) :
+        ProtocolInPostPairsIterator() :
             raw(PostData(nullptr, 0)),
-            lpos(rawlen)
+            lpos(npos)
         {}
 
         ~ProtocolInPostPairsIterator() {}
@@ -94,8 +94,8 @@ namespace RocksServer {
             std::cout << "\t\x1b[1;30m CHECK \x1b[0m" << std::endl;
 
             std::cout << "[[[\t\t\t\t\t\t\x1b[1;34m"<< lpos << "!= that."<< that.lpos << "\x1b[0m" << std::endl;
-            //return (cntr < 10) && (lpos != that.lpos);
-            return (cntr < 10) && (lpos < that.lpos);
+            return (cntr < 10) && (lpos != that.lpos);
+            //return (cntr < 10) && (lpos < that.lpos);
         }
 
         /**
@@ -126,11 +126,15 @@ namespace RocksServer {
         void next()
         {
             std::cout << "\t\x1b[1;32m "<< lpos <<" \x1b[0m" << std::endl;
-            // retrive key
-            rpos = raw.find('\n', lpos);
-            if(npos == rpos) {
+
+            if(lpos >= rawlen) {
+                std::cout << "\t\x1b[1;32m (lpos >= rawlen)  \x1b[0m" << std::endl;
+                lpos = npos;
                 return;
             }
+
+            // retrive key
+            rpos = raw.find('\n', lpos);
             key_star = lpos;
             key_len  = rpos - lpos;
 
