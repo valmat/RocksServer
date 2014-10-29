@@ -32,14 +32,6 @@ namespace RocksServer {
             auto key = *it;
             ++it;
 
-            /*
-            if( in.end() !=  it) {
-                rez = _rdb.incr( key,  *it );
-            } else {
-                rez = _rdb.incr( key );
-            }
-            */
-
             rez = ( in.end() !=  it) ? _rdb.incr( key,  *it ) : _rdb.incr( key );
             
             if( rez ) {
@@ -49,55 +41,6 @@ namespace RocksServer {
                 EvLogger::writeLog(_rdb.getStatus().data());
             }
 
-
-            /*
-            std::string raw = in.key().ToString();
-
-
-            bool rez;
-            auto seppos = raw.find('&');
-            auto len = raw.size();
-
-            if( seppos < len-1 ) {
-                rez = _rdb.incr( rocksdb::Slice( raw.data(), seppos ),  rocksdb::Slice( raw.data()+seppos+1, len - seppos - 1 ) );
-            } else {
-                rez = _rdb.incr( rocksdb::Slice(raw.data(), raw.size()) );
-            }
-            
-            if( rez ) {
-                out.ok();
-            } else {
-                out.fail();
-                EvLogger::writeLog(_rdb.getStatus().data());
-            }
-            */
-
-            /*
-            // Detect if current method is POST
-            if( !in.checkPost(out) || !in.checkPostSize(out) ) {
-                return;
-            }
-
-            auto raw = in.getRawPost();
-
-            bool rez;
-            auto seppos = raw.find('&');
-            auto len = raw.size();
-
-            if( seppos < len-1 ) {
-                rez = _rdb.incr( rocksdb::Slice( raw, seppos ),  rocksdb::Slice( raw+seppos+1, len - seppos - 1 ) );
-            } else {
-                rez = _rdb.incr( rocksdb::Slice(raw, raw.size()) );
-            }
-            
-            if( rez ) {
-                out.ok();
-            } else {
-                out.fail();
-                EvLogger::writeLog(_rdb.getStatus().data());
-            }
-
-            */
         }
 
         virtual ~RequestIncr() {}

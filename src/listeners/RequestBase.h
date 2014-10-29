@@ -22,13 +22,11 @@ namespace RocksServer {
          */
         //virtual void run(const ProtocolIn &, const ProtocolOut &) = 0;
         virtual void run(const EvRequest &request, const EvResponse &response) = 0;
-
-
         
     };
 
 
-    template<typename ProtIn = ProtocolIn, typename ProtOut = ProtocolOut>
+    template<typename ProtIn, typename ProtOut>
     struct RequestBase: public RequestSuperBase
     {
         virtual ~RequestBase() {}

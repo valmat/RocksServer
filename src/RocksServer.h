@@ -56,7 +56,6 @@
 
 // Protocol
 #include "Protocol/ProtocolOut.h"
-#include "Protocol/ProtocolIn.h"
 
 #include "Protocol/ProtocolInPostSimple.h"
 #include "Protocol/ProtocolInTrivial.h"
