@@ -66,6 +66,11 @@
 #include "Protocol/ProtocolInPostKeysIterator.h"
 #include "Protocol/ProtocolInPostKeys.h"
 
+#include "Protocol/ProtocolInPostPairsIterator.h"
+#include "Protocol/ProtocolInPostPairs.h"
+
+ 
+
 // Listeners
 #include "listeners/RequestBase.h"
 #include "listeners/RequestGet.h"

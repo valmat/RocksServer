@@ -10,7 +10,7 @@
 
 namespace RocksServer {
 
-    class RequestMset : public RequestBase<ProtocolIn, ProtocolOut>
+    class RequestMset : public RequestBase<ProtocolInPostPairs, ProtocolOut>
     {
     public:
         RequestMset(RocksDBWrapper &rdb) : _rdb(rdb) {}
@@ -20,18 +20,21 @@ namespace RocksServer {
          *  @param       protocol in object
          *  @param       protocol out object
          */
-        virtual void run(const ProtocolIn &in, const ProtocolOut &out) override
+        virtual void run(const ProtocolInPostPairs &in, const ProtocolOut &out) override
         {
             // Detect if current method is POST
-            if( !in.checkPost(out) || !in.checkPostSize(out) ) {
+            if( !in.check(out)) {
                 return;
             }
             
-            auto raw = in.getRawPost();
-
             // create a RocksDB write batch
             rocksdb::WriteBatch batch;
+            for (auto &it : in) {
+                batch.Put(it.first, it.second);
+            }
 
+            /*
+            auto raw = in.getRawPost();
 
             std::string::size_type lpos = 0;
             std::string::size_type rpos;
@@ -58,6 +61,9 @@ namespace RocksServer {
                 //to next iteration
                 lpos += vallen + 1;
             }
+            */
+
+
 
             // set and filling buffer
             if(_rdb.mset(batch)) {

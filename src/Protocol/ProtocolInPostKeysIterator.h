@@ -12,21 +12,12 @@
 
 namespace RocksServer {
 
-    /**
-     *  Forward declarations
-     */
-    //class ProtocolInPostKeysIteratorImpl;
-
     class ProtocolInPostKeysIterator
     {
     public:
 
         typedef std::string::size_type size_type;
 
-        /**
-         *  Constructor
-         *  @param  impl        Implementation iterator
-         */
         ProtocolInPostKeysIterator(const PostData &raw) :
             raw(raw),
             lpos(0),
@@ -36,11 +27,12 @@ namespace RocksServer {
             setCurrent();
         }
 
-        // trivial constructor
+        /**
+         *  Trivial constructor (for returning in method ProtocolInPostKeys::end())
+         */
         ProtocolInPostKeysIterator() :
             raw(PostData(nullptr, 0)),
-            lpos(npos),
-            rpos(npos)
+            lpos(npos)
         {}
 
         ~ProtocolInPostKeysIterator() {}

@@ -99,6 +99,15 @@ namespace RocksServer {
             return _data;
         }
 
+
+        /**
+         *  Cast to a const char *
+         */
+        const char * data() const
+        {
+            return _data;
+        }
+
         /**
          *  Cast to a std::string
          */

@@ -12,21 +12,12 @@
 
 namespace RocksServer {
 
-    /**
-     *  Forward declarations
-     */
-    //class ProtocolInGetIteratorImpl;
-
     class ProtocolInGetIterator
     {
     public:
 
         typedef std::string::size_type size_type;
 
-        /**
-         *  Constructor
-         *  @param  impl        Implementation iterator
-         */
         ProtocolInGetIterator(const std::string &uri, size_type len,size_type startpos) :
             str(uri),
             strlen(len),
@@ -36,7 +27,9 @@ namespace RocksServer {
             setCurrent();
         }
 
-        // trivial constructor
+        /**
+         *  Trivial constructor (for returning in method ProtocolInGet::end())
+         */
         ProtocolInGetIterator() :
             str(""),
             strlen(0),
