@@ -58,7 +58,6 @@ namespace RocksServer {
             resp.add("FAIL\n", 5);
         }
 
-        ~ProtocolOut() {}
     private:
         const EvResponse &resp;
     };

@@ -48,14 +48,11 @@ namespace RocksServer {
             _status = rocksdb::DB::Open(dbOptions, dbpath, &_db);
         }
 
-
         virtual ~RocksDBWrapper()
         {
             //delete Incrementor; <-- not required : std::shared_ptr
             delete _db;
         }
-
-        
 
         /**
          *  Cast to a rocksdb::DB pointer
@@ -170,7 +167,7 @@ namespace RocksServer {
          * @param   string key
          * @param   incval, default: 1
          */
-        bool incr(const rocksdb::Slice& key, const int64_t& incval = 1)
+        bool incr(const rocksdb::Slice& key, const int64_t& incval)
         {
             _status = _db->Merge(rocksdb::WriteOptions(), key, std::to_string(incval));
             return _status.ok();
@@ -181,7 +178,7 @@ namespace RocksServer {
          * @param   string key
          * @param   string incval
          */
-        bool incr(const rocksdb::Slice& key, const rocksdb::Slice& incval)
+        bool incr(const rocksdb::Slice& key, const rocksdb::Slice& incval = "1")
         {
             _status = _db->Merge(rocksdb::WriteOptions(), key, incval);
             return _status.ok();

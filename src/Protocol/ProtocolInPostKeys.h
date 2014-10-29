@@ -24,8 +24,6 @@ namespace RocksServer {
         {
             return ProtocolInPostKeysIterator();
         }
-
-        ~ProtocolInPostKeys() {}
     };
 
 }

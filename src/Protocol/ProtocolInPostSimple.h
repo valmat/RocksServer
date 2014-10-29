@@ -27,8 +27,6 @@ namespace RocksServer {
             return true;
         }
 
-        ~ProtocolInPostSimple() {}
-
     protected:
         const EvRequest &request;
     };

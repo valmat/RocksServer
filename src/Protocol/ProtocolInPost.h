@@ -14,7 +14,6 @@ namespace RocksServer {
     {
     public:
         ProtocolInPost(const EvRequest &r) :request(r), raw(request.getPostData()) {}
-        //ProtocolInPost(EvRequest &&r) :request(std::move(r)) {}
 
         // Check query
         bool check(const ProtocolOut &out) const
@@ -58,13 +57,8 @@ namespace RocksServer {
             return std::make_pair(key, value);
         }
 
-        
-
-        ~ProtocolInPost() {}
     protected:
         const EvRequest &request;
-
-    public:
         const PostData raw;
     };
 

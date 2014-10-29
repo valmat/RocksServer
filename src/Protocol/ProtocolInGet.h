@@ -20,8 +20,6 @@ namespace RocksServer {
             len(uri.size())
         {}
 
-        //ProtocolInGet(EvRequest &&r) :request(std::move(r)) {}
-
         // Detect if current query is valid
         bool check() const
         {
@@ -42,10 +40,6 @@ namespace RocksServer {
         {
             return ProtocolInGetIterator();
         }
-
-        
-
-        ~ProtocolInGet() {}
 
     protected:
         const EvRequest &request;

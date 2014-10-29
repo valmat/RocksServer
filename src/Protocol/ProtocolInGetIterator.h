@@ -37,8 +37,6 @@ namespace RocksServer {
             rpos(npos)
         {}
 
-        ~ProtocolInGetIterator() {}
-
         /**
          *  Increment position (pre-increment)
          */

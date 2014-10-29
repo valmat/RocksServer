@@ -42,7 +42,6 @@ namespace RocksServer {
         PostData& getRawPost() const
         {
             if(!raw.isValid()) {
-            //if(!raw) {
                 //raw = request.getPostData();
                 raw = std::move(request.getPostData());
             }
@@ -54,17 +53,9 @@ namespace RocksServer {
             return request.getUri();
         }
 
-        void isPost() const
-        {
-            //request.add("FAIL\n", 5);
-        }
-
-        ~ProtocolIn() {}
     private:
         const EvRequest &request;
         mutable PostData raw;
-
-        //const char sep = '\n';
     };
 
 }

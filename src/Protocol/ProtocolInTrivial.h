@@ -14,7 +14,6 @@ namespace RocksServer {
     {
     public:
         ProtocolInTrivial(const EvRequest &r) {}
-        ~ProtocolInTrivial() {}
     };
 
 }
