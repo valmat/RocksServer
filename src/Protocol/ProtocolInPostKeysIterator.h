@@ -35,8 +35,6 @@ namespace RocksServer {
             lpos(npos)
         {}
 
-        ~ProtocolInPostKeysIterator() {}
-
         /**
          *  Increment position (pre-increment)
          */

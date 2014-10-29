@@ -119,7 +119,7 @@ namespace RocksServer {
 
         const PostData &raw;
         
-        size_type rawlen = raw.size();
+        size_type rawlen;
         size_type lpos = 0;
         size_type rpos;
 

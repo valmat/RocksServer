@@ -10,9 +10,8 @@
 
 namespace RocksServer {
 
-    class ProtocolInTrivial
+    struct ProtocolInTrivial
     {
-    public:
         ProtocolInTrivial(const EvRequest &r) {}
     };
 

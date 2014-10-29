@@ -14,7 +14,6 @@ namespace RocksServer {
     {
     public:
         ProtocolInPostSimple(const EvRequest &r) :request(r) {}
-        ProtocolInPostSimple(EvRequest &&r) :request(std::move(r)) {}
 
         // Detect if current method is POST
         bool check(const ProtocolOut &out) const

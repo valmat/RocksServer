@@ -40,7 +40,6 @@ namespace RocksServer {
                 out.fail();
                 EvLogger::writeLog(_rdb.getStatus().data());
             }
-
         }
 
         virtual ~RequestIncr() {}

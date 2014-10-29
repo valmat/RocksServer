@@ -38,7 +38,7 @@ namespace RocksServer {
         // retrive key
         rocksdb::Slice key() const
         {
-            return rocksdb::Slice((const char *)raw, raw.size());
+            return rocksdb::Slice(raw, raw.size());
         }
 
         // retrive key and value
