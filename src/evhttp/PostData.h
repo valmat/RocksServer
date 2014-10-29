@@ -29,12 +29,19 @@ namespace RocksServer {
         /**
          *  Copy constructor
          */
-        PostData(const PostData &that) : _len(that._len), _data(that._data) {}
+        PostData(const PostData &that) : _len(that._len), _data(that._data) 
+        {
+            std::cout << "\x1b[1;32m Copy constructor \x1b[0m" << std::endl;
+        }
 
         /**
          *  Move constructor
          */
-        //PostData(PostData &&that) : _len(std::move(that._len)), _data(std::move(that._data)) {}
+        PostData(PostData &&that) : _len(std::move(that._len)), _data(std::move(that._data)) 
+        {
+            that._data = nullptr;
+            std::cout << "\x1b[1;32m Move constructor \x1b[0m" << std::endl;
+        }
 
         /**
          *  Move assignment
@@ -53,11 +60,11 @@ namespace RocksServer {
                 that._data = nullptr;
                 that._len = 0;
             }
-            //std::cout << "Move assignment" << std::endl;
-            //std::cout << "(" << std::endl;
-            //std::cout << "data:\t"       << (size_t)_data << std::endl;
-            //std::cout << "that._data:\t" << (size_t)that._data << std::endl;
-            //std::cout << ")" << std::endl;
+            std::cout << "\x1b[1;32m Move assignment \x1b[0m" << std::endl;
+            std::cout << "(" << std::endl;
+            std::cout << "\tdata:\t"       << (size_t)_data << std::endl;
+            std::cout << "\tthat._data:\t" << (size_t)that._data << std::endl;
+            std::cout << ")" << std::endl << std::endl;
             return *this;
         }
 
@@ -70,16 +77,20 @@ namespace RocksServer {
                 _len  = that._len;
                 _data = that._data;
             }
-            //std::cout << "Copy assignment" << std::endl;
+            std::cout << "\x1b[1;32m Copy assignment \x1b[0m" << std::endl;
             return *this;
         }
 
         ~PostData()
         {
             //if(_data) delete [] _data;
-            //std::cout << "data: " << (size_t)_data << std::endl;
+            // \x1b[1;34;47m" << npos << "\t" << lpos << "\x1b[0m"
+            std::cout << "\x1b[1;34;47m data: " << (size_t)_data << "\x1b[0m"<< std::endl;
             if(_data) {
-                //std::cout << "will be deleted" << std::endl;
+                std::cout << "\x1b[1;31;47m" << std::string(_data, _len) << "\x1b[0m"<< std::endl;
+                delete [] _data;
+                _data = nullptr;
+                std::cout << "\x1b[1;31;47m will be deleted" << std::endl << "\x1b[0m"<< std::endl;
             }
         }
 

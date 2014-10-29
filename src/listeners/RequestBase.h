@@ -17,12 +17,10 @@ namespace RocksServer {
 
         /**
          *  Runs request listener
-         *  @param       protocol in object
-         *  @param       protocol out object
+         *  @param       EvRequest object
+         *  @param       EvResponse object
          */
-        //virtual void run(const ProtocolIn &, const ProtocolOut &) = 0;
         virtual void run(const EvRequest &request, const EvResponse &response) = 0;
-        
     };
 
 
@@ -41,18 +39,13 @@ namespace RocksServer {
     private:
         /**
          *  Runs request listener
-         *  @param       protocol in object
-         *  @param       protocol out object
+         *  @param       EvRequest object
+         *  @param       EvResponse object
          */
         virtual void run(const EvRequest &request, const EvResponse &response) override
         {
-            run(ProtIn{request}, ProtOut{response} );
+            run(std::move(ProtIn{request}), std::move(ProtOut{response}) );
         }
-
-        //friend struct RequestSuperBase; // EvServer
-        
     };
-
-    //using RequestBase = RequestBase1<ProtocolIn, ProtocolOut>;
 
 }
