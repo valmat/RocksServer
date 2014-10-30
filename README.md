@@ -62,8 +62,8 @@ make install
 ```
 
 ## Usage
-Exemple of usage: [driver for PHP](drivers/php/README.md)
-Or any your implementation by [protocol description](protocol.md).
+Exemple of usage: [driver for PHP](https://github.com/valmat/rocksdbphp)
+Or any your own implementation by [protocol description](protocol.md).
 
 
 ## License
