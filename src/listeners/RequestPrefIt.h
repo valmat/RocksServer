@@ -24,7 +24,6 @@ namespace RocksServer {
         virtual void run(const ProtocolInGet &in, const ProtocolOut &out) override
         {
             if(!in.check()) {
-                out.setFailValue();
                 return;
             }
             
@@ -39,7 +38,6 @@ namespace RocksServer {
                     out.setFailPair(iter->key());
                 }
             }
-            
         }
 
         virtual ~RequestPrefIt() {}

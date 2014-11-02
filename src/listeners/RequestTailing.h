@@ -22,14 +22,18 @@ namespace RocksServer {
          */
         virtual void run(const ProtocolInTrivial &in, const ProtocolOut &out) override
         {
-            rocksdb::Slice key, value;
             auto rOpt = rocksdb::ReadOptions();
             rOpt.tailing = true;
-            rocksdb::Iterator* it = _rdb->NewIterator(std::move(rOpt));
+            std::unique_ptr<rocksdb::Iterator> it(_rdb->NewIterator(std::move(rOpt)));
+
+            // filling buffer
             for (it->SeekToFirst(); it->Valid(); it->Next()) {
-                key   = it->key();
-                value = it->value();
-                out.setPair(key, value);
+                out.setPair(it->key(), it->value());
+                if(it->status().ok()) {
+                    out.setPair(it->key(), it->value());
+                } else {
+                    out.setFailPair(it->key());
+                }
             }
         }
 
