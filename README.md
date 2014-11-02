@@ -13,6 +13,7 @@ operations  | description
 **Multi delete keys** | Delete keys from DB
 **Check key exist** | Check key existing
 **Imcrement** | Imcrement value by key
+**Prefit** | Prefix iterator
 
 
 For more details see: [protocol description](protocol.md)

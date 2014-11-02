@@ -161,6 +161,7 @@ int main(int argc, char **argv)
     server.onRequest("/tail",   new RequestTailing(rdb));
     server.onRequest("/backup", new RequestBackup(rdb, cfg.get("backup_path", dfCfg.backup_path)));
     server.onRequest("/stats",  new RequestStats(rdb));
+    server.onRequest("/prefit", new RequestPrefIt(rdb));
     
 
     /**
@@ -169,7 +170,7 @@ int main(int argc, char **argv)
      *  
      */
     if (!server.dispatch()) {
-        std::cerr << "Failed to run messahe loop." << std::endl;
+        std::cerr << "Failed to run message loop." << std::endl;
         return 1;
     }
 

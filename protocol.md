@@ -211,6 +211,16 @@ POST /tail
 Reply: same [multi get](https://github.com/valmat/RocksServer/blob/master/protocol.md#multi-get)
 
 
+###Get keys and values by key-prefix
+
+Request:
+```
+GET /prefit?<prefix>
+```
+
+Reply: same [multi get](https://github.com/valmat/RocksServer/blob/master/protocol.md#multi-get)
+
+
 ###Backup
 Backup database
 

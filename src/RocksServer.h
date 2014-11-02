@@ -7,7 +7,7 @@
  *  @github https://github.com/valmat/rocksserver
  */
 
-#define ROCKSSERVER_VERSION "v.0.1.1"
+#define ROCKSSERVER_VERSION "v.0.1.2"
 
 // C++ headers
 #include <iostream>
@@ -81,6 +81,7 @@
 #include "listeners/RequestTailing.h"
 #include "listeners/RequestBackup.h"
 #include "listeners/RequestStats.h"
+#include "listeners/RequestPrefIt.h"
 
 
 #include "evhttp/EvServer.h"

@@ -49,13 +49,8 @@ namespace RocksServer {
          */
         ProtocolInPostPairsIterator operator++(int)
         {
-            // make a copy
             ProtocolInPostPairsIterator copy(*this);
-            
-            // increment current object
             ++(*this);
-            
-            // return the original
             return copy;
         }
         
