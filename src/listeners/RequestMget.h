@@ -7,6 +7,7 @@
  *  @github https://github.com/valmat/rocksserver
  */
 
+#pragma once
 
 namespace RocksServer {
 

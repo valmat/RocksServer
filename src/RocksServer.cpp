@@ -163,6 +163,10 @@ int main(int argc, char **argv)
     server.onRequest("/stats",  new RequestStats(rdb));
     server.onRequest("/prefit", new RequestPrefIt(rdb));
     
+    // Load extentions
+    Extend ext(server, rdb, cfg, dfCfg);
+
+    
 
     /**
      *  

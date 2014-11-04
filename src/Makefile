@@ -29,11 +29,13 @@ all: ${BINFILE}
 ${BINFILE}: 
 	$(CC) $(NAME).cpp $(CFLAGS) -I. -I$(ROCKSPATH)/include -I$(LEVENTI) -c -o $(NAME).o
 	$(CC) evhttp/EvLogger.cpp $(CFLAGS) -I. -I$(ROCKSPATH)/include -I$(LEVENTI) -c -o EvLogger.o
-	$(CC) $(NAME).o EvLogger.o $(CFLAGS) -levent -L$(ROCKSPATH) -L$(LEVENTL) $(ROCKSLIB) $(LINKEROPT) -o $(NAME).bin
-	$(CC) restore.cpp $(CFLAGS) -I. -I$(ROCKSPATH)/include -c -o restore.o
-	$(CC) restore.o $(CFLAGS) -L$(ROCKSPATH) $(ROCKSLIB) $(LINKEROPT) -o restore.bin
-	$(CC) human_readable.cpp $(CFLAGS) -I. -I$(ROCKSPATH)/include -c -o human_readable.o
-	$(CC) human_readable.o $(CFLAGS) -L$(ROCKSPATH) $(ROCKSLIB) $(LINKEROPT) -o human_readable.bin
+	$(CC) extend/Extend.cpp $(CFLAGS) -I. -I$(ROCKSPATH)/include -I$(LEVENTI) -c -o Extend.o
+	$(CC) extend/ExtendObj.cpp $(CFLAGS) -I. -I$(ROCKSPATH)/include -I$(LEVENTI) -c -o ExtendObj.o
+	$(CC) $(NAME).o EvLogger.o Extend.o ExtendObj.o $(CFLAGS) -levent -ldl -L$(ROCKSPATH) -L$(LEVENTL) $(ROCKSLIB) $(LINKEROPT) -o $(NAME).bin
+#	$(CC) restore.cpp $(CFLAGS) -I. -I$(ROCKSPATH)/include -c -o restore.o
+#	$(CC) restore.o $(CFLAGS) -L$(ROCKSPATH) $(ROCKSLIB) $(LINKEROPT) -o restore.bin
+#	$(CC) human_readable.cpp $(CFLAGS) -I. -I$(ROCKSPATH)/include -c -o human_readable.o
+#	$(CC) human_readable.o $(CFLAGS) -L$(ROCKSPATH) $(ROCKSLIB) $(LINKEROPT) -o human_readable.bin
 	@echo
 	@echo "Build complete."
 #	@echo "For start server run ./$(NAME).bin config.ini"
@@ -49,6 +51,7 @@ install:
 	mkdir -p /var/rocksserver
 	chown nobody /var/rocksserver
 	mkdir -p /etc/rocksserver
+	mkdir -p /usr/lib/rocksserver
 	cp -f config.ini /etc/rocksserver/config.ini
 	cp -f RocksServer.bin /usr/local/bin/rocksserver
 	cp -f restore.bin /usr/local/bin/rocksrestore
@@ -58,7 +61,6 @@ install:
 
 uninstall:
 	update-rc.d -f rocksserver remove
-	rm -fR /etc/rocksserver
 	rm -f /usr/local/bin/rocksrestore
 	rm -f /usr/local/bin/rocks_human_readable
 	rm -f /etc/init.d/rocksserver
@@ -67,6 +69,7 @@ uninstall-clean:
 	update-rc.d -f rocksserver remove
 	rm -fR /var/rocksserver
 	rm -fR /etc/rocksserver
+	rm -fR /usr/lib/rocksserver
 	rm -f /usr/local/bin/rocksrestore
 	rm -f /usr/local/bin/rocks_human_readable
 	rm -f /etc/init.d/rocksserver
