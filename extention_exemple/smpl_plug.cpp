@@ -14,7 +14,9 @@
 //extern "C" int myplug() 
 PLUGIN()
 {
+    // create extension
+    static RocksServer::Extension extension();
 
     std::cout << "This message from myplug.so function myplug" << std::endl;
-    return 5;
+    return extension;
 }
