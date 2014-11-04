@@ -9,8 +9,10 @@
 
 #pragma once
 
-namespace RocksServer {
+// Forward declaration
+struct evhttp_request;
 
+namespace RocksServer {
 
     class EvRequest
     {
@@ -30,10 +32,7 @@ namespace RocksServer {
         /**
          *  Get request URI string
          */
-        std::string getUri() const
-        {
-            return  evhttp_request_get_uri(_req);
-        }
+        std::string getUri() const;
 
         /**
          *  Get request query string
@@ -53,39 +52,23 @@ namespace RocksServer {
         /**
          *  Get raw post data wrapper
          */
-        PostData getPostData() const
-        {
-            evbuffer *in_evb = evhttp_request_get_input_buffer(_req);
-            size_t len = evbuffer_get_length(in_evb);
-            char *data = new char[len];
-            evbuffer_copyout(in_evb, data, len);
-            return PostData(data, len);
-        }
+        PostData getPostData() const;
 
         /**
          *  Get response code
          */
-        int getCode() const
-        {
-            return evhttp_request_get_response_code(_req);
-        }
+        int getCode() const;
 
         /**
          *  Get request method
          *  see: http://www.wangafu.net/~nickm/libevent-2.1/doxygen/html/http_8h.html
          */
-        evhttp_cmd_type getMethod() const
-        {
-            return evhttp_request_get_command(_req);
-        }
+        evhttp_cmd_type getMethod() const;
 
         /**
          *  Check if current method is POST
          */
-        bool isPost() const
-        {
-            return ( EVHTTP_REQ_POST == getMethod() );
-        }
+        bool isPost() const;
 
         /**
          *  Cast to a evhttp_request pointer
