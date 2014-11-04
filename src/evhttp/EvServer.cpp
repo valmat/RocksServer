@@ -1,5 +1,5 @@
 /**
- *  EvServer.h
+ *  EvServer.cpp
  *
  *  This is a simple wrapper around evhttp_* functions
  *

@@ -9,12 +9,10 @@
 
 #pragma once
 
-
 // Forward declaration
 struct evhttp;
 struct event_base;
 struct event;
-    
 
 namespace RocksServer {
 
