@@ -71,7 +71,7 @@ namespace RocksServer {
          */
 
         // Path to RocksServer extentions directory
-        std::string extdir = "/usr/lib/rocksserver";
+        std::string extdir = "/usr/lib/rocksserver/plugins";
 
     };
 

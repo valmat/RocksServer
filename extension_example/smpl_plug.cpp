@@ -7,7 +7,9 @@
 
 // nm smpl_plug.so
 
-#include "../src/api.h"
+// /usr/include/rocksserver/include
+//#include "../src/api.h"
+#include <rocksserver/api.h>
 #include "RequestPing.h"
 
 
