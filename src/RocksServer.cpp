@@ -71,6 +71,14 @@ int main(int argc, char **argv)
             
         }
     }
+    
+
+    /**
+     *  
+     *  Init extensions
+     *  
+     */
+    Extend ext;
 
 
     /**
@@ -164,9 +172,7 @@ int main(int argc, char **argv)
     server.onRequest("/prefit", new RequestPrefIt(rdb));
     
     // Load extentions
-    Extend ext(server, rdb, cfg, dfCfg);
-    std::cerr <<  "[1]" << std::endl;
-    
+    ext.load(server, rdb, cfg, dfCfg);
 
     /**
      *  
@@ -179,7 +185,6 @@ int main(int argc, char **argv)
         return 1;
     }
     */
-    std::cerr <<  "[2]" << std::endl;
 
     return 0;
 }

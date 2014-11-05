@@ -12,7 +12,7 @@
  
 namespace RocksServer {
 
-    Extend::Extend(EvServer &server, const RocksDBWrapper &rdb, const IniConfigs &cfg, const DefaultConfigs &dfCfg)
+    void Extend::load(EvServer &server, const RocksDBWrapper &rdb, const IniConfigs &cfg, const DefaultConfigs &dfCfg)
     {
         // Read directory for load extentions
         std::string extdir = cfg.get("extdir", dfCfg.extdir);

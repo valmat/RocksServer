@@ -40,7 +40,7 @@ namespace RocksServer {
         plugin(rdb, cfg, &extension);
 
         for(auto &it: extension) {
-            server.onRequest(it.first.data(), it.second);
+            server.onRequest(it.first.data(), std::move(it.second));
         }
 
     }

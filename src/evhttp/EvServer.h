@@ -53,7 +53,15 @@ namespace RocksServer {
          *  @param  path       path to listen
          *  @param  req        listener
          */
-        void onRequest(const char *path, RequestSuperBase *pReq);
+        void onRequest(const char *path, std::unique_ptr<RequestSuperBase> &&pReq);
+
+        /**
+         *  Bind request listener
+         */
+        void onRequest(const char *path, RequestSuperBase *pReq)
+        {
+            onRequest(path, std::unique_ptr<RequestSuperBase>(pReq));
+        }
 
         /**
          *  Bind request listener
@@ -75,7 +83,7 @@ namespace RocksServer {
         event_base *_base;
 
         // The container for storing a requests listeners
-        std::forward_list<RequestSuperBase *> _reqList;
+        std::forward_list< std::unique_ptr<RequestSuperBase> > _reqList;
 
         // event handler for SIGINT signal
         event *_sigint = nullptr;

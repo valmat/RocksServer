@@ -59,10 +59,18 @@ namespace RocksServer {
         if(_sigterm) event_free(_sigterm);
 
         // freeing request objects
+        /*
         for(auto &pReq: _reqList) {
             std::cerr << "\t:"<< (size_t) pReq << std::endl;
             delete pReq;
         }
+        for(auto &pReq: _reqList) {
+            std::cerr << "\t:"<< (size_t) pReq.get() << std::endl;
+            //pReq.~unique_ptr();
+            pReq.reset(nullptr);
+
+        }
+        */
         
         if(_http) evhttp_free(_http);
         if(_base) event_base_free(_base);
@@ -109,10 +117,10 @@ namespace RocksServer {
      *  @param  path       path to listen
      *  @param  req        listener
      */
-    void EvServer::onRequest(const char *path, RequestSuperBase *pReq)
+    void EvServer::onRequest(const char *path, std::unique_ptr<RequestSuperBase> &&pReq)
     {
         // Store a pointer in the scope
-        _reqList.push_front(pReq);
+        _reqList.push_front(std::move(pReq));
         
         evhttp_set_cb(_http, path, [] (evhttp_request *http_req, void *cb_arg) {
 
@@ -126,7 +134,7 @@ namespace RocksServer {
             }
             
             reinterpret_cast<RequestSuperBase *>(cb_arg)->run(request, response);
-        }, pReq) ;
+        }, pReq.get()) ;
     }
 
 }
