@@ -9,20 +9,19 @@
 
 #pragma once
 
+// Forward declaration
+struct evbuffer;
+struct evhttp_request;
+
 namespace RocksServer {
 
     class EvResponse
     {
     public:
 
-        EvResponse(evhttp_request *req) : _evb(evbuffer_new()), _req(req) {}
+        EvResponse(evhttp_request *req);
 
-        ~EvResponse()
-        {
-            send();
-            // Free memory
-            if(_evb) evbuffer_free(_evb);
-        }
+        ~EvResponse();
 
         /**
          *  Check if buffer successfully created
@@ -36,26 +35,14 @@ namespace RocksServer {
          *  add formated string to buffer
          *  @param       formated string
          */
-        const EvResponse& add_printf(const char *fmt, ...) const
-        {
-            va_list ap;
-            va_start(ap, fmt);
-            evbuffer_add_vprintf(_evb, fmt, ap);
-            va_end(ap);
-
-            return *this;
-        }
+        const EvResponse& add_printf(const char *fmt, ...) const;
 
         /**
          *  add string to buffer
          *  @param      string
          *  @param      string lenght
          */
-        const EvResponse& add(const char *data, size_t datlen) const
-        {
-            evbuffer_add(_evb, data, datlen);
-            return *this;
-        }
+        const EvResponse& add(const char *data, size_t datlen) const;
 
         /**
          *  add string to buffer
@@ -76,11 +63,7 @@ namespace RocksServer {
             return add(str.c_str(), str.size());
         }
 
-        const EvResponse& add(const std::string *pstr) const
-        {
-            evbuffer_add_reference(_evb, pstr->c_str(), pstr->size(), nullptr, nullptr);
-            return *this;
-        }
+        const EvResponse& add(const std::string *pstr) const;
 
         const EvResponse& add(size_t val) const
         {
@@ -107,13 +90,7 @@ namespace RocksServer {
          *  Send buffer as server reply
          *  @param       event buffer wrapper
          */
-        void send() const
-        {
-            if(!_reply_sent && _evb) {
-                evhttp_send_reply(_req, HTTP_OK, "OK", _evb);
-                _reply_sent = true;
-            }
-        }
+        void send() const;
 
     private:
         evbuffer *_evb;

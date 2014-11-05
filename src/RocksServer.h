@@ -7,7 +7,7 @@
  *  @github https://github.com/valmat/rocksserver
  */
 
-#define ROCKSSERVER_VERSION "v.0.1.2"
+#define ROCKSSERVER_VERSION "v.0.1.4"
 
 // C++ headers
 #include <iostream>
@@ -55,18 +55,18 @@
 #include "rocks/BackupEngine.h"
 
 // Protocol
-#include "Protocol/ProtocolOut.h"
+#include "protocols/ProtocolOut.h"
 
-#include "Protocol/ProtocolInPostSimple.h"
-#include "Protocol/ProtocolInTrivial.h"
-#include "Protocol/ProtocolInGetIterator.h"
-#include "Protocol/ProtocolInGet.h"
-#include "Protocol/ProtocolInPost.h"
-#include "Protocol/ProtocolInPostKeysIterator.h"
-#include "Protocol/ProtocolInPostKeys.h"
+#include "protocols/ProtocolInPostSimple.h"
+#include "protocols/ProtocolInTrivial.h"
+#include "protocols/ProtocolInGetIterator.h"
+#include "protocols/ProtocolInGet.h"
+#include "protocols/ProtocolInPost.h"
+#include "protocols/ProtocolInPostKeysIterator.h"
+#include "protocols/ProtocolInPostKeys.h"
 
-#include "Protocol/ProtocolInPostPairsIterator.h"
-#include "Protocol/ProtocolInPostPairs.h"
+#include "protocols/ProtocolInPostPairsIterator.h"
+#include "protocols/ProtocolInPostPairs.h"
 
 // Listeners
 #include "listeners/RequestBase.h"
@@ -85,3 +85,11 @@
 
 
 #include "evhttp/EvServer.h"
+
+// Extensions
+#include "extend/Extension.h"
+#include "extend/PlugContainer.h"
+#include "extend/Extend.h"
+//#include "extend/ExtensionObj.h"
+
+

@@ -6,8 +6,10 @@ cd $(dirname $0)
 # compile rocksdb
 #
 cd rocksdb
+make clean
 make
-make static_lib
+#make static_lib
+make shared_lib
 # make check
 
 #

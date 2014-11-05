@@ -17,14 +17,14 @@ namespace RocksServer {
         const char *content_type = nullptr;
 
         // Limitations for body size (limit in bytes)
-        ev_ssize_t max_body_size = 0;
+        size_t max_body_size = 0;
 
         // Limitations for headers size
-        ev_ssize_t max_headers_size = 0;
+        size_t max_headers_size = 0;
 
         // Sets the what HTTP methods are supported in requests accepted by this server,
         // and passed to user callbacks.
-        ev_uint16_t  allowed_methods = 0;
+        uint16_t  allowed_methods = 0;
     };
 
 }

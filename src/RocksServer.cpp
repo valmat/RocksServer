@@ -71,6 +71,14 @@ int main(int argc, char **argv)
             
         }
     }
+    
+
+    /**
+     *  
+     *  Init extensions
+     *  
+     */
+    Extend ext;
 
 
     /**
@@ -150,19 +158,21 @@ int main(int argc, char **argv)
      *  Bind request listeners
      *  
      */
-    server.onRequest("/get",    new RequestGet(rdb));
-    server.onRequest("/mget",   new RequestMget(rdb));
-    server.onRequest("/set",    new RequestSet(rdb));
-    server.onRequest("/mset",   new RequestMset(rdb));
-    server.onRequest("/exist",  new RequestKeyExist(rdb));
-    server.onRequest("/del",    new RequestDel(rdb));
-    server.onRequest("/mdel",   new RequestMdel(rdb));
-    server.onRequest("/incr",   new RequestIncr(rdb));
-    server.onRequest("/tail",   new RequestTailing(rdb));
-    server.onRequest("/backup", new RequestBackup(rdb, cfg.get("backup_path", dfCfg.backup_path)));
-    server.onRequest("/stats",  new RequestStats(rdb));
-    server.onRequest("/prefit", new RequestPrefIt(rdb));
+    server.bind("/get",    new RequestGet(rdb));
+    server.bind("/mget",   new RequestMget(rdb));
+    server.bind("/set",    new RequestSet(rdb));
+    server.bind("/mset",   new RequestMset(rdb));
+    server.bind("/exist",  new RequestKeyExist(rdb));
+    server.bind("/del",    new RequestDel(rdb));
+    server.bind("/mdel",   new RequestMdel(rdb));
+    server.bind("/incr",   new RequestIncr(rdb));
+    server.bind("/tail",   new RequestTailing(rdb));
+    server.bind("/backup", new RequestBackup(rdb, cfg.get("backup_path", dfCfg.backup_path)));
+    server.bind("/stats",  new RequestStats(rdb));
+    server.bind("/prefit", new RequestPrefIt(rdb));
     
+    // Load extentions
+    ext.load(server, rdb, cfg, dfCfg);
 
     /**
      *  

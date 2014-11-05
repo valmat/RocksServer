@@ -7,6 +7,7 @@
  *  @github https://github.com/valmat/rocksserver
  */
 
+#pragma once
 
 namespace RocksServer {
 
@@ -64,6 +65,14 @@ namespace RocksServer {
         // RocksDB backup path
         // The directory in which a backup will be saved
         std::string backup_path = "/var/rocksserver/backup";
+
+        /**
+         *  Etc 
+         */
+
+        // Path to RocksServer extentions directory
+        std::string extdir = "/usr/lib/rocksserver/plugins";
+
     };
 
 }
