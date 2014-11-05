@@ -3,11 +3,13 @@ CC 	 = clang++
 
 NAME	 = RocksServer
 
-CFLAGS	 = -std=c++11 -O3 -Wall -fPIC
-#CFLAGS	 = -std=c++11 -g -Wall -fPIC
+OPT_FLAG=-O3
+#OPT_FLAG=-g
+
+CFLAGS	 = -std=c++11 $(OPT_FLAG) -Wall
 
 #LINKEROPT = -static
-LINKEROPT = -rdynamic -O3
+LINKEROPT = -rdynamic $(OPT_FLAG)
 
 BINFILE  = $(NAME).bin
 
@@ -39,9 +41,6 @@ ${BINFILE}:
 	$(CC) extend/Extend.cpp $(CFLAGS) -I. -I$(ROCKSPATH)/include -I$(LEVENTI) -c -o Extend.o
 	$(CC) extend/PlugContainer.cpp $(CFLAGS) -I. -I$(ROCKSPATH)/include -I$(LEVENTI) -c -o PlugContainer.o
 	$(CC) *.o $(CFLAGS) -levent -ldl -L$(ROCKSPATH) -L$(LEVENTL) $(ROCKSLIB) $(LINKEROPT) -o $(NAME).bin
-
-#	$(CC) *.o $(CFLAGS) -levent -ldl -L$(ROCKSPATH) -L$(LEVENTL) $(ROCKSLIB) -shared -o $(NAME).so
-#	$(CC) *.o $(CFLAGS) -levent -L$(LEVENTL) -shared -o $(NAME).so
 
 	$(CC) restore.cpp $(CFLAGS) -I. -I$(ROCKSPATH)/include -c -o restore.o
 	$(CC) restore.o $(CFLAGS) -L$(ROCKSPATH) $(ROCKSLIB) $(LINKEROPT) -o restore.bin

@@ -8,8 +8,8 @@ cd $(dirname $0)
 cd rocksdb
 make clean
 make
-#make static_lib
-make shared_lib
+make static_lib
+#make shared_lib
 # make check
 
 #

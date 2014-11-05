@@ -63,7 +63,7 @@ make install
 ```
 
 ## Usage
-Exemple of usage: [driver for PHP](https://github.com/valmat/rocksdbphp)
+Exemple of usage: [driver for php](https://github.com/valmat/rocksdbphp)
 Or any your own implementation by [protocol description](protocol.md).
 
 
@@ -71,18 +71,11 @@ Or any your own implementation by [protocol description](protocol.md).
 First you need implement your own request listener.
 To do this, you have to implement the interface
 ```c
-    template<typename ProtIn, typename ProtOut>
-    struct RequestBase: public RequestSuperBase
-    {
-        /**
-         *  Runs request listener
-         *  @param       protocol in object
-         *  @param       protocol out object
-         */
-        virtual void run(const ProtIn &, const ProtOut &) = 0;
-
-        virtual ~RequestBase() {}
-    };
+template<typename ProtIn, typename ProtOut>
+struct RequestBase: public RequestSuperBase
+{
+    virtual void run(const ProtIn &, const ProtOut &) = 0;
+};
 ```
 
 For example:
