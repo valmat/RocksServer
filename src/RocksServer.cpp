@@ -165,7 +165,7 @@ int main(int argc, char **argv)
     
     // Load extentions
     Extend ext(server, rdb, cfg, dfCfg);
-
+    std::cerr <<  "[1]" << std::endl;
     
 
     /**
@@ -173,10 +173,13 @@ int main(int argc, char **argv)
      *  Start the event loop
      *  
      */
+    /*
     if (!server.dispatch()) {
         std::cerr << "Failed to run message loop." << std::endl;
         return 1;
     }
+    */
+    std::cerr <<  "[2]" << std::endl;
 
     return 0;
 }

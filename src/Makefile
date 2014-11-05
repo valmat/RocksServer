@@ -3,12 +3,13 @@ CC 	 = clang++
 
 NAME	 = RocksServer
 
-#CFLAGS	 = -std=c++11 -O3 -Wall
-CFLAGS	 = -std=c++11 -g -Wall
+#CFLAGS	 = -std=c++11 -O3 -Wall -fPIC
+CFLAGS	 = -std=c++11 -g -Wall -fPIC
+#CFLAGS	 = -std=c++11 -g -Wall
 
 
 #LINKEROPT = -static
-LINKEROPT = 
+LINKEROPT = -rdynamic
 
 BINFILE  = $(NAME).bin
 
@@ -35,6 +36,10 @@ ${BINFILE}:
 	$(CC) extend/Extend.cpp $(CFLAGS) -I. -I$(ROCKSPATH)/include -I$(LEVENTI) -c -o Extend.o
 	$(CC) extend/ExtendObj.cpp $(CFLAGS) -I. -I$(ROCKSPATH)/include -I$(LEVENTI) -c -o ExtendObj.o
 	$(CC) *.o $(CFLAGS) -levent -ldl -L$(ROCKSPATH) -L$(LEVENTL) $(ROCKSLIB) $(LINKEROPT) -o $(NAME).bin
+
+#	$(CC) *.o $(CFLAGS) -levent -ldl -L$(ROCKSPATH) -L$(LEVENTL) $(ROCKSLIB) -shared -o $(NAME).so
+#	$(CC) *.o $(CFLAGS) -levent -L$(LEVENTL) -shared -o $(NAME).so
+
 #	$(CC) restore.cpp $(CFLAGS) -I. -I$(ROCKSPATH)/include -c -o restore.o
 #	$(CC) restore.o $(CFLAGS) -L$(ROCKSPATH) $(ROCKSLIB) $(LINKEROPT) -o restore.bin
 #	$(CC) human_readable.cpp $(CFLAGS) -I. -I$(ROCKSPATH)/include -c -o human_readable.o

@@ -20,10 +20,10 @@ namespace RocksServer {
     public: 
         // none | debug | msg |  warn | error | fatal 
         enum class Level : int {
-            debug  = EVENT_LOG_DEBUG,
-            msg    = EVENT_LOG_MSG,
-            warn   = EVENT_LOG_WARN,
-            error  = EVENT_LOG_ERR,
+            debug  = 0, // EVENT_LOG_DEBUG,
+            msg    = 1, // EVENT_LOG_MSG,
+            warn   = 2, // EVENT_LOG_WARN,
+            error  = 3, // EVENT_LOG_ERR,
             fatal,
             none
         };

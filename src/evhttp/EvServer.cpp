@@ -60,6 +60,7 @@ namespace RocksServer {
 
         // freeing request objects
         for(auto &pReq: _reqList) {
+            std::cerr << "\t:"<< (size_t) pReq << std::endl;
             delete pReq;
         }
         

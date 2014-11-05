@@ -43,7 +43,7 @@ namespace RocksServer {
      *  Get request method
      *  see: http://www.wangafu.net/~nickm/libevent-2.1/doxygen/html/http_8h.html
      */
-    evhttp_cmd_type EvRequest::getMethod() const
+    int EvRequest::getMethod() const
     {
         return evhttp_request_get_command(_req);
     }

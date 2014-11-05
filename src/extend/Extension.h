@@ -23,13 +23,18 @@ namespace RocksServer {
         }
 
         // Helper methods for create iterator
-        const_iterator cbegin() const
+        const_iterator begin() const
         {
-            return listeners.cbegin();
+            return listeners.begin();
         }
-        const_iterator cend() const
+        const_iterator end() const
         {
-            return listeners.cend();
+            return listeners.end();
+        }
+
+        ~Extension()
+        {
+            std::cerr <<  "~Extension" << std::endl;
         }
 
     private:
