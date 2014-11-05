@@ -14,7 +14,7 @@ namespace RocksServer {
     class Extend
     {
     public:
-        void load(EvServer &server, const RocksDBWrapper &rdb, const IniConfigs &cfg, const DefaultConfigs &dfCfg);
+        void load(EvServer &server, RocksDBWrapper &rdb, const IniConfigs &cfg, const DefaultConfigs &dfCfg);
 
     private:
         std::forward_list<PlugContainer> handles;

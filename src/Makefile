@@ -59,7 +59,6 @@ clean:
 	rm -f $(NAME).o $(NAME).bin *.o restore.bin human_readable.o human_readable.bin
 
 install:
-	@echo ${SRC}
 	mkdir -p /var/rocksserver
 	chown nobody /var/rocksserver
 	$(CP) ${SRC}/RocksServer.bin /usr/local/bin/rocksserver

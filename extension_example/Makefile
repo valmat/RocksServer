@@ -27,3 +27,9 @@ clean:
 ${OBJECTS}: 
 		${CPP} ${CPP_FLAGS} -o $@ ${@:%.o=%.cpp}
 
+install:
+	cp -f ${RESULT} /usr/lib/rocksserver/plugins/${RESULT}
+
+uninstall:
+	rm -f /usr/lib/rocksserver/plugins/${RESULT}
+

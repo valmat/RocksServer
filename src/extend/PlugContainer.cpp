@@ -11,7 +11,7 @@
 #include <dlfcn.h>
 
 namespace RocksServer {
-    PlugContainer::PlugContainer(std::string plug_file, EvServer &server, const RocksDBWrapper &rdb, const IniConfigs &cfg) :
+    PlugContainer::PlugContainer(std::string plug_file, EvServer &server, RocksDBWrapper &rdb, const IniConfigs &cfg) :
         handle(dlopen(plug_file.data(), RTLD_LAZY))
     {
         //Check for errors

@@ -9,6 +9,7 @@
 
 #include <rocksserver/api.h>
 #include "RequestPing.h"
+#include "RequestWstats.h"
 
 
 using namespace RocksServer;
@@ -16,9 +17,10 @@ using namespace RocksServer;
 /*
  * Create plugin
  */
-//PLUGIN(Extension &extension, const RocksDBWrapper& rdb, const IniConfigs& cfg)
-//PLUGIN(Extension &extension, const RocksDBWrapper& rdb)
-PLUGIN(Extension &extension)
+//PLUGIN(Extension &extension, RocksDBWrapper& rdb, const IniConfigs& cfg)
+PLUGIN(Extension &extension, RocksDBWrapper& rdb)
+//PLUGIN(Extension &extension)
 {
     extension.bind("/ping", new RequestPing());
+    extension.bind("/wstats", new RequestWstats(rdb));
 }
