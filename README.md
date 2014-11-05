@@ -67,6 +67,58 @@ Exemple of usage: [driver for PHP](https://github.com/valmat/rocksdbphp)
 Or any your own implementation by [protocol description](protocol.md).
 
 
+## How to extend
+First you need implement your own request listener.
+To do this, you have to implement the interface
+```c
+    template<typename ProtIn, typename ProtOut>
+    struct RequestBase: public RequestSuperBase
+    {
+        /**
+         *  Runs request listener
+         *  @param       protocol in object
+         *  @param       protocol out object
+         */
+        virtual void run(const ProtIn &, const ProtOut &) = 0;
+
+        virtual ~RequestBase() {}
+    };
+```
+
+For example:
+`RequestPing.h`
+```c
+struct RequestPing : public RequestBase<ProtocolInTrivial, ProtocolOut>
+{
+    virtual void run(const ProtocolInTrivial &in, const ProtocolOut &out) override
+    {
+        out.setStr("pong");
+    }
+};
+```
+After that, you need to implement a plugin:
+`smpl_plug.cpp`
+```c
+#include <rocksserver/api.h>
+#include "RequestPing.h"
+
+PLUGIN(Extension &extension)
+{
+    extension.bind("/ping", new RequestPing());
+}
+```
+Compile your plugin:
+```
+g++ -I. -I"/usr/include/rocksserver/include" -Wall -O3 -std=c++11 -fPIC -c smpl_plug.cpp -o smpl_plug.o 
+g++ -Wall -std=c++11 -O3 -shared smpl_plug.o -o smpl_plug.so
+```
+and copy to `/usr/lib/rocksserver/plugins`
+```
+cp -f smpl_plug.so /usr/lib/rocksserver/plugins/smpl_plug.so
+```
+Restart RocksServer.
+See [example](https://github.com/valmat/RocksServer/tree/master/extension_example) how to extend RocksServer.
+
 ## License
 [BSD](LICENSE)
 
