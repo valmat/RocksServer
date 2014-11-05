@@ -3,13 +3,13 @@ CC 	 = clang++
 
 NAME	 = RocksServer
 
-#CFLAGS	 = -std=c++11 -O3 -Wall -fPIC
-CFLAGS	 = -std=c++11 -g -Wall -fPIC
+CFLAGS	 = -std=c++11 -O3 -Wall -fPIC
+#CFLAGS	 = -std=c++11 -g -Wall -fPIC
 #CFLAGS	 = -std=c++11 -g -Wall
 
 
 #LINKEROPT = -static
-LINKEROPT = -rdynamic
+LINKEROPT = -rdynamic -O3
 
 BINFILE  = $(NAME).bin
 
@@ -34,7 +34,7 @@ ${BINFILE}:
 	$(CC) evhttp/EvResponse.cpp $(CFLAGS) -I. -I$(ROCKSPATH)/include -I$(LEVENTI) -c -o EvResponse.o
 	$(CC) evhttp/EvRequest.cpp $(CFLAGS) -I. -I$(ROCKSPATH)/include -I$(LEVENTI) -c -o EvRequest.o
 	$(CC) extend/Extend.cpp $(CFLAGS) -I. -I$(ROCKSPATH)/include -I$(LEVENTI) -c -o Extend.o
-	$(CC) extend/ExtendObj.cpp $(CFLAGS) -I. -I$(ROCKSPATH)/include -I$(LEVENTI) -c -o ExtendObj.o
+	$(CC) extend/PlugContainer.cpp $(CFLAGS) -I. -I$(ROCKSPATH)/include -I$(LEVENTI) -c -o PlugContainer.o
 	$(CC) *.o $(CFLAGS) -levent -ldl -L$(ROCKSPATH) -L$(LEVENTL) $(ROCKSLIB) $(LINKEROPT) -o $(NAME).bin
 
 #	$(CC) *.o $(CFLAGS) -levent -ldl -L$(ROCKSPATH) -L$(LEVENTL) $(ROCKSLIB) -shared -o $(NAME).so

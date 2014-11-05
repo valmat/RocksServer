@@ -1,7 +1,7 @@
 /**
  *
- *  ExtendObj.cpp
- *  ExtendObj RocksServer
+ *  PlugContainer.cpp
+ *  Plugin container
  *
  *  @author valmat <ufabiz@gmail.com>
  *  @github https://github.com/valmat/rocksserver
@@ -11,9 +11,8 @@
 #include <dlfcn.h>
 
 namespace RocksServer {
-    ExtendObj::ExtendObj(std::string plug_file, EvServer &server, const RocksDBWrapper &rdb, const IniConfigs &cfg) :
+    PlugContainer::PlugContainer(std::string plug_file, EvServer &server, const RocksDBWrapper &rdb, const IniConfigs &cfg) :
         handle(dlopen(plug_file.data(), RTLD_LAZY))
-        //handle(dlopen(plug_file.data(), RTLD_NOW | RTLD_LOCAL))
     {
         //Check for errors
         if (!handle) {
@@ -33,22 +32,17 @@ namespace RocksServer {
             return;
         }
 
-        Extension extension;
-
         // Execute the function from the extension
-        std::cout << "Исполняем функцию из библиотеки: " << std::endl;
-        plugin(rdb, cfg, &extension);
-
+        Extension extension;
+        plugin(extension, rdb, cfg);
         for(auto &it: extension) {
-            server.onRequest(it.first.data(), std::move(it.second));
+            server.bind(it.first.data(), std::move(it.second));
         }
-
     }
 
-    ExtendObj::~ExtendObj()
+    PlugContainer::~PlugContainer()
     {
         // Close the extension
-        std::cerr <<  "~ExtendObj" << std::endl;
         if(handle) dlclose(handle);
     }
 

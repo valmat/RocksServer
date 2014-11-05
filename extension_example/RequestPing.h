@@ -1,5 +1,5 @@
 /**
- *  RequestHelloWorld.h
+ *  RequestPing.h
  *
  *  Example request listener
  *
@@ -10,9 +10,8 @@
 
 namespace RocksServer {
 
-    class RequestHelloWorld : public RequestBase<ProtocolInTrivial, ProtocolOut>
+    struct RequestPing : public RequestBase<ProtocolInTrivial, ProtocolOut>
     {
-    public:
         /**
          *  Runs request listener
          *  @param       protocol in object
@@ -20,13 +19,7 @@ namespace RocksServer {
          */
         virtual void run(const ProtocolInTrivial &in, const ProtocolOut &out) override
         {
-            out.setStr("Hello world!");
-        }
-
-        virtual ~RequestHelloWorld() 
-        {
-            std::cout << "~RequestHelloWorld()" << std::endl;
+            out.setStr("pong");
         }
     };
-
 }

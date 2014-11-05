@@ -18,7 +18,7 @@ namespace RocksServer {
         std::string extdir = cfg.get("extdir", dfCfg.extdir);
         DIR *dp;
         if( nullptr == (dp = opendir(extdir.c_str())) ) {
-            std::cout << "Error(" << errno << ") opening " << extdir << std::endl;
+            std::cerr << "Error(" << errno << ") opening " << extdir << std::endl;
             return;
         }
 
@@ -29,7 +29,7 @@ namespace RocksServer {
             }
             
             std::string plug_file = extdir + "/" + dirp->d_name;
-            std::cout << "Load extension " << dirp->d_name << std::endl;
+            std::cout << "Load extension: " << dirp->d_name << std::endl;
 
             handles.emplace_front(std::move(plug_file), server, rdb, cfg);
         }

@@ -8,48 +8,13 @@
 // nm smpl_plug.so
 
 #include "../src/api.h"
-#include "RequestHelloWorld.h"
-
-
-
-struct TestClass
-{
-    TestClass()
-    {
-        std::cout << "TestClass()" << std::endl;
-    }
-
-    ~TestClass()
-    {
-        std::cout << "~TestClass()" << std::endl;
-    }
-
-    operator int()
-    {
-        return 5678;
-    }
-};
-
-static TestClass ret_val;
-
+#include "RequestPing.h"
 
 
 using namespace RocksServer;
 
-//#define PLUGIN(extension) extern "C" int get_plugin(RocksServer::Extension *(extension))
-
-
- 
-//Наша функция, которую мы будем запускать из нашего приложения.
-//extern "C" int get_plugin() 
-//PLUGIN(extension)
-void plugin(const RocksDBWrapper& rdb, const IniConfigs& cfg, Extension *extension)
+//PLUGIN(Extension &extension, const RocksDBWrapper& rdb, const IniConfigs& cfg)
+PLUGIN(Extension &extension)
 {
-    // create extension
-    //static RocksServer::Extension extension();
-    //ret_val = 177;
-
-    extension->add("/test", new RequestHelloWorld());
-
-    std::cout << "This message from get_plugin.so function get_plugin \t"<< (int)ret_val << std::endl;
+    extension.bind("/ping", new RequestPing());
 }

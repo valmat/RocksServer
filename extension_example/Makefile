@@ -1,17 +1,16 @@
-#CPP             = g++
-#LD              = g++
-CPP             = clang++
-LD              = clang++
+CPP             = g++
+LD              = g++
+#CPP             = clang++
+#LD              = clang++
 
 
-#CPP_FLAGS       = -c -I. I../deps/rocksdb/include -O3 -std=c++11
-CPP_FLAGS       = -I. -I"$(PWD)/../deps/rocksdb/include" -g -std=c++11 -fPIC -c
+#CPP_FLAGS       = -I. -I"$(PWD)/../deps/rocksdb/include" -g -std=c++11 -fPIC -c
+CPP_FLAGS       = -I. -I"$(PWD)/../deps/rocksdb/include" -O3 -std=c++11 -fPIC -c
 
-#LD_FLAGS        = -Wall -shared -O2 
-LD_FLAGS        = -Wall -std=c++11 -shared
+#LD_FLAGS        = -Wall -std=c++11 -g -shared
+LD_FLAGS        = -Wall -std=c++11 -O3 -shared
 
 NAME            = smpl_plug
-
 
 RESULT          = $(NAME).so
 

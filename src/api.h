@@ -1,6 +1,5 @@
 
-
-//#define PLUGIN(extension) extern "C" int myplug(RocksServer::Extension *(extension))
+#pragma once
 
 // C++ headers
 #include <iostream>
@@ -61,10 +60,4 @@
 #include "extend/Extension.h"
 
 
-void plugin(const RocksServer::RocksDBWrapper&, const RocksServer::IniConfigs&, RocksServer::Extension *);
-
-extern "C" void get_plugin(const RocksServer::RocksDBWrapper& rdb, const RocksServer::IniConfigs& cfg, RocksServer::Extension *extension)
-{
-    plugin(rdb, cfg, extension);
-}
-
+#define PLUGIN extern "C" void plugin

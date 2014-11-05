@@ -53,14 +53,14 @@ namespace RocksServer {
          *  @param  path       path to listen
          *  @param  req        listener
          */
-        void onRequest(const char *path, std::unique_ptr<RequestSuperBase> &&pReq);
+        void bind(const char *path, std::unique_ptr<RequestSuperBase> &&pReq);
 
         /**
          *  Bind request listener
          */
-        void onRequest(const char *path, RequestSuperBase *pReq)
+        void bind(const char *path, RequestSuperBase *pReq)
         {
-            onRequest(path, std::unique_ptr<RequestSuperBase>(pReq));
+            bind(path, std::unique_ptr<RequestSuperBase>(pReq));
         }
 
         /**
@@ -68,10 +68,10 @@ namespace RocksServer {
          *  @param  paths       paths to listen
          *  @param  req        listener
          */
-        void onRequest(std::initializer_list<const char *> paths, RequestSuperBase *pReq)
+        void bind(std::initializer_list<const char *> paths, RequestSuperBase *pReq)
         {
             for(auto &path: paths) {
-                onRequest(path, pReq);
+                bind(path, pReq);
             }
         }
 

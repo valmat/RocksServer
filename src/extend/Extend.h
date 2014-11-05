@@ -16,13 +16,8 @@ namespace RocksServer {
     public:
         void load(EvServer &server, const RocksDBWrapper &rdb, const IniConfigs &cfg, const DefaultConfigs &dfCfg);
 
-        ~Extend()
-        {
-            std::cerr <<  "~Extend" << std::endl;
-        }
-
     private:
-        std::forward_list<ExtendObj> handles;
+        std::forward_list<PlugContainer> handles;
     };
 
 }
