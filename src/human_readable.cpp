@@ -33,6 +33,47 @@ void print_help(const char *script_name)
     std::cout << std::endl;
 }
 
+
+// Simplest RocksDB wrapper container
+class RocksDbContainer
+{
+public:
+    RocksDbContainer(const std::string &database_dir)
+    {
+        // DB options
+        rocksdb::Options dbOptions;
+        dbOptions.create_if_missing = true;
+        dbOptions.merge_operator.reset(new RocksServer::Int64Incrementor);
+
+        auto status = rocksdb::DB::Open(dbOptions, database_dir, &_db );
+        
+        _valid = status.ok();
+        if (!_valid) {
+            std::cerr << "RocksDB start error:" << std::endl << status.ToString() << std::endl;
+            std::cerr << "RocksDB version is " << ROCKSDB_MAJOR << "." << ROCKSDB_MINOR << "." << ROCKSDB_PATCH << std::endl;
+        }
+    }
+
+    operator bool()
+    {
+        return _valid;
+    }
+
+    std::unique_ptr<rocksdb::Iterator> keyIterator()
+    {
+        return std::unique_ptr<rocksdb::Iterator>(_db->NewIterator(rocksdb::ReadOptions()));;
+    }
+
+    ~RocksDbContainer()
+    {
+        delete _db;
+    }
+private:
+    rocksdb::DB* _db;
+    bool _valid = false;
+};
+
+
 int main(int argc, char **argv)
 {
     /*
@@ -67,25 +108,12 @@ int main(int argc, char **argv)
     /*
      * Init RocksDB
      */
+    RocksDbContainer db(database_dir);
 
-    // DB pointer
-    rocksdb::DB* rdb;
-    // DB options
-    rocksdb::Options dbOptions;
-
-    dbOptions.create_if_missing = true;
-    dbOptions.merge_operator.reset(new RocksServer::Int64Incrementor);
-
-    auto status = rocksdb::DB::Open(dbOptions, database_dir, &rdb);
-
-    // Check RocksDB started
-    if (!status.ok()) {
-        std::cerr << "RocksDB start error:" << std::endl << status.ToString() << std::endl;
-        std::cout << "RocksDB version is " << ROCKSDB_MAJOR << "." << ROCKSDB_MINOR << "." << ROCKSDB_PATCH << std::endl;
+    // Check if RocksDB started
+    if (!db) {
         return 1;
     }
-    
-
 
     // Redirected stdout to file
     FILE *fp = nullptr;
@@ -95,12 +123,13 @@ int main(int argc, char **argv)
             return 1;
         }
     }
-    
+
     /*
      * Iterate over all db keys
      */
     std::string key, value;
-    rocksdb::Iterator* it = rdb->NewIterator(rocksdb::ReadOptions());
+    auto it = db.keyIterator();
+
     for (it->SeekToFirst(); it->Valid(); it->Next()) {
         key   = it->key().ToString();
         value = it->value().ToString();
@@ -110,12 +139,11 @@ int main(int argc, char **argv)
         std::cout << value << std::endl;
     }
 
+    // Check for any errors found during the scan
     if(!it->status().ok()) {
         std::cerr<< it->status().ToString() << std::endl;
     }
-    //assert(it->status().ok()); // Check for any errors found during the scan
     
-    delete it;
     if(fp) fclose(fp);
 
     return 0;
