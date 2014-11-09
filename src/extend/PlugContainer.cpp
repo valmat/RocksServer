@@ -32,12 +32,8 @@ namespace RocksServer {
             return;
         }
 
-        // Execute the function from the extension
-        Extension extension;
-        plugin(extension, rdb, cfg);
-        for(auto &it: extension) {
-            server.bind(it.first.data(), std::move(it.second));
-        }
+        // Execute the function from an extension
+        plugin(server, rdb, cfg);
     }
 
     PlugContainer::~PlugContainer()

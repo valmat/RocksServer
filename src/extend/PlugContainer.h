@@ -11,17 +11,18 @@
 
 namespace RocksServer {
 
-    struct PlugContainer
+    class PlugContainer
     {
-        // Define plugin type  
-        typedef void (*plug_t)(Extension&, RocksDBWrapper&, const IniConfigs&);
-
+    public:
         PlugContainer(std::string plug_file, EvServer &server, RocksDBWrapper &rdb, const IniConfigs &cfg);
 
         ~PlugContainer();
 
     private:
+        // Define plugin type  
+        typedef void (*plug_t)(Extension, RocksDBWrapper&, const IniConfigs&);
+
         void* handle;
-        const char * plug_fname = "plugin";
+        const char* plug_fname = "plugin";
     };
 }

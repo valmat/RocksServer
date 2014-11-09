@@ -21,5 +21,7 @@ namespace RocksServer {
         {
             out.setStr("pong");
         }
+        
+        virtual ~RequestPing() {}
     };
 }

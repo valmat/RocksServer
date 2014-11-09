@@ -11,31 +11,29 @@
 
 namespace RocksServer {
 
-    struct Extension
+    // Forward declaration
+    class EvServer;
+
+    class Extension
     {
-        typedef std::pair< std::string, std::unique_ptr<RequestSuperBase> > ListenerObj;
-        typedef typename std::forward_list<ListenerObj>::iterator iterator;
-        
+        typedef std::unique_ptr<RequestSuperBase> listener_ptr;
+    public:
+
+        Extension(EvServer &server) : server(server) {};
+
         // Add listener
-        void bind(std::string path, RequestSuperBase* listener)
+        Extension& bind(std::string path, RequestSuperBase* listener)
         {
-            listeners.emplace_front(std::move(path), std::move(std::unique_ptr<RequestSuperBase>(listener)));
-
-        }
-
-        // Helper methods for create iterator
-        iterator begin()
-        {
-            return listeners.begin();
-        }
-        
-        iterator end()
-        {
-            return listeners.end();
+            // create unique_ptr in plugin scope
+            bind(std::move(path), std::move(listener_ptr(listener)));
+            return *this;
         }
 
     private:
-        std::forward_list<ListenerObj> listeners;
+        // Add listener
+        void bind(std::string &&path, listener_ptr &&listener);
+
+        EvServer &server;
     };
 
 }
