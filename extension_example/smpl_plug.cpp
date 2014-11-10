@@ -17,9 +17,9 @@ using namespace RocksServer;
 /*
  * Create plugin
  */
-//PLUGIN(Extension &extension, RocksDBWrapper& rdb, const IniConfigs& cfg)
+//PLUGIN(Extension extension, RocksDBWrapper& rdb, const IniConfigs& cfg)
 PLUGIN(Extension extension, RocksDBWrapper& rdb)
-//PLUGIN(Extension &extension)
+//PLUGIN(Extension extension)
 {
     extension.bind("/ping", new RequestPing())
              .bind("/wstats", new RequestWstats(rdb));

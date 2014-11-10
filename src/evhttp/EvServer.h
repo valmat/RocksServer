@@ -63,18 +63,6 @@ namespace RocksServer {
             bind(path, std::unique_ptr<RequestSuperBase>(pReq));
         }
 
-        /**
-         *  Bind request listener
-         *  @param  paths       paths to listen
-         *  @param  req        listener
-         */
-        void bind(std::initializer_list<const char *> paths, RequestSuperBase *pReq)
-        {
-            for(auto &path: paths) {
-                bind(path, pReq);
-            }
-        }
-
     private:
 
         evhttp *_http = nullptr;
