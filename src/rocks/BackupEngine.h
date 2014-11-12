@@ -54,11 +54,9 @@ namespace RocksServer
         rocksdb::Status restoreBackup(const std::string& db_dir) const {
             return _engine->RestoreDBFromLatestBackup(db_dir, db_dir);
         }
-
+        
     private:
-
         rocksdb::BackupEngine* _engine;
-
     };
 
 }

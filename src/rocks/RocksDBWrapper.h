@@ -47,9 +47,21 @@ namespace RocksServer {
             dbOptions.merge_operator.reset(new Int64Incrementor);
 
             _status = rocksdb::DB::Open(dbOptions, dbpath, &_db);
+
+            // If is data base backupable
+            if(cfg.get("isbackupable", dfCfg.isbackupable)) {
+                auto backupableOptions = rocksdb::BackupableDBOptions(cfg.get("backup_path", dfCfg.backup_path));
+
+                backupableOptions.share_table_files = cfg.get("share_table_files",  dfCfg.share_table_files);
+                backupableOptions.sync              = cfg.get("backup_sync",        dfCfg.backup_sync);
+                backupableOptions.destroy_old_data  = cfg.get("backup_destroy_old", dfCfg.backup_destroy_old);
+                backupableOptions.backup_log_files  = cfg.get("backup_log_files",   dfCfg.backup_log_files);
+
+                _db = new rocksdb::BackupableDB(_db, backupableOptions);
+            }
         }
 
-        virtual ~RocksDBWrapper()
+        ~RocksDBWrapper()
         {
             //delete Incrementor; <-- not required : std::shared_ptr
             delete _db;

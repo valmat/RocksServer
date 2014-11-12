@@ -167,9 +167,14 @@ int main(int argc, char **argv)
     server.bind("/mdel",   new RequestMdel(rdb));
     server.bind("/incr",   new RequestIncr(rdb));
     server.bind("/tail",   new RequestTailing(rdb));
-    server.bind("/backup", new RequestBackup(rdb, cfg.get("backup_path", dfCfg.backup_path)));
     server.bind("/stats",  new RequestStats(rdb));
     server.bind("/prefit", new RequestPrefIt(rdb));
+    // If is data base backupable
+    if(cfg.get("isbackupable", dfCfg.isbackupable)) {
+       server.bind("/backup", new RequestBackup(rdb));
+       server.bind("/backup/info", new RequestBackupInfo(rdb));
+
+    }
     
     // Load extentions
     ext.load(server, rdb, cfg, dfCfg);

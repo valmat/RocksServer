@@ -79,9 +79,10 @@
 #include "listeners/RequestMdel.h"
 #include "listeners/RequestIncr.h"
 #include "listeners/RequestTailing.h"
-#include "listeners/RequestBackup.h"
 #include "listeners/RequestStats.h"
 #include "listeners/RequestPrefIt.h"
+#include "listeners/RequestBackup.h"
+#include "listeners/RequestBackupInfo.h"
 
 
 #include "evhttp/EvServer.h"

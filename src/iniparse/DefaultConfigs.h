@@ -67,6 +67,38 @@ namespace RocksServer {
         std::string backup_path = "/var/rocksserver/backup";
 
         /**
+         *  Configs backups RocksDB 
+         */
+
+        //Is this DB backupable?
+        bool isbackupable = true;
+
+        // If share_table_files == true, backup will assume that table files with
+        // same name have the same contents. This enables incremental backups and
+        // avoids unnecessary data copies.
+        // If share_table_files == false, each backup will be on its own and will
+        // not share any data with other backups.
+        // default: true
+        bool share_table_files = true;
+
+        // If sync == true, we can guarantee you'll get consistent backup even
+        // on a machine crash/reboot. Backup process is slower with sync enabled.
+        // If sync == false, we don't guarantee anything on machine reboot. However,
+        // chances are some of the backups are consistent.
+        // Default: true
+        bool backup_sync = true;
+
+        // If true, it will delete whatever backups there are already
+        // Default: false
+        bool backup_destroy_old = false;
+
+        // If false, we won't backup log files. This option can be useful for backing
+        // up in-memory databases where log file are persisted, but table files are in
+        // memory.
+        // Default: true
+        bool backup_log_files = true;
+
+        /**
          *  Etc 
          */
 

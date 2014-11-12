@@ -8,6 +8,9 @@
  *  @github https://github.com/valmat/rocksserver
  */
 
+#pragma once
+
+using rocksdb::BackupableDB;
 
 namespace RocksServer {
 
@@ -15,7 +18,7 @@ namespace RocksServer {
     {
     public:
         
-        RequestBackup(RocksDBWrapper &rdb, const std::string &bk_path) : _rdb(rdb), _bk_path(bk_path) {} 
+        RequestBackup(rocksdb::DB *rdb) : db(reinterpret_cast<BackupableDB*>(rdb)) {} 
 
         /**
          *  Runs request listener
@@ -29,8 +32,7 @@ namespace RocksServer {
                 return;
             }
 
-            BackupEngine bk(_bk_path);
-            auto status = bk.createBackup(_rdb);
+            auto status = db->CreateNewBackup();
 
             if( status.ok() ) {
                 out.ok();
@@ -42,10 +44,7 @@ namespace RocksServer {
 
         virtual ~RequestBackup() {}
     private:
-        RocksDBWrapper& _rdb;
-
-        std::string _bk_path;
-
+        BackupableDB* db;
     };
 
 }
