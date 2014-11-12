@@ -33,20 +33,15 @@ namespace RocksServer {
 
             std::vector<rocksdb::BackupInfo> backup_info;
             db->GetBackupInfo(&backup_info);
+            out.setStr(backup_info.size());
             for(auto inf: backup_info) {
                 dt = localtime(&inf.timestamp);
                 strftime(buffer, sizeof(buffer), "%d.%m.%Y %T %z", dt);
 
-                std::cout << "id: " << inf.backup_id << std::endl;
-                std::cout << "timestamp: " << inf.timestamp << std::endl;
-                std::cout << "time: " << buffer << std::endl;
-                std::cout << "size: " << inf.size << std::endl;
-                std::cout << std::endl;
-
-                out.setStr(std::string("id: ") + std::to_string(inf.backup_id) + "\n");
+                out.setStr(std::string("\nid: ") + std::to_string(inf.backup_id) + "\n");
                 out.setStr(std::string("timestamp: ") + std::to_string(inf.timestamp) + "\n");
                 out.setStr(std::string("time: ") + std::string(buffer) + "\n");
-                out.setStr(std::string("size: ") + std::to_string(inf.size) + "\n\n");
+                out.setStr(std::string("size: ") + std::to_string(inf.size) + "\n");
             }
         }
 

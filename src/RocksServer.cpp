@@ -171,9 +171,8 @@ int main(int argc, char **argv)
     server.bind("/prefit", new RequestPrefIt(rdb));
     // If is data base backupable
     if(cfg.get("isbackupable", dfCfg.isbackupable)) {
-       server.bind("/backup", new RequestBackup(rdb));
+       server.bind("/backup", new RequestBackup(rdb, cfg.get("backups_to_keep", dfCfg.num_backups_to_keep)));
        server.bind("/backup/info", new RequestBackupInfo(rdb));
-
     }
     
     // Load extentions

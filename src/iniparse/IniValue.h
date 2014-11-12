@@ -9,6 +9,8 @@
 
 #pragma once
 
+#include <cstdint>
+
 namespace RocksServer {
 
     template <typename T>
@@ -60,28 +62,17 @@ namespace RocksServer {
         }
 
         /**
-         *  Cast to a size_t
+         *  Cast to an intiger
          */
-         operator IniValue<size_t> () const
-        {
-            return std::strtoull(_value.c_str(), nullptr, 10);
-        }
+        operator IniValue<uint64_t> () const {return std::strtoull(_value.c_str(), nullptr, 10);}
+        operator IniValue<uint32_t> () const {return std::strtoul(_value.c_str(), nullptr, 10);}
+        operator IniValue<uint16_t> () const {return std::strtoul(_value.c_str(), nullptr, 10);}
+        operator IniValue<uint8_t>  () const {return std::strtoul(_value.c_str(), nullptr, 10);}
 
-        /**
-         *  Cast to a unsigned short
-         */
-         operator IniValue<unsigned short> () const
-        {
-            return std::strtoul(_value.c_str(), nullptr, 10);
-        }
-
-        /**
-         *  Cast to a int
-         */
-         operator IniValue<int> () const
-        {
-            return std::strtoul(_value.c_str(), nullptr, 10);
-        }
+        operator IniValue<int64_t> () const {return std::stoll(_value);}
+        operator IniValue<int32_t> () const {return std::stol(_value);}
+        operator IniValue<int16_t> () const {return std::stoi(_value);}
+        operator IniValue<int8_t>  () const {return std::stoi(_value);}
 
         /**
          *  Cast to a EvLogger::Level

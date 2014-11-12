@@ -17,8 +17,12 @@ namespace RocksServer {
     class RequestBackup : public RequestBase<ProtocolInPostSimple, ProtocolOut>
     {
     public:
-        
-        RequestBackup(rocksdb::DB *rdb) : db(reinterpret_cast<BackupableDB*>(rdb)) {} 
+
+
+        RequestBackup(rocksdb::DB *rdb, uint32_t num_backups) : 
+            db(reinterpret_cast<BackupableDB*>(rdb)),
+            num_backups(num_backups)
+        {} 
 
         /**
          *  Runs request listener
@@ -34,17 +38,30 @@ namespace RocksServer {
 
             auto status = db->CreateNewBackup();
 
-            if( status.ok() ) {
-                out.ok();
-            } else {
+            if( !status.ok() ) {
                 out.fail();
                 EvLogger::writeLog(status.ToString().data());
+                return;
             }
+
+            if(num_backups) {
+                status = db->PurgeOldBackups(num_backups);
+
+                if( !status.ok() ) {
+                    out.fail();
+                    EvLogger::writeLog(status.ToString().data());
+                    return;
+                }
+            }
+
+            out.ok();
         }
 
         virtual ~RequestBackup() {}
     private:
         BackupableDB* db;
+        // num backups to keep
+        uint32_t num_backups;
     };
 
 }

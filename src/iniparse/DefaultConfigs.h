@@ -98,6 +98,10 @@ namespace RocksServer {
         // Default: true
         bool backup_log_files = true;
 
+        // deletes old backups, keeping latest num_backups_to_keep alive
+        // If num_backups_to_keep == 0, no specified — will keep all backups
+        uint32_t num_backups_to_keep = 0;
+
         /**
          *  Etc 
          */
