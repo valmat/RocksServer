@@ -1,8 +1,8 @@
 /**
  *  RequestBackupInfo.h
  *
- *  Request listener for command "/backup"
- *  Create backup
+ *  Request listener for command "/backup/info"
+ *  Show information about backups
  *
  *  @author valmat <ufabiz@gmail.com>
  *  @github https://github.com/valmat/rocksserver
