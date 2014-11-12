@@ -18,7 +18,6 @@ namespace RocksServer {
     {
     public:
 
-
         RequestBackupDel(rocksdb::DB *rdb) : db(reinterpret_cast<BackupableDB*>(rdb)) {} 
 
         /**
@@ -33,13 +32,16 @@ namespace RocksServer {
                 return;
             }
 
+            // Get buckupID from the POST data
             uint32_t backup_id = std::strtoul(in.key().data(), nullptr, 10);
+            // execut delete operation
             auto status = db->DeleteBackup(backup_id);
 
             if( status.ok() ) {
                 out.ok();
             } else {
                 out.fail();
+                // Log error message
                 EvLogger::writeLog(status.ToString().data());
             }
         }

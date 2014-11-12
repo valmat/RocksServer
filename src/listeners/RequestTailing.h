@@ -13,7 +13,7 @@ namespace RocksServer {
     class RequestTailing : public RequestBase<ProtocolInTrivial, ProtocolOut>
     {
     public:
-        RequestTailing(RocksDBWrapper &rdb) : _rdb(rdb) {}
+        RequestTailing(RocksDBWrapper &rdb) : db(rdb) {}
 
         /**
          *  Runs request listener
@@ -24,7 +24,7 @@ namespace RocksServer {
         {
             auto rOpt = rocksdb::ReadOptions();
             rOpt.tailing = true;
-            std::unique_ptr<rocksdb::Iterator> it(_rdb->NewIterator(std::move(rOpt)));
+            std::unique_ptr<rocksdb::Iterator> it(db->NewIterator(std::move(rOpt)));
 
             // filling buffer
             for (it->SeekToFirst(); it->Valid(); it->Next()) {
@@ -39,7 +39,7 @@ namespace RocksServer {
 
         virtual ~RequestTailing() {}
     private:
-        RocksDBWrapper& _rdb;
+        RocksDBWrapper& db;
     };
 
 }

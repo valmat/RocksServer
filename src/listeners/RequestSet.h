@@ -13,7 +13,7 @@ namespace RocksServer {
     class RequestSet : public RequestBase<ProtocolInPost, ProtocolOut>
     {
     public:
-        RequestSet(RocksDBWrapper &rdb) : _rdb(rdb) {}
+        RequestSet(RocksDBWrapper &rdb) : db(rdb) {}
 
         /**
          *  Runs request listener
@@ -27,19 +27,21 @@ namespace RocksServer {
                 return;
             }
             
+            // Get key-value pair from the POST data
             auto pair = in.pair();
 
-            if(_rdb.set(pair.first, pair.second)) {
+            // Set key-value pair to the DB
+            if(db.set(pair.first, pair.second)) {
                 out.ok();
             } else {
                 out.fail();
-                EvLogger::writeLog(_rdb.getStatus().data());
+                EvLogger::writeLog(db.getStatus().data());
             }
         }
 
         virtual ~RequestSet() {}
     private:
-        RocksDBWrapper& _rdb;
+        RocksDBWrapper& db;
     };
 
 }

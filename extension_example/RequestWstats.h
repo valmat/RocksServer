@@ -39,7 +39,6 @@ namespace RocksServer {
             //  etc...
 
 
-            //std::string key = in.check() ? in.key() : "stats";
             std::string key;
             if(in.check()) {
                 key = in.key().ToString();

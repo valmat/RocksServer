@@ -25,7 +25,7 @@ namespace RocksServer {
          IniValue(const T &&value) : _value(std::move(value)) {}
 
         /**
-         *  Cast to a object of type T
+         *  Cast to an object of type T
          */
         operator T () const
         {
@@ -62,7 +62,7 @@ namespace RocksServer {
         }
 
         /**
-         *  Cast to an intiger
+         *  Casting to integer types
          */
         operator IniValue<uint64_t> () const {return std::strtoull(_value.c_str(), nullptr, 10);}
         operator IniValue<uint32_t> () const {return std::strtoul(_value.c_str(), nullptr, 10);}
@@ -99,7 +99,7 @@ namespace RocksServer {
         }
         
         /**
-         *  Cast to const char *
+         *  Cast to a const char *
          */
         operator IniValue<const char *> () const
         {

@@ -13,7 +13,7 @@ namespace RocksServer {
     class RequestStats : public RequestBase<ProtocolInTrivial, ProtocolOut>
     {
     public:
-        RequestStats(RocksDBWrapper &rdb) : _rdb(rdb) {}
+        RequestStats(RocksDBWrapper &rdb) : db(rdb) {}
 
         /**
          *  Runs request listener
@@ -23,17 +23,17 @@ namespace RocksServer {
         virtual void run(const ProtocolInTrivial &in, const ProtocolOut &out) override
         {
             std::string stat;
-            if(_rdb->GetProperty("rocksdb.stats", &stat)) {
+            if(db->GetProperty("rocksdb.stats", &stat)) {
                 out.setStr(stat);
             } else {
                 out.fail();
-                EvLogger::writeLog(_rdb.getStatus().data());
+                EvLogger::writeLog(db.getStatus().data());
             }
         }
 
         virtual ~RequestStats() {}
     private:
-        RocksDBWrapper& _rdb;
+        RocksDBWrapper& db;
     };
 
 }

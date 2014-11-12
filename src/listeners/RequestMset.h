@@ -13,7 +13,7 @@ namespace RocksServer {
     class RequestMset : public RequestBase<ProtocolInPostPairs, ProtocolOut>
     {
     public:
-        RequestMset(RocksDBWrapper &rdb) : _rdb(rdb) {}
+        RequestMset(RocksDBWrapper &rdb) : db(rdb) {}
 
         /**
          *  Runs request listener
@@ -33,18 +33,18 @@ namespace RocksServer {
                 batch.Put(it.first, it.second);
             }
 
-            // set and filling buffer
-            if(_rdb.mset(batch)) {
+            // Set batch to the DB and filling output buffer
+            if(db.mset(batch)) {
                 out.ok();
             } else {
                 out.fail(); 
-                EvLogger::writeLog(_rdb.getStatus().data());
+                EvLogger::writeLog(db.getStatus().data());
             }
         }
 
         virtual ~RequestMset() {}
     private:
-        RocksDBWrapper& _rdb;
+        RocksDBWrapper& db;
     };
 
 }

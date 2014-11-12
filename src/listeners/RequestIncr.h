@@ -13,7 +13,7 @@ namespace RocksServer {
     class RequestIncr : public RequestBase<ProtocolInPostKeys, ProtocolOut>
     {
     public:
-        RequestIncr(RocksDBWrapper &rdb) : _rdb(rdb) {}
+        RequestIncr(RocksDBWrapper &rdb) : db(rdb) {}
         
         /**
          *  Runs request listener
@@ -22,7 +22,7 @@ namespace RocksServer {
          */
         virtual void run(const ProtocolInPostKeys &in, const ProtocolOut &out) override
         {
-            // Detect if current method is POST
+            // Detect if current method is POST and any data transfered
             if( !in.check(out) ) {
                 return;
             }
@@ -32,19 +32,19 @@ namespace RocksServer {
             auto key = *it;
             ++it;
 
-            rez = ( in.end() !=  it) ? _rdb.incr( key,  *it ) : _rdb.incr( key );
+            rez = ( in.end() !=  it) ? db.incr( key,  *it ) : db.incr( key );
             
             if( rez ) {
                 out.ok();
             } else {
                 out.fail();
-                EvLogger::writeLog(_rdb.getStatus().data());
+                EvLogger::writeLog(db.getStatus().data());
             }
         }
 
         virtual ~RequestIncr() {}
     private:
-        RocksDBWrapper& _rdb;
+        RocksDBWrapper& db;
     };
 
 }

@@ -44,6 +44,7 @@ namespace RocksServer {
                 return;
             }
 
+            // if num_backups is specified, remove old backups
             if(num_backups) {
                 status = db->PurgeOldBackups(num_backups);
 

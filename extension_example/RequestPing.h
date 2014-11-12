@@ -1,7 +1,7 @@
 /**
  *  RequestPing.h
  *
- *  Example request listener
+ *  Simplest example request listener
  *
  *  @author valmat <ufabiz@gmail.com>
  *  @github https://github.com/valmat/rocksserver
@@ -19,6 +19,7 @@ namespace RocksServer {
          */
         virtual void run(const ProtocolInTrivial &in, const ProtocolOut &out) override
         {
+            // Just set string to buffer output
             out.setStr("pong");
         }
         

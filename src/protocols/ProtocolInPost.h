@@ -2,6 +2,10 @@
  *  ProtocolInPost.h
  *
  *  Bridge to work with  a request.
+ *  For http method POST
+ *
+ *  If the request http method is the POST 
+ *  and you just need to get data such as key or key-value pair, use this class
  *
  *  @author valmat <ufabiz@gmail.com>
  *  @github https://github.com/valmat/rocksserver

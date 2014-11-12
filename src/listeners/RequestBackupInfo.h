@@ -28,12 +28,12 @@ namespace RocksServer {
          */
         virtual void run(const ProtocolInTrivial &in, const ProtocolOut &out) override
         {
-            struct tm * dt;
-            char buffer [26];
-
             std::vector<rocksdb::BackupInfo> backup_info;
             db->GetBackupInfo(&backup_info);
+            
             out.setStr(backup_info.size());
+            struct tm * dt;
+            char buffer [26];            
             for(auto inf: backup_info) {
                 dt = localtime(&inf.timestamp);
                 strftime(buffer, sizeof(buffer), "%d.%m.%Y %T %z", dt);

@@ -13,7 +13,7 @@ namespace RocksServer {
     class RequestGet : public RequestBase<ProtocolInGet, ProtocolOut>
     {
     public:
-        RequestGet(RocksDBWrapper &rdb) : _rdb(rdb) {}
+        RequestGet(RocksDBWrapper &rdb) : db(rdb) {}
 
         /**
          *  Runs request listener
@@ -22,14 +22,15 @@ namespace RocksServer {
          */
         virtual void run(const ProtocolInGet &in, const ProtocolOut &out) override
         {
+            // Check if any data transfered
             if(!in.check()) {
                 out.setFailValue();
                 return;
             }
 
-            std::string val = _rdb.get(in.key());
+            std::string val = db.get(in.key());
 
-            if(!_rdb.status()) {
+            if(!db.status()) {
                 out.setFailValue();
             } else {
                 out.setValue(val);
@@ -38,7 +39,7 @@ namespace RocksServer {
 
         virtual ~RequestGet() {}
     private:
-        RocksDBWrapper& _rdb;
+        RocksDBWrapper& db;
     };
 
 }

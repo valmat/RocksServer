@@ -13,7 +13,7 @@ namespace RocksServer {
     class RequestKeyExist : public RequestBase<ProtocolInGet, ProtocolOut>
     {
     public:
-        RequestKeyExist(RocksDBWrapper &rdb) : _rdb(rdb) {}
+        RequestKeyExist(RocksDBWrapper &rdb) : db(rdb) {}
 
         /**
          *  Runs request listener
@@ -29,7 +29,7 @@ namespace RocksServer {
                 
             std::string value;
             bool value_found;
-            bool result = _rdb.keyExist(in.key(), value, value_found);
+            bool result = db.keyExist(in.key(), value, value_found);
 
             if(result) {
                 out.ok();
@@ -45,7 +45,7 @@ namespace RocksServer {
 
         virtual ~RequestKeyExist() {}
     private:
-        RocksDBWrapper& _rdb;
+        RocksDBWrapper& db;
     };
 
 }

@@ -13,7 +13,7 @@ namespace RocksServer {
     class RequestMdel : public RequestBase<ProtocolInPostKeys, ProtocolOut>
     {
     public:
-        RequestMdel(RocksDBWrapper &rdb) : _rdb(rdb) {}
+        RequestMdel(RocksDBWrapper &rdb) : db(rdb) {}
 
         /**
          *  Runs request listener
@@ -34,17 +34,17 @@ namespace RocksServer {
             }
 
             // Apply the delete-batch to the RocksDB
-            if(_rdb.mset(batch)) {
+            if(db.mset(batch)) {
                 out.ok();
             } else {
                 out.fail();
-                EvLogger::writeLog(_rdb.getStatus().data());
+                EvLogger::writeLog(db.getStatus().data());
             }
         }
 
         virtual ~RequestMdel() {}
     private:
-        RocksDBWrapper& _rdb;
+        RocksDBWrapper& db;
     };
 
 }

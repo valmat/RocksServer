@@ -13,7 +13,7 @@ namespace RocksServer {
     class RequestDel : public RequestBase<ProtocolInPost, ProtocolOut>
     {
     public:
-        RequestDel(RocksDBWrapper &rdb) : _rdb(rdb) {}
+        RequestDel(RocksDBWrapper &rdb) : db(rdb) {}
 
         /**
          *  Runs request listener
@@ -27,17 +27,17 @@ namespace RocksServer {
                 return;
             }
             
-            if( _rdb.del(in.key()) ) {
+            if( db.del(in.key()) ) {
                 out.ok();
             } else {
                 out.fail();
-                EvLogger::writeLog(_rdb.getStatus().data());
+                EvLogger::writeLog(db.getStatus().data());
             }
         }
 
         virtual ~RequestDel() {}
     private:
-        RocksDBWrapper& _rdb;
+        RocksDBWrapper& db;
     };
 
 }

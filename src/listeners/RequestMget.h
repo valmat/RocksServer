@@ -14,7 +14,7 @@ namespace RocksServer {
     class RequestMget : public RequestBase<ProtocolInGet, ProtocolOut>
     {
     public:
-        RequestMget(RocksDBWrapper &rdb) : _rdb(rdb) {}
+        RequestMget(RocksDBWrapper &rdb) : db(rdb) {}
 
         /**
          *  Runs request listener
@@ -35,9 +35,9 @@ namespace RocksServer {
 
             // Retrive result
             std::vector<rocksdb::Status> statuses;
-            std::vector<std::string> values = _rdb.mget(keys, statuses);
+            std::vector<std::string> values = db.mget(keys, statuses);
 
-            // filling buffer
+            // filling output buffer via data, retrieved from the DB
             for(unsigned i=0; i < keys.size(); i++) {
                 if(statuses[i].ok()) {
                     out.setPair(keys[i], values[i]);
@@ -49,7 +49,7 @@ namespace RocksServer {
 
         virtual ~RequestMget() {}
     private:
-        RocksDBWrapper& _rdb;
+        RocksDBWrapper& db;
     };
 
 }
