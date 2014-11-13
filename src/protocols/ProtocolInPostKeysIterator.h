@@ -40,15 +40,16 @@ namespace RocksServer {
          */
         ProtocolInPostKeysIterator &operator++()
         {
-            if(rpos == npos) {
-                lpos = npos;
-                return *this;
-            }
-
             lpos = rpos+1;
             rpos = raw.find('\n', lpos);
-            
+
             setCurrent();
+            
+            // Check if the end is reached 
+            if(lpos == raw.size()) {
+                lpos = npos;
+            }
+
             return *this;
         }
         
