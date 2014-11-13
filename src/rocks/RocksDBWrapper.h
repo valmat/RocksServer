@@ -42,6 +42,11 @@ namespace RocksServer {
             dbOptions.allow_mmap_writes          = cfg.get("allow_mmap_writes", dbOptions.allow_mmap_writes);
             dbOptions.block_size                 = cfg.get("block_size", dbOptions.block_size);
 
+            dbOptions.wal_dir                    = cfg.get("wal_dir", dbOptions.wal_dir);
+            dbOptions.WAL_ttl_seconds            = cfg.get("wal_ttl_seconds", dbOptions.WAL_ttl_seconds);
+            dbOptions.WAL_size_limit_MB          = cfg.get("wal_size_limit_mb", dbOptions.WAL_size_limit_MB);
+
+
             dbOptions.create_if_missing          = true;
 
             dbOptions.merge_operator.reset(new Int64Incrementor);
@@ -50,15 +55,34 @@ namespace RocksServer {
 
             // If is data base backupable
             if(cfg.get("isbackupable", dfCfg.isbackupable)) {
-                auto backupableOptions = rocksdb::BackupableDBOptions(cfg.get("backup_path", dfCfg.backup_path));
+                auto bcOptions = rocksdb::BackupableDBOptions(cfg.get("backup_path", dfCfg.backup_path));
 
-                backupableOptions.share_table_files = cfg.get("share_table_files",  dfCfg.share_table_files);
-                backupableOptions.sync              = cfg.get("backup_sync",        dfCfg.backup_sync);
-                backupableOptions.destroy_old_data  = cfg.get("backup_destroy_old", dfCfg.backup_destroy_old);
-                backupableOptions.backup_log_files  = cfg.get("backup_log_files",   dfCfg.backup_log_files);
+                // If share_table_files == true, backup will assume that table files with
+                // same name have the same contents. This enables incremental backups and
+                // avoids unnecessary data copies.
+                // If share_table_files == false, each backup will be on its own and will
+                // not share any data with other backups.
+                // default: true
+                bcOptions.share_table_files = cfg.get("share_table_files",  bcOptions.share_table_files);
+                // If sync == true, we can guarantee you'll get consistent backup even
+                // on a machine crash/reboot. Backup process is slower with sync enabled.
+                // If sync == false, we don't guarantee anything on machine reboot. However,
+                // chances are some of the backups are consistent.
+                // Default: true
+                bcOptions.sync              = cfg.get("backup_sync",        bcOptions.sync);
+                // If true, it will delete whatever backups there are already
+                // Default: false
+                bcOptions.destroy_old_data  = cfg.get("backup_destroy_old", bcOptions.destroy_old_data);
+                // If false, we won't backup log files. This option can be useful for backing
+                // up in-memory databases where log file are persisted, but table files are in memory.
+                // (See https://github.com/facebook/rocksdb/wiki/How-to-persist-in-memory-RocksDB-database%3F)
+                // Default: true
+                bcOptions.backup_log_files  = cfg.get("backup_log_files",   bcOptions.backup_log_files);
 
-                _db = new rocksdb::BackupableDB(_db, backupableOptions);
+                _db = new rocksdb::BackupableDB(_db, bcOptions);
             }
+
+
         }
 
         ~RocksDBWrapper()
