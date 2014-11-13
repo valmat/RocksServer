@@ -1,4 +1,5 @@
-#Simple, but flexible and fast server for RocksDB
+#RocksServer is server for RocksDB
+
 
 Supports the following operations:
 
@@ -111,6 +112,9 @@ cp -f smpl_plug.so /usr/lib/rocksserver/plugins/smpl_plug.so
 ```
 Restart RocksServer.
 See [example](https://github.com/valmat/RocksServer/tree/master/extension_example) how to extend RocksServer.
+
+## How to customize
+Just edit [config.ini](https://github.com/valmat/RocksServer/blob/master/src/config.ini)
 
 ## License
 [BSD](LICENSE)
