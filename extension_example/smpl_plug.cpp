@@ -11,6 +11,7 @@
 #include "RequestPing.h"
 #include "RequestWstats.h"
 #include "RequestBackupDel.h"
+#include "RequestBackupMdel.h"
 
 using namespace RocksServer;
 
@@ -33,7 +34,9 @@ using namespace RocksServer;
  */
 PLUGIN(Extension extension, RocksDBWrapper& rdb)
 {
-    extension.bind("/ping",       new RequestPing())
-             .bind("/wstats",     new RequestWstats(rdb))
-             .bind("/backup/del", new RequestBackupDel(rdb));
+    extension.bind("/ping",        new RequestPing())
+             .bind("/wstats",      new RequestWstats(rdb))
+             .bind("/backup/del",  new RequestBackupDel(rdb))
+             .bind("/backup/mdel", new RequestBackupMdel(rdb));
+
 }
