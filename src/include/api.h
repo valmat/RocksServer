@@ -1,5 +1,6 @@
-
 #pragma once
+
+#include "rocksserver/version.h"
 
 // C++ headers
 #include <iostream>
