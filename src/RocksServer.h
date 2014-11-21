@@ -31,16 +31,16 @@
 #include <event2/http_struct.h>
 
 // Server wrapper
-#include "evhttp/EvResponse.h"
-#include "evhttp/PostData.h"
-#include "evhttp/EvRequest.h"
-#include "evhttp/EvServerOptions.h"
-#include "evhttp/EvLogger.h"
+#include "include/evhttp/EvResponse.h"
+#include "include/evhttp/PostData.h"
+#include "include/evhttp/EvRequest.h"
+#include "include/evhttp/EvServerOptions.h"
+#include "include/evhttp/EvLogger.h"
 
 // Configs
-#include "iniparse/IniValue.h"
-#include "iniparse/IniConfigs.h"
-#include "iniparse/DefaultConfigs.h"
+#include "include/iniparse/IniValue.h"
+#include "include/iniparse/IniConfigs.h"
+#include "include/iniparse/DefaultConfigs.h"
 
 // RocksDB
 #include "rocksdb/db.h"
@@ -50,27 +50,27 @@
 #include "rocksdb/utilities/backupable_db.h"
 
 // RocksDB wrapper
-#include "rocks/Int64Incrementor.h"
-#include "rocks/RocksDBWrapper.h"
-#include "rocks/Batch.h"
-#include "rocks/BackupEngine.h"
+#include "include/rocks/Int64Incrementor.h"
+#include "include/rocks/RocksDBWrapper.h"
+#include "include/rocks/Batch.h"
+#include "include/rocks/BackupEngine.h"
 
 // Protocol
-#include "protocols/ProtocolOut.h"
+#include "include/protocols/ProtocolOut.h"
 
-#include "protocols/ProtocolInPostSimple.h"
-#include "protocols/ProtocolInTrivial.h"
-#include "protocols/ProtocolInGetIterator.h"
-#include "protocols/ProtocolInGet.h"
-#include "protocols/ProtocolInPost.h"
-#include "protocols/ProtocolInPostKeysIterator.h"
-#include "protocols/ProtocolInPostKeys.h"
+#include "include/protocols/ProtocolInPostSimple.h"
+#include "include/protocols/ProtocolInTrivial.h"
+#include "include/protocols/ProtocolInGetIterator.h"
+#include "include/protocols/ProtocolInGet.h"
+#include "include/protocols/ProtocolInPost.h"
+#include "include/protocols/ProtocolInPostKeysIterator.h"
+#include "include/protocols/ProtocolInPostKeys.h"
 
-#include "protocols/ProtocolInPostPairsIterator.h"
-#include "protocols/ProtocolInPostPairs.h"
+#include "include/protocols/ProtocolInPostPairsIterator.h"
+#include "include/protocols/ProtocolInPostPairs.h"
 
 // Listeners
-#include "listeners/RequestBase.h"
+#include "include/listeners/RequestBase.h"
 #include "listeners/RequestGet.h"
 #include "listeners/RequestMget.h"
 #include "listeners/RequestSet.h"
@@ -86,12 +86,10 @@
 #include "listeners/RequestBackupInfo.h"
 
 
-#include "evhttp/EvServer.h"
+#include "include/evhttp/EvServer.h"
 
 // Extensions
-#include "extend/Extension.h"
+#include "include/Extension.h"
 #include "extend/PlugContainer.h"
 #include "extend/Extend.h"
-//#include "extend/ExtensionObj.h"
-
 

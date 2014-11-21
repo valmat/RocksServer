@@ -31,6 +31,13 @@ namespace RocksServer {
             return set(pair.first, pair.second);
         }
 
+        // Set a key-value pair to the batch
+        template <typename KT, typename VT>
+        Batch & set(std::pair<KT,VT> &&pair) 
+        {
+            return set(pair.first, pair.second);
+        }
+
         // Set a key-value pairs to the batch
         template <typename T>
         Batch & set(T &&iterable) 

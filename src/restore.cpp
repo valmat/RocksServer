@@ -14,7 +14,7 @@
 #include "rocksdb/utilities/backupable_db.h"
 
 // RocksDB wrapper
-#include "rocks/BackupEngine.h"
+#include "include/rocks/BackupEngine.h"
 
 #define HELP_EXIT()  print_help(*argv); return 0;
 

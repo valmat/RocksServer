@@ -27,11 +27,11 @@
 #include <rocksserver/iniparse/DefaultConfigs.h>
 
 // RocksDB
-#include <rocksserver/include/rocksdb/db.h>
-#include <rocksserver/include/rocksdb/version.h>
-#include <rocksserver/include/rocksdb/write_batch.h>
-#include <rocksserver/include/rocksdb/merge_operator.h>
-#include <rocksserver/include/rocksdb/utilities/backupable_db.h>
+#include <rocksserver/rocksdb/rocksdb/db.h>
+#include <rocksserver/rocksdb/rocksdb/version.h>
+#include <rocksserver/rocksdb/rocksdb/write_batch.h>
+#include <rocksserver/rocksdb/rocksdb/merge_operator.h>
+#include <rocksserver/rocksdb/rocksdb/utilities/backupable_db.h>
 
 // RocksDB wrapper
 #include <rocksserver/rocks/Int64Incrementor.h>
@@ -41,7 +41,6 @@
 
 // Protocol
 #include <rocksserver/protocols/ProtocolOut.h>
-
 #include <rocksserver/protocols/ProtocolInPostSimple.h>
 #include <rocksserver/protocols/ProtocolInTrivial.h>
 #include <rocksserver/protocols/ProtocolInGetIterator.h>
@@ -54,7 +53,7 @@
 #include <rocksserver/protocols/ProtocolInPostPairs.h>
 
 // Listeners
-#include <rocksserver/RequestBase.h>
+#include <rocksserver/listeners/RequestBase.h>
 
 
 // Extensions

@@ -34,10 +34,10 @@ all: ${BINFILE}
 
 ${BINFILE}: 
 	$(CC) $(NAME).cpp $(CFLAGS) -I. -I$(ROCKSPATH)/include -I$(LEVENTI) -c -o $(NAME).o
-	$(CC) evhttpsrc/EvLogger.cpp $(CFLAGS) -I. -I$(ROCKSPATH)/include -I$(LEVENTI) -c -o EvLogger.o
-	$(CC) evhttpsrc/EvServer.cpp $(CFLAGS) -I. -I$(ROCKSPATH)/include -I$(LEVENTI) -c -o EvServer.o
-	$(CC) evhttpsrc/EvResponse.cpp $(CFLAGS) -I. -I$(ROCKSPATH)/include -I$(LEVENTI) -c -o EvResponse.o
-	$(CC) evhttpsrc/EvRequest.cpp $(CFLAGS) -I. -I$(ROCKSPATH)/include -I$(LEVENTI) -c -o EvRequest.o
+	$(CC) evhttp/EvLogger.cpp $(CFLAGS) -I. -I$(ROCKSPATH)/include -I$(LEVENTI) -c -o EvLogger.o
+	$(CC) evhttp/EvServer.cpp $(CFLAGS) -I. -I$(ROCKSPATH)/include -I$(LEVENTI) -c -o EvServer.o
+	$(CC) evhttp/EvResponse.cpp $(CFLAGS) -I. -I$(ROCKSPATH)/include -I$(LEVENTI) -c -o EvResponse.o
+	$(CC) evhttp/EvRequest.cpp $(CFLAGS) -I. -I$(ROCKSPATH)/include -I$(LEVENTI) -c -o EvRequest.o
 	$(CC) rocks/RocksDBWrapper.cpp $(CFLAGS) -I. -I$(ROCKSPATH)/include -I$(LEVENTI) -c -o RocksDBWrapper.o
 	$(CC) extend/Extend.cpp $(CFLAGS) -I. -I$(ROCKSPATH)/include -I$(LEVENTI) -c -o Extend.o
 	$(CC) extend/PlugContainer.cpp $(CFLAGS) -I. -I$(ROCKSPATH)/include -I$(LEVENTI) -c -o PlugContainer.o
@@ -57,7 +57,7 @@ run:
 	./$(NAME).bin
 
 clean:
-	rm -f $(NAME).o $(NAME).bin *.o restore.bin human_readable.o human_readable.bin
+	rm -f *.o *.bin
 
 install:
 	mkdir -p /var/rocksserver
@@ -71,16 +71,10 @@ install:
 	mkdir -p /usr/lib/rocksserver/plugins
 	#
 	mkdir -p /usr/include/rocksserver
-	$(CPR) ${SRC}/rocks /usr/include/rocksserver/
-	$(CPR) ${SRC}/iniparse /usr/include/rocksserver/
-	$(CPR) ${SRC}/protocols /usr/include/rocksserver/
-	$(CPR) ${SRC}/evhttp /usr/include/rocksserver/
+	$(CPR) ${SRC}/include/* /usr/include/rocksserver/
 	#
-	$(CPR) ${SRC}/../deps/rocksdb/include /usr/include/rocksserver/
-	#
-	$(CP) ${SRC}/extend/Extension.h /usr/include/rocksserver/Extension.h
-	$(CP) ${SRC}/extend/api.h /usr/include/rocksserver/api.h
-	$(CP) ${SRC}/listeners/RequestBase.h /usr/include/rocksserver/RequestBase.h
+	mkdir -p /usr/include/rocksserver/rocksdb
+	$(CPR) ${SRC}/../deps/rocksdb/include/* /usr/include/rocksserver/rocksdb/
 	#
 	update-rc.d rocksserver defaults
 

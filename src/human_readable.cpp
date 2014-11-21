@@ -17,7 +17,7 @@
 #include "rocksdb/merge_operator.h"
 
 // RocksDB Incrementor
-#include "rocks/Int64Incrementor.h"
+#include "include/rocks/Int64Incrementor.h"
 
 
 #define HELP_EXIT()  print_help(*argv); return 0;
