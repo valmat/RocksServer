@@ -28,7 +28,6 @@ namespace RocksServer {
 
             // filling buffer
             for (it->SeekToFirst(); it->Valid(); it->Next()) {
-                out.setPair(it->key(), it->value());
                 if(it->status().ok()) {
                     out.setPair(it->key(), it->value());
                 } else {

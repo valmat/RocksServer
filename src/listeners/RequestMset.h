@@ -28,13 +28,11 @@ namespace RocksServer {
             }
             
             // create a RocksDB write batch
-            rocksdb::WriteBatch batch;
-            for (auto &it : in) {
-                batch.Put(it.first, it.second);
-            }
+            Batch batch;
+            batch.set(in);
 
             // Set batch to the DB and filling output buffer
-            if(db.mset(batch)) {
+            if(db.commit(batch)) {
                 out.ok();
             } else {
                 out.fail(); 

@@ -52,6 +52,7 @@
 // RocksDB wrapper
 #include "rocks/Int64Incrementor.h"
 #include "rocks/RocksDBWrapper.h"
+#include "rocks/Batch.h"
 #include "rocks/BackupEngine.h"
 
 // Protocol

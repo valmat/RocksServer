@@ -4,7 +4,7 @@ CC 	 = g++
 NAME	 = RocksServer
 
 OPT_FLAG=-O3
-#OPT_FLAG=-g
+#OPT_FLAG=-g -O0
 
 CFLAGS	 = -std=c++11 $(OPT_FLAG) -Wall
 
@@ -38,6 +38,7 @@ ${BINFILE}:
 	$(CC) evhttpsrc/EvServer.cpp $(CFLAGS) -I. -I$(ROCKSPATH)/include -I$(LEVENTI) -c -o EvServer.o
 	$(CC) evhttpsrc/EvResponse.cpp $(CFLAGS) -I. -I$(ROCKSPATH)/include -I$(LEVENTI) -c -o EvResponse.o
 	$(CC) evhttpsrc/EvRequest.cpp $(CFLAGS) -I. -I$(ROCKSPATH)/include -I$(LEVENTI) -c -o EvRequest.o
+	$(CC) rocks/RocksDBWrapper.cpp $(CFLAGS) -I. -I$(ROCKSPATH)/include -I$(LEVENTI) -c -o RocksDBWrapper.o
 	$(CC) extend/Extend.cpp $(CFLAGS) -I. -I$(ROCKSPATH)/include -I$(LEVENTI) -c -o Extend.o
 	$(CC) extend/PlugContainer.cpp $(CFLAGS) -I. -I$(ROCKSPATH)/include -I$(LEVENTI) -c -o PlugContainer.o
 	$(CC) extend/Extension.cpp $(CFLAGS) -I. -I$(ROCKSPATH)/include -I$(LEVENTI) -c -o Extension.o

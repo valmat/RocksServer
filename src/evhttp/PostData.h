@@ -19,12 +19,15 @@ namespace RocksServer {
          *  @param  data       raw string of post data
          *  @param  len        string length
          */
-        PostData(const char *data, size_t len) : _len(len), _data(data) {}
+        PostData(const char *data, size_t len) noexcept : _len(len), _data(data) {}
+
+        PostData(const PostData &) = delete;
+        PostData(PostData &&) = default;
 
         /**
          *  Trivial constructor
          */
-        PostData() : _len(0), _data(nullptr) {}
+        PostData() noexcept : _len(0), _data(nullptr) {}
 
         ~PostData()
         {

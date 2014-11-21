@@ -28,13 +28,11 @@ namespace RocksServer {
             }
             
             // create a RocksDB delete batch
-            rocksdb::WriteBatch batch;
-            for (auto &it : in) {
-                batch.Delete(it);
-            }
+            Batch batch;
+            batch.del(in);
 
             // Apply the delete-batch to the RocksDB
-            if(db.mset(batch)) {
+            if(db.commit(batch)) {
                 out.ok();
             } else {
                 out.fail();
