@@ -25,7 +25,7 @@ using namespace RocksServer;
  * PLUGIN(Extension extension)
  *
  * The macro `PLUGIN` is defined in rocksserver/api.h. 
- * Instead of using a macro, you can write
+ * Instead of using the macro, you can write
  * `extern "C" void plugin(...)` if you like
  *
  * @param extension  object of Extension
