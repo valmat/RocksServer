@@ -31,7 +31,7 @@ namespace RocksServer {
          *  Trivial constructor (for returning in method ProtocolInPostPairs::end())
          */
         ProtocolInPostPairsIterator() :
-            raw(PostData()),
+            raw(std::move(PostData())),
             lpos(npos)
         {}
 

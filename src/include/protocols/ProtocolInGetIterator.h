@@ -30,7 +30,7 @@ namespace RocksServer {
          *  Trivial constructor (for returning in method ProtocolInGet::end())
          */
         ProtocolInGetIterator() :
-            str(std::string()),
+            str(std::move(std::string())),
             lpos(npos)
         {}
 

@@ -3,7 +3,7 @@ CC 	 = g++
 
 NAME	 = RocksServer
 
-OPT_FLAG=-O3
+OPT_FLAG=-O4
 #OPT_FLAG=-g -O0
 
 CFLAGS	 = -std=c++11 $(OPT_FLAG) -Wall
