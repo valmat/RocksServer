@@ -70,7 +70,7 @@ Or any your own implementation by [protocol description](protocol.md).
 
 ## How to extend
 First you need implement your own request listener.
-To do this, you have to implement the interface
+To do this, you should to implement the interface
 ```c
 template<typename ProtIn, typename ProtOut>
 struct RequestBase: public RequestSuperBase
