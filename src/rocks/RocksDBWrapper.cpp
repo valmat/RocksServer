@@ -50,7 +50,7 @@ namespace RocksServer {
         _status = rocksdb::DB::Open(dbOptions, dbpath, &_db);
 
         // If is data base backupable
-        if(cfg.get("isbackupable", dfCfg.isbackupable)) {
+        if(_status.ok() && cfg.get("isbackupable", dfCfg.isbackupable)) {
             auto bcOptions = rocksdb::BackupableDBOptions(cfg.get("backup_path", dfCfg.backup_path));
 
             // If share_table_files == true, backup will assume that table files with
