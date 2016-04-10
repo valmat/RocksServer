@@ -108,7 +108,7 @@ namespace RocksServer {
     bool RocksDBWrapper::commit(Batch &batch)
     {
         _status = _db->Write(rocksdb::WriteOptions(), &batch.batch);
-        return (bool)(_status.ok());
+        return _status.ok();
     }
 
 }
