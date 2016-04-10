@@ -32,7 +32,7 @@ fi
 
 do_start() {
     RUNCMD="$BINEXEC $CONF"
-    su -c "$RUNCMD &" nobody
+    su -c "$RUNCMD &" $OWNER
     ps -aef | grep $OWNER | grep "$RUNCMD" | grep -v grep | awk '{print $2}' > $PIDFILE
 }
 
