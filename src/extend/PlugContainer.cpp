@@ -22,7 +22,9 @@ namespace RocksServer {
         }
 
         // Load a required function.
-        plug_t plugin = (plug_t) dlsym(handle, plug_fname);
+        plug_t plugin;
+        *(void **)(&plugin) = dlsym(handle, plug_fname);
+
         //Check for errors
         if (!plugin) {
             std::cerr << "Load extention " << plug_file << " missed" << std::endl;
@@ -33,7 +35,7 @@ namespace RocksServer {
         }
 
         // Execute the function from an extension
-        plugin(server, rdb, cfg);
+        (*plugin)(server, rdb, cfg);
     }
 
     PlugContainer::~PlugContainer()

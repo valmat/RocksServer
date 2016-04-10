@@ -19,10 +19,12 @@ namespace RocksServer {
         ~PlugContainer();
 
     private:
-        // Define plugin type  
-        typedef void (*plug_t)(Extension, RocksDBWrapper&, const IniConfigs&);
+        // Define plugin type
+        using plug_t = void (*)(Extension, RocksDBWrapper&, const IniConfigs&);
 
+        // A function pointer obtained through dlopen
         void* handle;
+        // Plugin function name
         const char* plug_fname = "plugin";
     };
 }
