@@ -34,7 +34,8 @@ namespace RocksServer
          * @param string path
          * @param location of DB log files
          */
-        rocksdb::Status createBackup(rocksdb::DB* db) const {
+        rocksdb::Status createBackup(rocksdb::DB* db) const
+        {
             return _engine->CreateNewBackup(db);
         }
 
@@ -43,7 +44,8 @@ namespace RocksServer
          * @param       db_dir  location of DB
          * @param       wal_dir location of DB log files
          */
-        rocksdb::Status restoreBackup(const std::string& db_dir, const std::string& wal_dir) const {
+        rocksdb::Status restoreBackup(const std::string& db_dir, const std::string& wal_dir) const
+        {
             return _engine->RestoreDBFromLatestBackup(db_dir, wal_dir);
         }
 
@@ -51,8 +53,29 @@ namespace RocksServer
          * Restore DB from latest backup
          * @param       db_dir  location of DB
          */
-        rocksdb::Status restoreBackup(const std::string& db_dir) const {
+        rocksdb::Status restoreBackup(const std::string& db_dir) const
+        {
             return _engine->RestoreDBFromLatestBackup(db_dir, db_dir);
+        }
+
+        /**
+         * Restore DB from backup by index
+         * @param       db_dir  location of DB
+         * @param       index   backup index
+         */
+        rocksdb::Status restoreBackup(const std::string& db_dir, uint32_t index) const
+        {
+            return _engine->RestoreDBFromBackup(index, db_dir, db_dir);
+        }
+
+        /**
+         * Get backups list information
+         */
+        std::vector<rocksdb::BackupInfo> backupInfo() const
+        {
+            std::vector<rocksdb::BackupInfo> backup_info;
+            _engine->GetBackupInfo(&backup_info);
+            return backup_info;
         }
         
     private:
