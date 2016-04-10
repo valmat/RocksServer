@@ -3,13 +3,13 @@ CC 	 = g++
 
 NAME	 = RocksServer
 
-OPT_FLAG=-O4
-#OPT_FLAG=-g -O0
+OPT_FLAGS=-O4
+#OPT_FLAGS=-g -O0
 
-CFLAGS	 = -std=c++11 $(OPT_FLAG) -Wall
+#compiler flags
+CFLAGS	 = -std=c++11 $(OPT_FLAGS) -Wall -pedantic
 
-#LINKEROPT = -static
-LINKEROPT = -rdynamic $(OPT_FLAG)
+
 
 BINFILE  = $(NAME).bin
 
@@ -32,32 +32,74 @@ SRC=`pwd`
 
 all: ${BINFILE}
 
-${BINFILE}: 
-	$(CC) $(NAME).cpp $(CFLAGS) -I. -I$(ROCKSPATH)/include -I$(LEVENTI) -c -o $(NAME).o
-	$(CC) evhttp/EvLogger.cpp $(CFLAGS) -I. -I$(ROCKSPATH)/include -I$(LEVENTI) -c -o EvLogger.o
-	$(CC) evhttp/EvServer.cpp $(CFLAGS) -I. -I$(ROCKSPATH)/include -I$(LEVENTI) -c -o EvServer.o
-	$(CC) evhttp/EvResponse.cpp $(CFLAGS) -I. -I$(ROCKSPATH)/include -I$(LEVENTI) -c -o EvResponse.o
-	$(CC) evhttp/EvRequest.cpp $(CFLAGS) -I. -I$(ROCKSPATH)/include -I$(LEVENTI) -c -o EvRequest.o
-	$(CC) rocks/RocksDBWrapper.cpp $(CFLAGS) -I. -I$(ROCKSPATH)/include -I$(LEVENTI) -c -o RocksDBWrapper.o
-	$(CC) extend/Extend.cpp $(CFLAGS) -I. -I$(ROCKSPATH)/include -I$(LEVENTI) -c -o Extend.o
-	$(CC) extend/PlugContainer.cpp $(CFLAGS) -I. -I$(ROCKSPATH)/include -I$(LEVENTI) -c -o PlugContainer.o
-	$(CC) extend/Extension.cpp $(CFLAGS) -I. -I$(ROCKSPATH)/include -I$(LEVENTI) -c -o Extension.o
-	$(CC) *.o $(CFLAGS) -levent -ldl -L$(ROCKSPATH) -L$(LEVENTL) $(ROCKSLIB) $(LINKEROPT) -o $(NAME).bin
 
+
+$(NAME).rs.o: $(NAME).cpp
+	$(CC) $(NAME).cpp $(CFLAGS) -I. -I$(ROCKSPATH)/include -I$(LEVENTI) -c -o $(NAME).rs.o
+
+EvLogger.rs.o: evhttp/EvLogger.cpp
+	$(CC) evhttp/EvLogger.cpp $(CFLAGS) -I. -I$(ROCKSPATH)/include -I$(LEVENTI) -c -o EvLogger.rs.o
+
+EvServer.rs.o: evhttp/EvServer.cpp
+	$(CC) evhttp/EvServer.cpp $(CFLAGS) -I. -I$(ROCKSPATH)/include -I$(LEVENTI) -c -o EvServer.rs.o
+
+EvResponse.rs.o: evhttp/EvResponse.cpp
+	$(CC) evhttp/EvResponse.cpp $(CFLAGS) -I. -I$(ROCKSPATH)/include -I$(LEVENTI) -c -o EvResponse.rs.o
+
+EvRequest.rs.o: evhttp/EvRequest.cpp
+	$(CC) evhttp/EvRequest.cpp $(CFLAGS) -I. -I$(ROCKSPATH)/include -I$(LEVENTI) -c -o EvRequest.rs.o
+
+RocksDBWrapper.rs.o: rocks/RocksDBWrapper.cpp
+	$(CC) rocks/RocksDBWrapper.cpp $(CFLAGS) -I. -I$(ROCKSPATH)/include -I$(LEVENTI) -c -o RocksDBWrapper.rs.o
+
+Extend.rs.o: extend/Extend.cpp
+	$(CC) extend/Extend.cpp $(CFLAGS) -I. -I$(ROCKSPATH)/include -I$(LEVENTI) -c -o Extend.rs.o
+
+PlugContainer.rs.o: extend/PlugContainer.cpp
+	$(CC) extend/PlugContainer.cpp $(CFLAGS) -I. -I$(ROCKSPATH)/include -I$(LEVENTI) -c -o PlugContainer.rs.o
+
+Extension.rs.o: extend/Extension.cpp
+	$(CC) extend/Extension.cpp $(CFLAGS) -I. -I$(ROCKSPATH)/include -I$(LEVENTI) -c -o Extension.rs.o
+
+restore.o: restore.cpp
 	$(CC) restore.cpp $(CFLAGS) -I. -I$(ROCKSPATH)/include -c -o restore.o
-	$(CC) restore.o $(CFLAGS) -L$(ROCKSPATH) $(ROCKSLIB) $(LINKEROPT) -o restore.bin
+
+human_readable.o: human_readable.cpp
 	$(CC) human_readable.cpp $(CFLAGS) -I. -I$(ROCKSPATH)/include -c -o human_readable.o
-	$(CC) human_readable.o $(CFLAGS) -L$(ROCKSPATH) $(ROCKSLIB) $(LINKEROPT) -o human_readable.bin
+
+.PHONY: obj
+obj: $(NAME).rs.o EvLogger.rs.o EvServer.rs.o EvResponse.rs.o EvRequest.rs.o RocksDBWrapper.rs.o Extend.rs.o PlugContainer.rs.o Extension.rs.o restore.o human_readable.o
+
+
+restore.bin: restore.o
+	$(CC) restore.o $(CFLAGS) -L$(ROCKSPATH) $(ROCKSLIB) -o restore.bin
+
+
+human_readable.bin: human_readable.o
+	$(CC) human_readable.o $(CFLAGS) -L$(ROCKSPATH) $(ROCKSLIB) -o human_readable.bin
+
+
+#dynamic:
+${BINFILE}: obj restore.bin human_readable.bin
+	$(CC) *.rs.o $(CFLAGS) -levent -ldl -L$(ROCKSPATH) -L$(LEVENTL) $(ROCKSLIB) -rdynamic -o $(NAME).bin
 	@echo
 	@echo "Build complete."
-#	@echo "For start server run ./$(NAME).bin config.ini"
+#	@echo "To start the server run ./$(NAME).bin config.ini"
 
-	
-run:
-	./$(NAME).bin
+
+.PHONY: static
+static: obj restore.bin human_readable.bin
+	$(CC) *.rs.o $(CFLAGS) $(LEVENTL)/libevent.a -ldl -L$(ROCKSPATH) $(ROCKSLIB) -rdynamic -o $(NAME).bin
+	@echo
+	@echo "Build complete."
+
+
+.PHONY: clean install uninstall uninstall-clean
+
 
 clean:
 	rm -f *.o *.bin
+
 
 install:
 	mkdir -p /var/rocksserver
