@@ -19,9 +19,10 @@ namespace RocksServer {
     public:
 
 
-        RequestBackup(rocksdb::DB *rdb, uint32_t num_backups) : 
+        RequestBackup(rocksdb::DB *rdb, uint32_t num_backups, bool flush_before_backup) : 
             db(reinterpret_cast<BackupableDB*>(rdb)),
-            num_backups(num_backups)
+            num_backups(num_backups),
+            flush_before_backup(flush_before_backup)
         {} 
 
         /**
@@ -36,7 +37,7 @@ namespace RocksServer {
                 return;
             }
 
-            auto status = db->CreateNewBackup();
+            auto status = db->CreateNewBackup(flush_before_backup);
 
             if( !status.ok() ) {
                 out.fail();
@@ -63,6 +64,8 @@ namespace RocksServer {
         BackupableDB* db;
         // num backups to keep
         uint32_t num_backups;
+
+        bool flush_before_backup;
     };
 
 }
