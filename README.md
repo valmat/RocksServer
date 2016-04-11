@@ -26,18 +26,28 @@ For more details see: [protocol description](protocol.md)
 The compiler should support `C++11`
 
 ## Install & Run
-Clone the repository:
+First install [RocksDB dependences](https://github.com/facebook/rocksdb/blob/master/INSTALL.md#dependencies):
+
 ```
-git clone --recursive git@github.com:valmat/RocksServer.git
+sudo apt-get install libsnappy-dev
+sudo apt-get install zlib1g-dev
+sudo apt-get install libbz2-dev.
+sudo apt-get install libgflags-dev
+```
+
+
+Then clone the repository:
+```
+git clone --recursive https://github.com/valmat/RocksServer
 cd RocksServer
 ```
 or
 ```
-git clone git@github.com:valmat/RocksServer.git
+git clone https://github.com/valmat/RocksServer
 cd RocksServer
 git submodule update
 ```
-Then compile dependencies:
+After then compile dependencies:
 ```
 ./deps/make.sh
 ```

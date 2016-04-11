@@ -26,7 +26,7 @@ void print_help(const char *script_name)
     std::cout << "usege: " << script_name << " [-i<backup index>] [-l] [-f<backup dir>] [-t<database dir>]";
     std::cout << std::endl << "exemple: " << script_name << " -f/var/rocksserver/backup -t/var/rocksserver/db";
     std::cout << std::endl << "exemple: " << script_name << " -f/var/rocksserver/backup -t/var/rocksserver/db -i5";
-    std::cout << std::endl << "exemple: " << script_name << " -l";
+    std::cout << std::endl << "exemple: " << script_name << " -l -f/var/rocksserver/backup";
     std::cout << std::endl << "Restore RocksDB backup files to database";
     std::cout << std::endl << "";
     std::cout << std::endl << "-f \tbackup dir";
