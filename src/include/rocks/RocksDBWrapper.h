@@ -77,7 +77,6 @@ namespace RocksServer {
         std::string get(const rocksdb::Slice &key)
         {
             std::string value;
-
             _status = _db->Get(rocksdb::ReadOptions(), key, &value);
             if (!_status.ok()) {
                 return "";
@@ -99,7 +98,16 @@ namespace RocksServer {
          * @param bool value_found.
          * @return bool (true if key exist)
          */
+        [[gnu::deprecated("Use keyExist(const rocksdb::Slice &key, std::string &value) instead")]]
         bool keyExist(const rocksdb::Slice &key, std::string &value, bool &value_found);
+
+        /**
+         * Fast check exist key
+         * @param string key
+         * @param string value. If the value exists, it can be retrieved. But there is no guarantee that it will be retrieved
+         * @return bool (true if key exist)
+         */
+        bool keyExist(const rocksdb::Slice &key, std::string &value);
 
         /**
          * Fast check exist key
@@ -109,8 +117,7 @@ namespace RocksServer {
         bool keyExist(const rocksdb::Slice &key)
         {
             std::string value;
-            bool value_found;
-            return keyExist(key, value, value_found);
+            return keyExist(key, value);
         }
 
         /**

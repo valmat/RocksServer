@@ -28,16 +28,9 @@ namespace RocksServer {
             }
                 
             std::string value;
-            bool value_found;
-            bool result = db.keyExist(in.key(), value, value_found);
-
-            if(result) {
+            if(db.keyExist(in.key(), value)) {
                 out.ok();
-                if(value_found) {
-                    out.setValue(value);
-                } else {
-                    out.setFailValue();
-                }
+                out.setValue(value);
             } else {
                 out.fail();
             }
