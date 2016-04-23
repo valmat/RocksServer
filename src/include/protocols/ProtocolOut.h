@@ -47,10 +47,10 @@ namespace RocksServer {
             return *this;
         }
 
-        template<typename ValueType>
-        const ProtocolOut& setStr(ValueType &&val) const
+        template<typename ...ValueType>
+        const ProtocolOut& setStr(ValueType&&... val) const
         {
-            resp.add(std::forward<ValueType>(val));
+            resp.add(std::forward<ValueType>(val)...);
             return *this;
         }
 
