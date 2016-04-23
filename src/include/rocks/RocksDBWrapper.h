@@ -99,10 +99,7 @@ namespace RocksServer {
          * @param bool value_found.
          * @return bool (true if key exist)
          */
-        bool keyExist(const rocksdb::Slice &key, std::string &value, bool &value_found)
-        {
-            return _db->KeyMayExist(rocksdb::ReadOptions(), key, &value, &value_found);
-        }
+        bool keyExist(const rocksdb::Slice &key, std::string &value, bool &value_found);
 
         /**
          * Fast check exist key
@@ -112,7 +109,8 @@ namespace RocksServer {
         bool keyExist(const rocksdb::Slice &key)
         {
             std::string value;
-            return _db->KeyMayExist(rocksdb::ReadOptions(), key, &value);
+            bool value_found;
+            return keyExist(key, value, value_found);
         }
 
         /**

@@ -111,4 +111,28 @@ namespace RocksServer {
         return _status.ok();
     }
 
+    /**
+     * Fast check exist key
+     * @param string key
+     * @param string value. If the value exists, it can be retrieved. But there is no guarantee that it will be retrieved
+     * @param bool value_found.
+     * @return bool (true if key exist)
+     */
+    bool RocksDBWrapper::keyExist(const rocksdb::Slice &key, std::string &value, bool &value_found)
+    {
+        bool isExist = _db->KeyMayExist(rocksdb::ReadOptions(), key, &value, &value_found);
+        if(!isExist) {
+            return false;
+        } else if(isExist && value_found) {
+            return true;
+        }
+        // else
+
+        // If Bloom Filter says that the key is found, it is necessary to further check
+        // See: https://github.com/facebook/rocksdb/wiki/RocksDB-Bloom-Filter
+        // See: http://rocksdb.org/blog/1427/new-bloom-filter-format/
+        _status = _db->Get(rocksdb::ReadOptions(), key, &value);
+        return _status.ok();
+    }
+
 }
