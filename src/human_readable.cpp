@@ -101,7 +101,9 @@ int main(int argc, char **argv)
             break;
         };
     };
-    if(optcnt < 1) {
+
+    // Check if input data are valid
+    if(optcnt < 1 || output_fname.empty() || database_dir.empty()) {
         HELP_EXIT();
     }
 
@@ -117,12 +119,10 @@ int main(int argc, char **argv)
 
     // Redirected stdout to file
     FILE *fp = nullptr;
-    if(output_fname.size()) {
-        if ( !(fp = freopen(output_fname.c_str(), "w", stdout)) ) {
-            std::cerr<<"Can't open file "<< output_fname << std::endl;
-            return 1;
-        }
-    }
+    if ( !(fp = freopen(output_fname.c_str(), "w", stdout)) ) {
+        std::cerr<<"Can't open file "<< output_fname << std::endl;
+        return 1;
+    }    
 
     /*
      * Iterate over all db keys
