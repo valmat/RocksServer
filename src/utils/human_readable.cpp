@@ -12,13 +12,6 @@
 
 // RocksDB
 #include "rocksdb/db.h"
-#include "rocksdb/version.h"
-#include "rocksdb/write_batch.h"
-#include "rocksdb/merge_operator.h"
-
-// RocksDB Incrementor
-#include "include/rocks/Int64Incrementor.h"
-
 
 #define HELP_EXIT()  print_help(*argv); return 0;
 
@@ -33,19 +26,13 @@ void print_help(const char *script_name)
     std::cout << std::endl;
 }
 
-
 // Simplest RocksDB wrapper container
 class RocksDbContainer
 {
 public:
     RocksDbContainer(const std::string &database_dir)
     {
-        // DB options
-        rocksdb::Options dbOptions;
-        dbOptions.create_if_missing = true;
-        dbOptions.merge_operator.reset(new RocksServer::Int64Incrementor);
-
-        auto status = rocksdb::DB::Open(dbOptions, database_dir, &_db );
+        auto status = rocksdb::DB::OpenForReadOnly(rocksdb::Options(), database_dir, &_db );
         
         _valid = status.ok();
         if (!_valid) {
@@ -133,7 +120,6 @@ int main(int argc, char **argv)
     for (it->SeekToFirst(); it->Valid(); it->Next()) {
         key   = it->key().ToString();
         value = it->value().ToString();
-        //std::cout << it->key().ToString() << ": " << it->value().ToString() << std::endl;
         std::cout << '[' << key << ']' << std::endl;
         std::cout << value.size() << std::endl;
         std::cout << value << std::endl;

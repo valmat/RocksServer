@@ -35,8 +35,6 @@ void print_help(const char *script_name)
     std::cout << std::endl;
 }
 
-
-
 int main(int argc, char **argv)
 {
     /*
