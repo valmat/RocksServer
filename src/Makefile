@@ -11,7 +11,7 @@ CFLAGS	 = -std=c++11 $(OPT_FLAGS) -Wall -pedantic
 
 
 
-BINFILE  = $(NAME).bin
+BINFILE  = bin/$(NAME).bin
 
 # path to RocksDB source
 ROCKSPATH	 = $(PWD)/../deps/rocksdb
@@ -33,68 +33,67 @@ SRC=`pwd`
 all: ${BINFILE}
 
 
+bin/obj/$(NAME).rs.o: $(NAME).cpp
+	$(CC) $(NAME).cpp $(CFLAGS) -I. -I$(ROCKSPATH)/include -I$(LEVENTI) -c -o bin/obj/$(NAME).rs.o
 
-$(NAME).rs.o: $(NAME).cpp
-	$(CC) $(NAME).cpp $(CFLAGS) -I. -I$(ROCKSPATH)/include -I$(LEVENTI) -c -o $(NAME).rs.o
+bin/obj/EvLogger.rs.o: evhttp/EvLogger.cpp
+	$(CC) evhttp/EvLogger.cpp $(CFLAGS) -I. -I$(ROCKSPATH)/include -I$(LEVENTI) -c -o bin/obj/EvLogger.rs.o
 
-EvLogger.rs.o: evhttp/EvLogger.cpp
-	$(CC) evhttp/EvLogger.cpp $(CFLAGS) -I. -I$(ROCKSPATH)/include -I$(LEVENTI) -c -o EvLogger.rs.o
+bin/obj/EvServer.rs.o: evhttp/EvServer.cpp
+	$(CC) evhttp/EvServer.cpp $(CFLAGS) -I. -I$(ROCKSPATH)/include -I$(LEVENTI) -c -o bin/obj/EvServer.rs.o
 
-EvServer.rs.o: evhttp/EvServer.cpp
-	$(CC) evhttp/EvServer.cpp $(CFLAGS) -I. -I$(ROCKSPATH)/include -I$(LEVENTI) -c -o EvServer.rs.o
+bin/obj/EvResponse.rs.o: evhttp/EvResponse.cpp
+	$(CC) evhttp/EvResponse.cpp $(CFLAGS) -I. -I$(ROCKSPATH)/include -I$(LEVENTI) -c -o bin/obj/EvResponse.rs.o
 
-EvResponse.rs.o: evhttp/EvResponse.cpp
-	$(CC) evhttp/EvResponse.cpp $(CFLAGS) -I. -I$(ROCKSPATH)/include -I$(LEVENTI) -c -o EvResponse.rs.o
+bin/obj/EvRequest.rs.o: evhttp/EvRequest.cpp
+	$(CC) evhttp/EvRequest.cpp $(CFLAGS) -I. -I$(ROCKSPATH)/include -I$(LEVENTI) -c -o bin/obj/EvRequest.rs.o
 
-EvRequest.rs.o: evhttp/EvRequest.cpp
-	$(CC) evhttp/EvRequest.cpp $(CFLAGS) -I. -I$(ROCKSPATH)/include -I$(LEVENTI) -c -o EvRequest.rs.o
+bin/obj/RocksDBWrapper.rs.o: rocks/RocksDBWrapper.cpp
+	$(CC) rocks/RocksDBWrapper.cpp $(CFLAGS) -I. -I$(ROCKSPATH)/include -I$(LEVENTI) -c -o bin/obj/RocksDBWrapper.rs.o
 
-RocksDBWrapper.rs.o: rocks/RocksDBWrapper.cpp
-	$(CC) rocks/RocksDBWrapper.cpp $(CFLAGS) -I. -I$(ROCKSPATH)/include -I$(LEVENTI) -c -o RocksDBWrapper.rs.o
+bin/obj/Extend.rs.o: extend/Extend.cpp
+	$(CC) extend/Extend.cpp $(CFLAGS) -I. -I$(ROCKSPATH)/include -I$(LEVENTI) -c -o bin/obj/Extend.rs.o
 
-Extend.rs.o: extend/Extend.cpp
-	$(CC) extend/Extend.cpp $(CFLAGS) -I. -I$(ROCKSPATH)/include -I$(LEVENTI) -c -o Extend.rs.o
+bin/obj/PlugContainer.rs.o: extend/PlugContainer.cpp
+	$(CC) extend/PlugContainer.cpp $(CFLAGS) -I. -I$(ROCKSPATH)/include -I$(LEVENTI) -c -o bin/obj/PlugContainer.rs.o
 
-PlugContainer.rs.o: extend/PlugContainer.cpp
-	$(CC) extend/PlugContainer.cpp $(CFLAGS) -I. -I$(ROCKSPATH)/include -I$(LEVENTI) -c -o PlugContainer.rs.o
+bin/obj/Extension.rs.o: extend/Extension.cpp
+	$(CC) extend/Extension.cpp $(CFLAGS) -I. -I$(ROCKSPATH)/include -I$(LEVENTI) -c -o bin/obj/Extension.rs.o
 
-Extension.rs.o: extend/Extension.cpp
-	$(CC) extend/Extension.cpp $(CFLAGS) -I. -I$(ROCKSPATH)/include -I$(LEVENTI) -c -o Extension.rs.o
+bin/obj/restore.o: restore.cpp
+	$(CC) restore.cpp $(CFLAGS) -I. -I$(ROCKSPATH)/include -c -o bin/obj/restore.o
 
-restore.o: restore.cpp
-	$(CC) restore.cpp $(CFLAGS) -I. -I$(ROCKSPATH)/include -c -o restore.o
+bin/obj/restore_hr.o: restore_hr.cpp
+	$(CC) restore_hr.cpp $(CFLAGS) -I. -I$(ROCKSPATH)/include -c -o bin/obj/restore_hr.o
 
-restore_hr.o: restore_hr.cpp
-	$(CC) restore_hr.cpp $(CFLAGS) -I. -I$(ROCKSPATH)/include -c -o restore_hr.o
-
-human_readable.o: human_readable.cpp
-	$(CC) human_readable.cpp $(CFLAGS) -I. -I$(ROCKSPATH)/include -c -o human_readable.o
+bin/obj/human_readable.o: human_readable.cpp
+	$(CC) human_readable.cpp $(CFLAGS) -I. -I$(ROCKSPATH)/include -c -o bin/obj/human_readable.o
 
 .PHONY: obj
-obj: $(NAME).rs.o EvLogger.rs.o EvServer.rs.o EvResponse.rs.o EvRequest.rs.o RocksDBWrapper.rs.o Extend.rs.o PlugContainer.rs.o Extension.rs.o restore.o restore_hr.o human_readable.o
+obj: bin/obj/$(NAME).rs.o bin/obj/EvLogger.rs.o bin/obj/EvServer.rs.o bin/obj/EvResponse.rs.o bin/obj/EvRequest.rs.o bin/obj/RocksDBWrapper.rs.o bin/obj/Extend.rs.o bin/obj/PlugContainer.rs.o bin/obj/Extension.rs.o bin/obj/restore.o bin/obj/restore_hr.o bin/obj/human_readable.o
 
 
-restore.bin: restore.o
-	$(CC) restore.o $(CFLAGS) -L$(ROCKSPATH) $(ROCKSLIB) -o restore.bin
+bin/restore.bin: bin/obj/restore.o
+	$(CC) bin/obj/restore.o $(CFLAGS) -L$(ROCKSPATH) $(ROCKSLIB) -o bin/restore.bin
 
-restore_hr.bin: restore_hr.o
-	$(CC) restore_hr.o $(CFLAGS) -L$(ROCKSPATH) $(ROCKSLIB) -o restore_hr.bin
+bin/restore_hr.bin: bin/obj/restore_hr.o
+	$(CC) bin/obj/restore_hr.o $(CFLAGS) -L$(ROCKSPATH) $(ROCKSLIB) -o bin/restore_hr.bin
 
-human_readable.bin: human_readable.o
-	$(CC) human_readable.o $(CFLAGS) -L$(ROCKSPATH) $(ROCKSLIB) -o human_readable.bin
+bin/human_readable.bin: bin/obj/human_readable.o
+	$(CC) bin/obj/human_readable.o $(CFLAGS) -L$(ROCKSPATH) $(ROCKSLIB) -o bin/human_readable.bin
 
 
 #dynamic:
-${BINFILE}: obj restore.bin restore_hr.bin human_readable.bin
-	$(CC) *.rs.o $(CFLAGS) -levent -ldl -L$(ROCKSPATH) -L$(LEVENTL) $(ROCKSLIB) -rdynamic -o $(NAME).bin
+${BINFILE}: obj bin/restore.bin bin/restore_hr.bin bin/human_readable.bin
+	$(CC) bin/obj/*.rs.o $(CFLAGS) -levent -ldl -L$(ROCKSPATH) -L$(LEVENTL) $(ROCKSLIB) -rdynamic -o bin/$(NAME).bin
 	@echo
 	@echo "Build complete."
-#	@echo "To start the server run ./$(NAME).bin config.ini"
+#	@echo "To start the server run ./bin/$(NAME).bin config.ini"
 
 
 .PHONY: static
-static: obj restore.bin restore_hr.bin human_readable.bin
-	$(CC) *.rs.o $(CFLAGS) $(LEVENTL)/libevent.a -ldl -L$(ROCKSPATH) $(ROCKSLIB) -rdynamic -o $(NAME).bin
+static: obj bin/restore.bin bin/restore_hr.bin bin/human_readable.bin
+	$(CC) bin/obj/*.rs.o $(CFLAGS) $(LEVENTL)/libevent.a -ldl -L$(ROCKSPATH) $(ROCKSLIB) -rdynamic -o bin/$(NAME).bin
 	@echo
 	@echo "Build complete."
 
@@ -103,16 +102,16 @@ static: obj restore.bin restore_hr.bin human_readable.bin
 
 
 clean:
-	rm -f *.o *.bin
+	rm -f bin/obj/*.o bin/*.bin
 
 
 install:
 	mkdir -p /var/rocksserver
 	chown nobody /var/rocksserver
-	$(CP) ${SRC}/RocksServer.bin /usr/local/bin/rocksserver
-	$(CP) ${SRC}/restore.bin /usr/local/bin/rocksrestore
-	$(CP) ${SRC}/restore_hr.bin /usr/local/bin/rocksrestore_hr
-	$(CP) ${SRC}/human_readable.bin /usr/local/bin/rocks_human_readable
+	$(CP) ${SRC}/bin/RocksServer.bin /usr/local/bin/rocksserver
+	$(CP) ${SRC}/bin/restore.bin /usr/local/bin/rocksrestore
+	$(CP) ${SRC}/bin/restore_hr.bin /usr/local/bin/rocksrestore_hr
+	$(CP) ${SRC}/bin/human_readable.bin /usr/local/bin/rocks_human_readable
 	$(CP) ${SRC}/../init.d/rocksserver /etc/init.d/rocksserver
 	mkdir -p /etc/rocksserver
 	$(CP) ${SRC}/config.ini /etc/rocksserver/config.ini
