@@ -64,23 +64,28 @@ Extension.rs.o: extend/Extension.cpp
 restore.o: restore.cpp
 	$(CC) restore.cpp $(CFLAGS) -I. -I$(ROCKSPATH)/include -c -o restore.o
 
+restore_hr.o: restore_hr.cpp
+	$(CC) restore_hr.cpp $(CFLAGS) -I. -I$(ROCKSPATH)/include -c -o restore_hr.o
+
 human_readable.o: human_readable.cpp
 	$(CC) human_readable.cpp $(CFLAGS) -I. -I$(ROCKSPATH)/include -c -o human_readable.o
 
 .PHONY: obj
-obj: $(NAME).rs.o EvLogger.rs.o EvServer.rs.o EvResponse.rs.o EvRequest.rs.o RocksDBWrapper.rs.o Extend.rs.o PlugContainer.rs.o Extension.rs.o restore.o human_readable.o
+obj: $(NAME).rs.o EvLogger.rs.o EvServer.rs.o EvResponse.rs.o EvRequest.rs.o RocksDBWrapper.rs.o Extend.rs.o PlugContainer.rs.o Extension.rs.o restore.o restore_hr.o human_readable.o
 
 
 restore.bin: restore.o
 	$(CC) restore.o $(CFLAGS) -L$(ROCKSPATH) $(ROCKSLIB) -o restore.bin
 
+restore_hr.bin: restore_hr.o
+	$(CC) restore_hr.o $(CFLAGS) -L$(ROCKSPATH) $(ROCKSLIB) -o restore_hr.bin
 
 human_readable.bin: human_readable.o
 	$(CC) human_readable.o $(CFLAGS) -L$(ROCKSPATH) $(ROCKSLIB) -o human_readable.bin
 
 
 #dynamic:
-${BINFILE}: obj restore.bin human_readable.bin
+${BINFILE}: obj restore.bin restore_hr.bin human_readable.bin
 	$(CC) *.rs.o $(CFLAGS) -levent -ldl -L$(ROCKSPATH) -L$(LEVENTL) $(ROCKSLIB) -rdynamic -o $(NAME).bin
 	@echo
 	@echo "Build complete."
@@ -88,7 +93,7 @@ ${BINFILE}: obj restore.bin human_readable.bin
 
 
 .PHONY: static
-static: obj restore.bin human_readable.bin
+static: obj restore.bin restore_hr.bin human_readable.bin
 	$(CC) *.rs.o $(CFLAGS) $(LEVENTL)/libevent.a -ldl -L$(ROCKSPATH) $(ROCKSLIB) -rdynamic -o $(NAME).bin
 	@echo
 	@echo "Build complete."
@@ -106,6 +111,7 @@ install:
 	chown nobody /var/rocksserver
 	$(CP) ${SRC}/RocksServer.bin /usr/local/bin/rocksserver
 	$(CP) ${SRC}/restore.bin /usr/local/bin/rocksrestore
+	$(CP) ${SRC}/restore_hr.bin /usr/local/bin/rocksrestore_hr
 	$(CP) ${SRC}/human_readable.bin /usr/local/bin/rocks_human_readable
 	$(CP) ${SRC}/../init.d/rocksserver /etc/init.d/rocksserver
 	mkdir -p /etc/rocksserver
@@ -123,6 +129,7 @@ install:
 uninstall:
 	update-rc.d -f rocksserver remove
 	rm -f /usr/local/bin/rocksrestore
+	rm -f /usr/local/bin/rocksrestore_hr
 	rm -f /usr/local/bin/rocksserver
 	rm -f /usr/local/bin/rocks_human_readable
 	rm -f /etc/init.d/rocksserver
@@ -134,6 +141,7 @@ uninstall-clean:
 	rm -fR /usr/lib/rocksserver/plugins
 	rm -fR /usr/include/rocksserver
 	rm -f /usr/local/bin/rocksrestore
+	rm -f /usr/local/bin/rocksrestore_hr
 	rm -f /usr/local/bin/rocks_human_readable
 	rm -f /etc/init.d/rocksserver
 
