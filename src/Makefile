@@ -60,14 +60,14 @@ bin/obj/PlugContainer.rs.o: extend/PlugContainer.cpp
 bin/obj/Extension.rs.o: extend/Extension.cpp
 	$(CC) extend/Extension.cpp $(CFLAGS) -I. -I$(ROCKSPATH)/include -I$(LEVENTI) -c -o bin/obj/Extension.rs.o
 
-bin/obj/restore.o: restore.cpp
-	$(CC) restore.cpp $(CFLAGS) -I. -I$(ROCKSPATH)/include -c -o bin/obj/restore.o
+bin/obj/restore.o: utils/restore.cpp
+	$(CC) utils/restore.cpp $(CFLAGS) -I. -I$(ROCKSPATH)/include -c -o bin/obj/restore.o
 
-bin/obj/restore_hr.o: restore_hr.cpp
-	$(CC) restore_hr.cpp $(CFLAGS) -I. -I$(ROCKSPATH)/include -c -o bin/obj/restore_hr.o
+bin/obj/restore_hr.o: utils/restore_hr.cpp
+	$(CC) utils/restore_hr.cpp $(CFLAGS) -I. -I$(ROCKSPATH)/include -c -o bin/obj/restore_hr.o
 
-bin/obj/human_readable.o: human_readable.cpp
-	$(CC) human_readable.cpp $(CFLAGS) -I. -I$(ROCKSPATH)/include -c -o bin/obj/human_readable.o
+bin/obj/human_readable.o: utils/human_readable.cpp
+	$(CC) utils/human_readable.cpp $(CFLAGS) -I. -I$(ROCKSPATH)/include -c -o bin/obj/human_readable.o
 
 .PHONY: obj
 obj: bin/obj/$(NAME).rs.o bin/obj/EvLogger.rs.o bin/obj/EvServer.rs.o bin/obj/EvResponse.rs.o bin/obj/EvRequest.rs.o bin/obj/RocksDBWrapper.rs.o bin/obj/Extend.rs.o bin/obj/PlugContainer.rs.o bin/obj/Extension.rs.o bin/obj/restore.o bin/obj/restore_hr.o bin/obj/human_readable.o
