@@ -71,13 +71,14 @@
 
 // Listeners
 #include "include/listeners/RequestBase.h"
+#include "listeners/RequestKeyExist.h"
 #include "listeners/RequestGet.h"
 #include "listeners/RequestMget.h"
 #include "listeners/RequestSet.h"
 #include "listeners/RequestMset.h"
-#include "listeners/RequestKeyExist.h"
 #include "listeners/RequestDel.h"
 #include "listeners/RequestMdel.h"
+#include "listeners/RequestMdelset.h"
 #include "listeners/RequestIncr.h"
 #include "listeners/RequestTailing.h"
 #include "listeners/RequestStats.h"
