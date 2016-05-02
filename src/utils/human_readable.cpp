@@ -12,6 +12,11 @@
 
 // RocksDB
 #include "rocksdb/db.h"
+#include "rocksdb/merge_operator.h"
+
+// RocksDB Incrementor
+#include "include/rocks/Int64Incrementor.h"
+
 
 #define HELP_EXIT()  print_help(*argv); return 0;
 
@@ -32,7 +37,11 @@ class RocksDbContainer
 public:
     RocksDbContainer(const std::string &database_dir)
     {
-        auto status = rocksdb::DB::OpenForReadOnly(rocksdb::Options(), database_dir, &_db );
+        // DB options
+        rocksdb::Options dbOptions;
+        dbOptions.merge_operator.reset(new RocksServer::Int64Incrementor);
+
+        auto status = rocksdb::DB::OpenForReadOnly(dbOptions, database_dir, &_db );
         
         _valid = status.ok();
         if (!_valid) {
