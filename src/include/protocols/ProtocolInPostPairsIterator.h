@@ -61,6 +61,14 @@ namespace RocksServer {
         {
             return (lpos != that.lpos);
         }
+        
+        /**
+         *  Compare with other iterator
+         */
+        bool operator==(const ProtocolInPostPairsIterator &that) const
+        {
+            return (lpos == that.lpos);
+        }
 
         /**
          *  Derefecence, this returns a rocksdb::Slice with the current key
