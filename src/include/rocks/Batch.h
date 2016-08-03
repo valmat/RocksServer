@@ -85,6 +85,18 @@ namespace RocksServer {
             return *this;
         }
 
+        // Retrieve the serialized version of this batch.
+        const std::string& data() const 
+        {
+            return batch.Data();
+        }
+
+        // Returns the number of updates in the batch
+        int count() const
+        {
+            return batch.Count();
+        }
+
     private:
         // RocksDB batch
         rocksdb::WriteBatch batch;
