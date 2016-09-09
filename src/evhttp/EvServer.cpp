@@ -34,6 +34,8 @@ namespace RocksServer {
 
         if (evhttp_bind_socket(_http, addr, port) == -1) {
             std::cerr << "Couldn't bind to host " << addr << " port " << port << "." << std::endl;
+            evhttp_free(_http);
+            _http = nullptr;
             return;
         }
 
