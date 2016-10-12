@@ -82,23 +82,40 @@ namespace RocksServer {
     /**
      * Get array values by array keys
      * @param  keys
-     * @return statuses
+     * @param statuses
+     * @return values
      */
-     std::vector<std::string> RocksDBWrapper::mget(const std::vector<rocksdb::Slice> &keys, std::vector<rocksdb::Status> &statuses)
+    std::vector<std::string> RocksDBWrapper::mget(const std::vector<rocksdb::Slice> &keys, std::vector<rocksdb::Status> &statuses)
     {
-        // size of keys array
-        size_t arrSize = keys.size();
-        
         // result values
         std::vector<std::string> values;
-        values.reserve(arrSize);
+        values.reserve(keys.size());
         
         // result statuses
-        statuses.reserve(arrSize);
+        statuses.reserve(keys.size());
 
         // filling values
         statuses = _db->MultiGet(rocksdb::ReadOptions(), keys, &values);
         return values;
+    }
+
+    /**
+     * Get array values by array keys
+     * @param  keys
+     * @param statuses
+     * @return values
+     */
+    std::vector<std::string> RocksDBWrapper::mget(const std::vector<std::string> &keys, std::vector<rocksdb::Status> &statuses)
+    {
+        std::vector<rocksdb::Slice> slice_keys;
+        slice_keys.reserve(keys.size());
+
+        // filling slices vector
+        for(auto& key: keys) {
+            slice_keys.emplace_back(key);
+        }
+
+        return mget(slice_keys, statuses);
     }
 
     /**

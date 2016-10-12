@@ -87,9 +87,18 @@ namespace RocksServer {
         /**
          * Get array values by array keys
          * @param  keys
-         * @return statuses
+         * @param statuses
+         * @return values
          */
          std::vector<std::string> mget(const std::vector<rocksdb::Slice> &keys, std::vector<rocksdb::Status> &statuses);
+
+        /**
+         * Get array values by array keys
+         * @param  keys
+         * @param statuses
+         * @return values
+         */
+         std::vector<std::string> mget(const std::vector<std::string> &keys, std::vector<rocksdb::Status> &statuses);
 
         /**
          * Fast check exist key
