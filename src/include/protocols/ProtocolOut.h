@@ -71,6 +71,11 @@ namespace RocksServer {
             resp.add("FAIL\n", 5);
             return *this;
         }
+        const ProtocolOut& endl() const
+        {
+            resp.endl();
+            return *this;
+        }
 
     private:
         const EvResponse &resp;
