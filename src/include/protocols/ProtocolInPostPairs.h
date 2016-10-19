@@ -11,7 +11,7 @@
  *  @github https://github.com/valmat/rocksserver
  */
 
-
+#pragma once
 namespace RocksServer {
 
     class ProtocolInPostPairs: public ProtocolInPost
@@ -27,6 +27,15 @@ namespace RocksServer {
         ProtocolInPostPairsIterator end() const
         {
             return ProtocolInPostPairsIterator();
+        }
+
+        std::map<std::string, std::string> map() const
+        {
+            std::map<std::string, std::string> values;
+            for(auto &&it: *this) {
+                values.emplace(it.first.ToString(), it.second.ToString());
+            }
+            return values;
         }
     };
 
