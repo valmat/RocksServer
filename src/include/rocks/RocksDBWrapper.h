@@ -48,7 +48,8 @@ namespace RocksServer {
          * @param string key
          * @param string value
          */
-         bool set(const rocksdb::Slice &key, const rocksdb::Slice &value) {
+        bool set(const rocksdb::Slice &key, const rocksdb::Slice &value)
+        {
             _status = _db->Put(rocksdb::WriteOptions(), key, value);
             return _status.ok();
         }
@@ -74,7 +75,7 @@ namespace RocksServer {
          * @param string key
          * @return string value or NULL (if the key is not exist)
          */
-        std::string get(const rocksdb::Slice &key)
+        std::string get(const rocksdb::Slice &key) const
         {
             std::string value;
             _status = _db->Get(rocksdb::ReadOptions(), key, &value);
@@ -90,7 +91,7 @@ namespace RocksServer {
          * @param statuses
          * @return values
          */
-         std::vector<std::string> mget(const std::vector<rocksdb::Slice> &keys, std::vector<rocksdb::Status> &statuses);
+         std::vector<std::string> mget(const std::vector<rocksdb::Slice> &keys, std::vector<rocksdb::Status> &statuses) const;
 
         /**
          * Get array values by array keys
@@ -98,7 +99,7 @@ namespace RocksServer {
          * @param statuses
          * @return values
          */
-         std::vector<std::string> mget(const std::vector<std::string> &keys, std::vector<rocksdb::Status> &statuses);
+         std::vector<std::string> mget(const std::vector<std::string> &keys, std::vector<rocksdb::Status> &statuses) const;
 
         /**
          * Fast check exist key
@@ -108,7 +109,7 @@ namespace RocksServer {
          * @return bool (true if key exist)
          */
         [[gnu::deprecated("Use keyExist(const rocksdb::Slice &key, std::string &value) instead")]]
-        bool keyExist(const rocksdb::Slice &key, std::string &value, bool &value_found);
+        bool keyExist(const rocksdb::Slice &key, std::string &value, bool &value_found) const;
 
         /**
          * Fast check exist key
@@ -116,14 +117,14 @@ namespace RocksServer {
          * @param string value. If the value exists, it can be retrieved. But there is no guarantee that it will be retrieved
          * @return bool (true if key exist)
          */
-        bool keyExist(const rocksdb::Slice &key, std::string &value);
+        bool keyExist(const rocksdb::Slice &key, std::string &value) const;
 
         /**
          * Fast check exist key
          * @param string key
          * @return bool (true if key exist)
          */
-        bool keyExist(const rocksdb::Slice &key)
+        bool keyExist(const rocksdb::Slice &key) const
         {
             std::string value;
             return keyExist(key, value);
@@ -142,7 +143,7 @@ namespace RocksServer {
         /**
          * Get last query status string
          */
-        std::string getStatus()
+        std::string getStatus() const
         {
             return  _status.ToString();
         }
@@ -150,7 +151,7 @@ namespace RocksServer {
         /**
          * Get last query status state
          */
-        bool status()
+        bool status() const
         {
             return _status.ok();
         }
@@ -182,6 +183,6 @@ namespace RocksServer {
         rocksdb::DB* _db;
 
         // Last operation status
-        rocksdb::Status _status;
+        mutable rocksdb::Status _status;
     };
 }

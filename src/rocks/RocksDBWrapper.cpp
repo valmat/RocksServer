@@ -85,7 +85,7 @@ namespace RocksServer {
      * @param statuses
      * @return values
      */
-    std::vector<std::string> RocksDBWrapper::mget(const std::vector<rocksdb::Slice> &keys, std::vector<rocksdb::Status> &statuses)
+    std::vector<std::string> RocksDBWrapper::mget(const std::vector<rocksdb::Slice> &keys, std::vector<rocksdb::Status> &statuses) const
     {
         // result values
         std::vector<std::string> values;
@@ -105,7 +105,7 @@ namespace RocksServer {
      * @param statuses
      * @return values
      */
-    std::vector<std::string> RocksDBWrapper::mget(const std::vector<std::string> &keys, std::vector<rocksdb::Status> &statuses)
+    std::vector<std::string> RocksDBWrapper::mget(const std::vector<std::string> &keys, std::vector<rocksdb::Status> &statuses) const
     {
         std::vector<rocksdb::Slice> slice_keys;
         slice_keys.reserve(keys.size());
@@ -135,7 +135,7 @@ namespace RocksServer {
      * @param bool value_found.
      * @return bool (true if key exist)
      */
-    bool RocksDBWrapper::keyExist(const rocksdb::Slice &key, std::string &value, bool &value_found)
+    bool RocksDBWrapper::keyExist(const rocksdb::Slice &key, std::string &value, bool &value_found) const
     {
         bool isExist = _db->KeyMayExist(rocksdb::ReadOptions(), key, &value, &value_found);
         if(!isExist) {
@@ -159,7 +159,7 @@ namespace RocksServer {
      * @param bool value_found.
      * @return bool (true if key exist)
      */
-    bool RocksDBWrapper::keyExist(const rocksdb::Slice &key, std::string &value)
+    bool RocksDBWrapper::keyExist(const rocksdb::Slice &key, std::string &value) const
     {
         bool value_found;
         bool isExist = _db->KeyMayExist(rocksdb::ReadOptions(), key, &value, &value_found);
