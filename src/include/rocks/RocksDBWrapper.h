@@ -178,6 +178,14 @@ namespace RocksServer {
             return _status.ok();
         }
 
+        /**
+         * Get new Iterator
+         */
+        std::unique_ptr<rocksdb::Iterator> newIter() const
+        {
+            return std::unique_ptr<rocksdb::Iterator>(_db->NewIterator(rocksdb::ReadOptions()));
+        }
+
     private:
         // DB pointer
         rocksdb::DB* _db;
