@@ -56,13 +56,13 @@ namespace RocksServer {
         /**
          *  add string to buffer
          *  @param      string
-         *  @param      string lenght
          */
-        const EvResponse& add(const std::string &str) const
+        template<typename T, typename = typename std::enable_if<traits::may_string<T>::value, void>::type>
+        const EvResponse& add(T &&str) const
         {
-            return add(str.c_str(), str.size());
+            return add(str.data(), str.size());
         }
-
+        
         const EvResponse& add(const std::string *pstr) const;
 
         const EvResponse& add(size_t val) const
@@ -88,7 +88,6 @@ namespace RocksServer {
 
         /**
          *  Send buffer as server reply
-         *  @param       event buffer wrapper
          */
         void send() const;
 
