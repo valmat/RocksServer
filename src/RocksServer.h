@@ -30,6 +30,9 @@
 #include <event2/http.h>
 #include <event2/http_struct.h>
 
+// Type traits
+#include "include/traits.h"
+
 // Server wrapper
 #include "include/evhttp/EvResponse.h"
 #include "include/evhttp/PostData.h"

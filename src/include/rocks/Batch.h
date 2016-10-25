@@ -10,28 +10,8 @@
 
 namespace RocksServer {
 
-
     class Batch
     {
-        /**
-         *  SFINAE
-         *  This type trait checks if the  `begin` and `end` methods is defined in class T
-         */
-        template <typename T>
-        class is_possible_iterable
-        {
-            typedef char yes;
-            class no { char _[2]; };
-
-            typedef typename std::remove_reference<typename std::remove_const<T>::type>::type X;
-
-            template <typename R> static yes test( decltype(&R::begin), decltype(&R::end) ) ;
-            template <typename R> static no test(...);
-
-        public:
-            enum { value = sizeof(test<X>(0,0)) == sizeof(yes) };
-        };
-
     public:
         // Set a key-value pair to the batch
         template <typename KT, typename VT>
@@ -43,31 +23,31 @@ namespace RocksServer {
 
         // Set a key-value pairs to the batch
         template <typename T>
-        typename std::enable_if<is_possible_iterable<T>::value, Batch &>::type
-        set(T &&iterable) 
+        typename std::enable_if<traits::may_iterable<T>::value, Batch &>::type
+        set(T &&iterable)
         {
-            for(auto &it : iterable) {
+            for(auto &&it : iterable) {
                 set(it);
             }
             return *this;
         }
         
         template <typename KT, typename VT>
-        Batch & set(const std::pair<KT,VT> &pair) 
+        Batch & set(const std::pair<KT,VT> &pair)
         {
             return set(pair.first, pair.second);
         }
 
         // Set a key-value pair to the batch
         template <typename KT, typename VT>
-        Batch & set(std::pair<KT,VT> &&pair) 
+        Batch & set(std::pair<KT,VT> &&pair)
         {
             return set(std::move(pair.first), std::move(pair.second));
         }
 
         // Delete a key
         template <typename T>
-        typename std::enable_if<!is_possible_iterable<T>::value, Batch &>::type
+        typename std::enable_if<!traits::may_iterable<T>::value, Batch &>::type
         del(T &&key)
         {
             batch.Delete(std::forward<T>(key));
@@ -76,17 +56,17 @@ namespace RocksServer {
 
         // Delete a keys
         template <typename T>
-        typename std::enable_if<is_possible_iterable<T>::value, Batch &>::type
-        del(T &&iterable) 
+        typename std::enable_if<traits::may_iterable<T>::value, Batch &>::type
+        del(T &&iterable)
         {
-            for(auto &it : iterable) {
+            for(auto &&it : iterable) {
                 del(it);
             }
             return *this;
         }
 
         // Retrieve the serialized version of this batch.
-        const std::string& data() const 
+        const std::string& data() const
         {
             return batch.Data();
         }

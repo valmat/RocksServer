@@ -15,6 +15,9 @@
 // C headers
 #include <string.h>
 
+// Type traits
+#include <rocksserver/traits.h>
+
 // Server wrapper
 #include <rocksserver/evhttp/EvResponse.h>
 #include <rocksserver/evhttp/PostData.h>
