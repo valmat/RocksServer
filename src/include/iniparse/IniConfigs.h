@@ -40,7 +40,7 @@ namespace RocksServer {
                 // trim
                 trim(str);
                 
-                if( !str.size() ) {
+                if( str.empty() ) {
                     continue;
                 }
                 
@@ -70,17 +70,18 @@ namespace RocksServer {
         template <typename T>
         IniValue<T> get(const std::string &name, const T &value, bool noEmpty = true) const
         {
+            auto cfg = _map.find(name);
             // if key not exist
-            if(_map.find(name) == _map.cend()) {
+            if(cfg == _map.cend()) {
                 return IniValue<T>(value);
             }
 
             // check if config value string is empty
-            if(noEmpty && !_map.at(name).size()) {
+            if(noEmpty && cfg->second.empty()) {
                 return IniValue<T>(value);
             }
             
-            return IniValue<std::string>( _map.at(name) );
+            return IniValue<std::string>(cfg->second);
         }
         
         ~IniConfigs() {}

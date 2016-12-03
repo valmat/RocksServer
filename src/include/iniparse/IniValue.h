@@ -21,8 +21,8 @@ namespace RocksServer {
          *  Constructors
          *  @param      default value
          */
-         IniValue(const T &value) : _value(value) {}
-         IniValue(const T &&value) : _value(std::move(value)) {}
+        IniValue(const T &value) : _value(value) {}
+        IniValue(T &&value) : _value(std::move(value)) {}
 
         /**
          *  Cast to an object of type T
@@ -37,7 +37,7 @@ namespace RocksServer {
         /**
          *  default value
          */
-        const T _value;
+        T _value;
     };
 
 
@@ -51,7 +51,7 @@ namespace RocksServer {
          *  @param      string value
          */
         IniValue(const std::string &value) : _value(value) {}
-        IniValue(const std::string &&value) : _value(std::move(value)) {}
+        IniValue(std::string &&value) : _value(std::move(value)) {}
 
         /**
          *  Cast to a string
@@ -105,13 +105,13 @@ namespace RocksServer {
         {
             return _value.c_str();
         }
-        
+
     private:
         
         /**
          *  string value
          */
-        const std::string _value;
+        std::string _value;
     };
 
 }
