@@ -107,9 +107,6 @@ static: obj bin/restore.bin bin/restore_hr.bin bin/human_readable.bin
 clean:
 	rm -f bin/obj/*.o bin/*.bin RocksServer.h.gch
 
-apigch:
-	g++ $(CFLAGS) -I. -I"/usr/include/rocksserver/rocksdb" -c /usr/include/rocksserver/api.h -o /usr/include/rocksserver/api.h.gch
-
 gch:
 	g++ $(CFLAGS) -I. -I$(ROCKSPATH)/include -I$(LEVENTI) -c RocksServer.h -o RocksServer.h.gch
 
@@ -132,9 +129,6 @@ install:
 	mkdir -p /usr/include/rocksserver/rocksdb
 	$(CPR) ${SRC}/../deps/rocksdb/include/* /usr/include/rocksserver/rocksdb/
 	#
-	# precompiled header:
-	g++ $(CFLAGS) -I. -I"/usr/include/rocksserver/rocksdb" -c /usr/include/rocksserver/api.h -o /usr/include/rocksserver/api.h.gch
-	#
 	update-rc.d rocksserver defaults
 
 uninstall:
@@ -144,7 +138,6 @@ uninstall:
 	rm -f /usr/local/bin/rocksserver
 	rm -f /usr/local/bin/rocks_human_readable
 	rm -f /etc/init.d/rocksserver
-	rm -f /usr/include/rocksserver/api.h.gch
 
 uninstall-clean:
 	update-rc.d -f rocksserver remove
@@ -156,6 +149,5 @@ uninstall-clean:
 	rm -f /usr/local/bin/rocksrestore_hr
 	rm -f /usr/local/bin/rocks_human_readable
 	rm -f /etc/init.d/rocksserver
-	rm -f /usr/include/rocksserver/api.h.gch
 
 
