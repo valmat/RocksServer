@@ -46,6 +46,11 @@ namespace RocksServer {
                 .add("\n-1\n", 4);
             return *this;
         }
+        const ProtocolOut& setFailPair() const
+        {
+            resp.add("\n-1\n", 4);
+            return *this;
+        }
 
         template<typename ...ValueType>
         const ProtocolOut& setStr(ValueType&&... val) const
