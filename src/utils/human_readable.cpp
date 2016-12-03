@@ -108,17 +108,18 @@ int main(int argc, char **argv)
      */
     RocksDbContainer db(database_dir);
 
-    // Check if RocksDB started
+    // Check if RocksDB is started
     if (!db) {
         return 1;
     }
 
-    // Redirected stdout to file
-    FILE *fp = nullptr;
-    if ( !(fp = freopen(output_fname.c_str(), "w", stdout)) ) {
-        std::cerr<<"Can't open file "<< output_fname << std::endl;
+    // Redirected stdout to the file
+    FILE *fp = freopen(output_fname.c_str(), "w", stdout);
+    if ( !fp ) {
+        std::cerr<<"Can't open file \""<< output_fname 
+                 << "\":\n" << strerror(errno) << std::endl;
         return 1;
-    }    
+    }
 
     /*
      * Iterate over all db keys
@@ -139,7 +140,7 @@ int main(int argc, char **argv)
         std::cerr<< it->status().ToString() << std::endl;
     }
     
-    if(fp) fclose(fp);
+    fclose(fp);
 
     return 0;
 }

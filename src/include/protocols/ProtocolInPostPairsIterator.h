@@ -19,10 +19,9 @@ namespace RocksServer {
         typedef std::string::size_type size_type;
 
         ProtocolInPostPairsIterator(const PostData &raw) :
-            raw(raw),
-            rawlen(raw.size())
+            raw(raw)
         {
-            if(lpos < rawlen) {
+            if(lpos < raw.size()) {
                 next();
             }
         }
@@ -93,22 +92,21 @@ namespace RocksServer {
          */
         void next()
         {
-            if(lpos >= rawlen) {
+            if(lpos >= raw.size()) {
                 lpos = npos;
                 return;
             }
 
             // retrive key
             rpos = raw.find('\n', lpos);
-            key_star = lpos;
-            key_len  = rpos - lpos;
-
+            size_type key_star = lpos;
+            size_type key_len  = rpos - lpos;
             
             // retrive value
             lpos = rpos+1;
 
             rpos = raw.find('\n', lpos);
-            vallen = std::atol(raw.data() + lpos);
+            size_type vallen = std::atol(raw.data() + lpos);
             lpos = rpos+1;
 
             // set pair
@@ -118,19 +116,12 @@ namespace RocksServer {
             lpos += vallen + 1;
         }
 
-        const size_type &npos = std::string::npos;
+        constexpr static size_type npos = std::string::npos;
 
         const PostData &raw;
-        
-        size_type rawlen;
-        size_type lpos = 0;
-        size_type rpos;
-
-        size_type key_star;
-        size_type key_len;
-        size_type vallen = 0;
-
         std::pair<rocksdb::Slice, rocksdb::Slice> current;
+        
+        size_type lpos = 0;
+        size_type rpos = 0;
     };
-
 }

@@ -111,15 +111,13 @@ namespace RocksServer {
                 rocksdb::Slice(raw+lpos, rpos-lpos);
         }
 
-        const size_type &npos = std::string::npos;
+        constexpr static size_type npos = std::string::npos;
 
         const PostData &raw;
+        rocksdb::Slice current;
         
         size_type lpos;
-        size_type rpos;
-
-        rocksdb::Slice current;
+        size_type rpos = 0;
     };
-
 }
 
