@@ -64,47 +64,30 @@ namespace RocksServer {
         /**
          *  Casting to integer types
          */
-        operator IniValue<uint64_t> () const {return std::strtoull(_value.c_str(), nullptr, 10);}
-        operator IniValue<uint32_t> () const {return std::strtoul(_value.c_str(), nullptr, 10);}
-        operator IniValue<uint16_t> () const {return std::strtoul(_value.c_str(), nullptr, 10);}
-        operator IniValue<uint8_t>  () const {return std::strtoul(_value.c_str(), nullptr, 10);}
+        operator IniValue<uint64_t> () const;
+        operator IniValue<uint32_t> () const;
+        operator IniValue<uint16_t> () const;
+        operator IniValue<uint8_t>  () const;
 
-        operator IniValue<int64_t> () const {return std::stoll(_value);}
-        operator IniValue<int32_t> () const {return std::stol(_value);}
-        operator IniValue<int16_t> () const {return std::stoi(_value);}
-        operator IniValue<int8_t>  () const {return std::stoi(_value);}
+        operator IniValue<int64_t> () const;
+        operator IniValue<int32_t> () const;
+        operator IniValue<int16_t> () const;
+        operator IniValue<int8_t>  () const;
 
         /**
          *  Cast to a EvLogger::Level
          */
-        operator IniValue<EvLogger::Level> () const
-        {
-            if("debug" == _value) return EvLogger::Level::debug;
-            if("msg"   == _value) return EvLogger::Level::msg;
-            if("warn"  == _value) return EvLogger::Level::warn;
-            if("error" == _value) return EvLogger::Level::error;
-            if("fatal" == _value) return EvLogger::Level::fatal;
-            
-            return EvLogger::Level::none;
-        }
+        operator IniValue<EvLogger::Level> () const;
 
         /**
          *  Cast to a bool
          */
-        operator IniValue<bool> () const
-        {
-            std::string v = _value;
-            std::transform(v.begin(), v.end(), v.begin(), (int (*)(int))std::tolower);
-            return ("true" == v || "1" == v || "on" == v);
-        }
+        operator IniValue<bool> () const;
         
         /**
          *  Cast to a const char *
          */
-        operator IniValue<const char *> () const
-        {
-            return _value.c_str();
-        }
+        operator IniValue<const char *> () const;
 
     private:
         
