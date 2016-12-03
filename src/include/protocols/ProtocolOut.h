@@ -17,9 +17,15 @@ namespace RocksServer {
         ProtocolOut(const EvResponse &r) :resp(r) {}
         ProtocolOut(EvResponse &&r) :resp(std::move(r)) {}
 
-        const ProtocolOut& setValue(const std::string &val) const
+        template<typename T, typename = typename std::enable_if<traits::may_string<T>::value, void>::type>
+        const ProtocolOut& setValue(T &&val) const
         {
-            resp.add_printf("%lu\n%s", val.size(), val.c_str());
+            resp.add_printf("%lu\n%s", val.size(), val.data());
+            return *this;
+        }
+        const ProtocolOut& setValue(const char *val) const
+        {
+            resp.add_printf("%lu\n%s", val, strlen(val));
             return *this;
         }
         
