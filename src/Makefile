@@ -33,6 +33,9 @@ SRC=`pwd`
 all: ${BINFILE}
 
 
+RocksServer.h.gch: RocksServer.h
+	g++ $(CFLAGS) -I. -I$(ROCKSPATH)/include -I$(LEVENTI) -c RocksServer.h -o RocksServer.h.gch
+
 bin/obj/$(NAME).rs.o: $(NAME).cpp
 	$(CC) $(NAME).cpp $(CFLAGS) -I. -I$(ROCKSPATH)/include -I$(LEVENTI) -c -o bin/obj/$(NAME).rs.o
 
@@ -70,7 +73,7 @@ bin/obj/human_readable.o: utils/human_readable.cpp
 	$(CC) utils/human_readable.cpp $(CFLAGS) -I. -I$(ROCKSPATH)/include -c -o bin/obj/human_readable.o
 
 .PHONY: obj
-obj: bin/obj/$(NAME).rs.o bin/obj/EvLogger.rs.o bin/obj/EvServer.rs.o bin/obj/EvResponse.rs.o bin/obj/EvRequest.rs.o bin/obj/RocksDBWrapper.rs.o bin/obj/Extend.rs.o bin/obj/PlugContainer.rs.o bin/obj/Extension.rs.o bin/obj/restore.o bin/obj/restore_hr.o bin/obj/human_readable.o
+obj: RocksServer.h.gch bin/obj/$(NAME).rs.o bin/obj/EvLogger.rs.o bin/obj/EvServer.rs.o bin/obj/EvResponse.rs.o bin/obj/EvRequest.rs.o bin/obj/RocksDBWrapper.rs.o bin/obj/Extend.rs.o bin/obj/PlugContainer.rs.o bin/obj/Extension.rs.o bin/obj/restore.o bin/obj/restore_hr.o bin/obj/human_readable.o
 
 
 bin/restore.bin: bin/obj/restore.o
@@ -87,7 +90,7 @@ bin/human_readable.bin: bin/obj/human_readable.o
 ${BINFILE}: obj bin/restore.bin bin/restore_hr.bin bin/human_readable.bin
 	$(CC) bin/obj/*.rs.o $(CFLAGS) -levent -ldl -L$(ROCKSPATH) -L$(LEVENTL) $(ROCKSLIB) -rdynamic -o bin/$(NAME).bin
 	@echo
-	@echo "Build complete."
+	@echo "\033[1;36mBuild complite \033[0m"
 #	@echo "To start the server run ./bin/$(NAME).bin config.ini"
 
 
@@ -95,14 +98,20 @@ ${BINFILE}: obj bin/restore.bin bin/restore_hr.bin bin/human_readable.bin
 static: obj bin/restore.bin bin/restore_hr.bin bin/human_readable.bin
 	$(CC) bin/obj/*.rs.o $(CFLAGS) $(LEVENTL)/libevent.a -ldl -L$(ROCKSPATH) $(ROCKSLIB) -rdynamic -o bin/$(NAME).bin
 	@echo
-	@echo "Build complete."
+	@echo "\033[1;34mBuild complite \033[0m"
 
 
 .PHONY: clean install uninstall uninstall-clean
 
 
 clean:
-	rm -f bin/obj/*.o bin/*.bin
+	rm -f bin/obj/*.o bin/*.bin RocksServer.h.gch
+
+apigch:
+	g++ $(CFLAGS) -I. -I"/usr/include/rocksserver/rocksdb" -c /usr/include/rocksserver/api.h -o /usr/include/rocksserver/api.h.gch
+
+gch:
+	g++ $(CFLAGS) -I. -I$(ROCKSPATH)/include -I$(LEVENTI) -c RocksServer.h -o RocksServer.h.gch
 
 
 install:
@@ -123,6 +132,9 @@ install:
 	mkdir -p /usr/include/rocksserver/rocksdb
 	$(CPR) ${SRC}/../deps/rocksdb/include/* /usr/include/rocksserver/rocksdb/
 	#
+	# precompiled header:
+	g++ $(CFLAGS) -I. -I"/usr/include/rocksserver/rocksdb" -c /usr/include/rocksserver/api.h -o /usr/include/rocksserver/api.h.gch
+	#
 	update-rc.d rocksserver defaults
 
 uninstall:
@@ -132,6 +144,7 @@ uninstall:
 	rm -f /usr/local/bin/rocksserver
 	rm -f /usr/local/bin/rocks_human_readable
 	rm -f /etc/init.d/rocksserver
+	rm -f /usr/include/rocksserver/api.h.gch
 
 uninstall-clean:
 	update-rc.d -f rocksserver remove
@@ -143,5 +156,6 @@ uninstall-clean:
 	rm -f /usr/local/bin/rocksrestore_hr
 	rm -f /usr/local/bin/rocks_human_readable
 	rm -f /etc/init.d/rocksserver
+	rm -f /usr/include/rocksserver/api.h.gch
 
 

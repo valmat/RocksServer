@@ -1,6 +1,7 @@
-#pragma once
+#ifndef ROCKSSERVER_API_H
+#define ROCKSSERVER_API_H
 
-#include "rocksserver/version.h"
+#include <rocksserver/version.h>
 
 // C++ headers
 #include <iostream>
@@ -65,3 +66,5 @@
 
 
 #define PLUGIN extern "C" void plugin
+
+#endif // ROCKSSERVER_API_H
