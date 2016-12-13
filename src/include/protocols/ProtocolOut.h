@@ -25,7 +25,7 @@ namespace RocksServer {
         }
         const ProtocolOut& setValue(const char *val) const
         {
-            resp.add_printf("%lu\n%s", val, strlen(val));
+            resp.add_printf("%lu\n%s", strlen(val), val);
             return *this;
         }
         
