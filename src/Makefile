@@ -7,7 +7,7 @@ OPT_FLAGS=-O4
 #OPT_FLAGS=-g -O0
 
 #compiler flags
-CFLAGS	 = -std=c++11 $(OPT_FLAGS) -pedantic -Wall -Wextra -Wno-unused-parameter
+CFLAGS	 = -std=c++11 $(OPT_FLAGS) -pedantic -Wall -Wextra -Wno-unused-parameter -fno-rtti
 
 
 
@@ -16,7 +16,8 @@ BINFILE  = bin/$(NAME).bin
 # path to RocksDB source
 ROCKSPATH	 = $(PWD)/../deps/rocksdb
 
-ROCKSLIB = -lrocksdb -lpthread -lrt -lsnappy -lgflags -lz -lbz2 -lzstd -lbz2 -llz4
+# ROCKSLIB = -lrocksdb -lpthread -lrt -lsnappy -lgflags -lz -lbz2 -lzstd -lbz2 -llz4
+ROCKSLIB = -lrocksdb -lpthread -lsnappy -lz -lzstd -lbz2 -llz4
 
 
 # path to Libevent source

@@ -26,7 +26,6 @@ namespace RocksServer {
 
         ~RocksDBWrapper()
         {
-            //delete Incrementor; <-- not required : std::shared_ptr
             delete _db;
         }
 
