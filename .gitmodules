@@ -5,5 +5,5 @@
 [submodule "libevent"]
 	path = deps/libevent
 	url = https://github.com/libevent/libevent
-	branch = release-2.1.4-alpha
+	branch = release-2.1.8-stable
 
