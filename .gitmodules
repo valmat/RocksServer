@@ -1,7 +1,7 @@
 [submodule "rocksdb"]
 	path = deps/rocksdb
 	url = https://github.com/facebook/rocksdb
-	branch = 3.4.fb
+	branch = 5.18.fb
 [submodule "libevent"]
 	path = deps/libevent
 	url = https://github.com/libevent/libevent
