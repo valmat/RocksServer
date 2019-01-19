@@ -16,7 +16,8 @@ BINFILE  = bin/$(NAME).bin
 # path to RocksDB source
 ROCKSPATH	 = $(PWD)/../deps/rocksdb
 
-ROCKSLIB = -lrocksdb -lpthread -lrt -lsnappy -lgflags -lz -lbz2
+ROCKSLIB = -lrocksdb -lpthread -lrt -lsnappy -lgflags -lz -lbz2 -lzstd -lbz2 -llz4
+
 
 # path to Libevent source
 LEVENTPATH	 = $(PWD)/../deps/libevent

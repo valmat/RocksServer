@@ -11,15 +11,16 @@
 #pragma once
 #include <time.h>
 
-using rocksdb::BackupableDB;
-
 namespace RocksServer {
 
     class RequestBackupInfo : public RequestBase<ProtocolInTrivial, ProtocolOut>
     {
     public:
         
-        RequestBackupInfo(rocksdb::DB *rdb) : db(reinterpret_cast<BackupableDB*>(rdb)) {} 
+        RequestBackupInfo(RocksDBWrapper &rdb, const rocksdb::BackupableDBOptions &bkOptions) :
+            db(rdb),
+            bkOptions(bkOptions)
+        {}
 
         /**
          *  Runs request listener
@@ -28,8 +29,7 @@ namespace RocksServer {
          */
         virtual void run(const ProtocolInTrivial &in, const ProtocolOut &out) override
         {
-            std::vector<rocksdb::BackupInfo> backup_info;
-            db->GetBackupInfo(&backup_info);
+            std::vector<rocksdb::BackupInfo> backup_info = BackupEngine(bkOptions).backupInfo();
             
             out.setStr(backup_info.size());
             struct tm * dt;
@@ -38,15 +38,16 @@ namespace RocksServer {
                 dt = localtime(&inf.timestamp);
                 strftime(buffer, sizeof(buffer), "%d.%m.%Y %T %z", dt);
 
-                out.setStr(std::string("\nid: ") + std::to_string(inf.backup_id) + "\n");
+                out.setStr(std::string("\nid: ")      + std::to_string(inf.backup_id) + "\n");
                 out.setStr(std::string("timestamp: ") + std::to_string(inf.timestamp) + "\n");
-                out.setStr(std::string("time: ") + std::string(buffer) + "\n");
-                out.setStr(std::string("size: ") + std::to_string(inf.size) + "\n");
+                out.setStr(std::string("time: ")      + std::string(buffer)           + "\n");
+                out.setStr(std::string("size: ")      + std::to_string(inf.size)      + "\n");
             }
         }
 
         virtual ~RequestBackupInfo() {}
     private:
-        BackupableDB* db;
+        RocksDBWrapper& db;
+        const rocksdb::BackupableDBOptions &bkOptions;
     };
 }

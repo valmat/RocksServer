@@ -170,15 +170,43 @@ int main(int argc, char **argv)
     server.bind("/tail",    new RequestTailing(rdb));
     server.bind("/stats",   new RequestStats(rdb));
     server.bind("/prefit",  new RequestPrefIt(rdb));
-    // If is data base backupable
+    //
+    // If is data base is backupable
+    //
+    rocksdb::BackupableDBOptions bkOptions( cfg.get("backup_path", dfCfg.backup_path) );
+
     if(cfg.get("isbackupable", dfCfg.isbackupable)) {
-       server.bind("/backup", new RequestBackup(
+        // If share_table_files == true, backup will assume that table files with
+        // same name have the same contents. This enables incremental backups and
+        // avoids unnecessary data copies.
+        // If share_table_files == false, each backup will be on its own and will
+        // not share any data with other backups.
+        // default: true
+        bkOptions.share_table_files = cfg.get("share_table_files",  bkOptions.share_table_files);
+        // If sync == true, we can guarantee you'll get consistent backup even
+        // on a machine crash/reboot. Backup process is slower with sync enabled.
+        // If sync == false, we don't guarantee anything on machine reboot. However,
+        // chances are some of the backups are consistent.
+        // Default: true
+        bkOptions.sync              = cfg.get("backup_sync",        bkOptions.sync);
+        // If true, it will delete whatever backups there are already
+        // Default: false
+        bkOptions.destroy_old_data  = cfg.get("backup_destroy_old", bkOptions.destroy_old_data);
+        // If false, we won't backup log files. This option can be useful for backing
+        // up in-memory databases where log file are persisted, but table files are in memory.
+        // (See https://github.com/facebook/rocksdb/wiki/How-to-persist-in-memory-RocksDB-database%3F)
+        // Default: true
+        bkOptions.backup_log_files  = cfg.get("backup_log_files",   bkOptions.backup_log_files);
+
+
+        server.bind("/backup", new RequestBackup(
                 rdb, 
+                bkOptions,
                 cfg.get("backups_to_keep", dfCfg.num_backups_to_keep), 
                 cfg.get("flush_before_backup", dfCfg.flush_before_backup)
             )
-       );
-       server.bind("/backup/info", new RequestBackupInfo(rdb));
+        );
+        server.bind("/backup/info", new RequestBackupInfo(rdb, bkOptions) );
     }
     
     // Load extentions

@@ -21,8 +21,22 @@ namespace RocksServer
          * Constructor
          * @param   location of DB backup
          */
+        BackupEngine(const rocksdb::BackupableDBOptions& options)
+        {
+            rocksdb::BackupEngine::Open(
+                rocksdb::Env::Default(),
+                options,
+                &_engine
+            );
+        }
+
+        /**
+         * Constructor
+         * @param   location of DB backup
+         */
         BackupEngine(const std::string &bk_path) :
-            _engine( rocksdb::BackupEngine::NewBackupEngine(rocksdb::Env::Default(), rocksdb::BackupableDBOptions(bk_path)) ) {}
+            BackupEngine( rocksdb::BackupableDBOptions(bk_path) )
+        {}
 
         virtual ~BackupEngine()
         {
@@ -34,9 +48,9 @@ namespace RocksServer
          * @param string path
          * @param location of DB log files
          */
-        rocksdb::Status createBackup(rocksdb::DB* db) const
+        rocksdb::Status createBackup(rocksdb::DB* db, bool flush_before_backup = false) const
         {
-            return _engine->CreateNewBackup(db);
+            return _engine->CreateNewBackup(db, flush_before_backup);
         }
 
         /**
@@ -66,6 +80,15 @@ namespace RocksServer
         rocksdb::Status restoreBackup(const std::string& db_dir, uint32_t index) const
         {
             return _engine->RestoreDBFromBackup(index, db_dir, db_dir);
+        }
+
+        /**
+         * Deletes old backups
+         * @param       num_backups_to_keep   keeping latest num_backups_to_keep alive
+         */
+        rocksdb::Status purgeOldBackups(uint32_t num_backups_to_keep) const
+        {
+            return _engine->PurgeOldBackups(num_backups_to_keep);
         }
 
         /**
