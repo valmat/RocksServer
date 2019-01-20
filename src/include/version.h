@@ -1,1 +1,1 @@
-#define ROCKSSERVER_VERSION "v.0.3.1"
+#define ROCKSSERVER_VERSION "v.0.4.0"
