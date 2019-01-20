@@ -41,8 +41,16 @@ namespace RocksServer {
             }
 
             BackupEngine bkEngine {bkOptions};
-            auto status = bkEngine.createBackup(db, flush_before_backup);
+            // Check creating engine status
+            if( !bkEngine ) {
+                out.fail();
+                EvLogger::writeLog(bkEngine.status().ToString().data());
+                return;
+            }
 
+            // Create backup
+            auto status = bkEngine.createBackup(db, flush_before_backup);
+            // Check creating backup status
             if( !status.ok() ) {
                 out.fail();
                 EvLogger::writeLog(status.ToString().data());

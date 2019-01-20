@@ -7,7 +7,7 @@ OPT_FLAGS=-O4
 #OPT_FLAGS=-g -O0
 
 #compiler flags
-CFLAGS	 = -std=c++11 $(OPT_FLAGS) -pedantic -Wall -Wextra -Wno-unused-parameter -fno-rtti
+CFLAGS	 = -std=c++11 $(OPT_FLAGS) -pedantic -Wall -Wextra -Wno-unused-parameter -fno-rtti -fno-exceptions
 
 
 

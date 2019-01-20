@@ -23,7 +23,7 @@ namespace RocksServer
          */
         BackupEngine(const rocksdb::BackupableDBOptions& options)
         {
-            rocksdb::BackupEngine::Open(
+            _status = rocksdb::BackupEngine::Open(
                 rocksdb::Env::Default(),
                 options,
                 &_engine
@@ -40,7 +40,7 @@ namespace RocksServer
 
         virtual ~BackupEngine()
         {
-            delete _engine;
+            if(_engine) delete _engine;
         }
 
         /**
@@ -51,6 +51,22 @@ namespace RocksServer
         rocksdb::Status createBackup(rocksdb::DB* db, bool flush_before_backup = false) const
         {
             return _engine->CreateNewBackup(db, flush_before_backup);
+        }
+
+        /**
+         * Get opening status
+         */
+        rocksdb::Status status() const
+        {
+            return _status;
+        }
+
+        /**
+         *  Check if engine is valid
+         */
+        operator bool () const
+        {
+            return _engine && _status.ok();
         }
 
         /**
@@ -102,6 +118,7 @@ namespace RocksServer
         }
         
     private:
+        rocksdb::Status _status;
         rocksdb::BackupEngine* _engine;
     };
 

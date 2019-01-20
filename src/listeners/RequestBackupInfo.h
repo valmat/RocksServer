@@ -29,7 +29,15 @@ namespace RocksServer {
          */
         virtual void run(const ProtocolInTrivial &in, const ProtocolOut &out) override
         {
-            std::vector<rocksdb::BackupInfo> backup_info = BackupEngine(bkOptions).backupInfo();
+            BackupEngine bkEngine {bkOptions};
+            // Check creating engine status
+            if( !bkEngine ) {
+                out.fail();
+                EvLogger::writeLog(bkEngine.status().ToString().data());
+                return;
+            }
+
+            std::vector<rocksdb::BackupInfo> backup_info = bkEngine.backupInfo();
             
             out.setStr(backup_info.size());
             struct tm * dt;
