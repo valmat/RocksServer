@@ -23,8 +23,11 @@ namespace RocksServer {
         // DB options
         rocksdb::Options dbOptions;
 
-        // Set options from ini-config
+        dbOptions.paranoid_checks            = cfg.get("paranoid_checks", dbOptions.paranoid_checks);
+
         dbOptions.max_open_files             = cfg.get("max_open_files", dbOptions.max_open_files);
+        dbOptions.max_file_opening_threads   = cfg.get("max_file_opening_threads", dbOptions.max_file_opening_threads);
+
 
         dbOptions.write_buffer_size          = cfg.get("write_buffer_size", dbOptions.write_buffer_size);
         dbOptions.max_write_buffer_number    = cfg.get("max_write_buffer_number", dbOptions.max_write_buffer_number);
@@ -33,10 +36,35 @@ namespace RocksServer {
 
         dbOptions.allow_mmap_reads           = cfg.get("allow_mmap_reads", dbOptions.allow_mmap_reads);
         dbOptions.allow_mmap_writes          = cfg.get("allow_mmap_writes", dbOptions.allow_mmap_writes);
+        // dbOptions.block_size                 = cfg.get("block_size", dbOptions.block_size);
 
         dbOptions.wal_dir                    = cfg.get("wal_dir", dbOptions.wal_dir);
         dbOptions.WAL_ttl_seconds            = cfg.get("wal_ttl_seconds", dbOptions.WAL_ttl_seconds);
         dbOptions.WAL_size_limit_MB          = cfg.get("wal_size_limit_mb", dbOptions.WAL_size_limit_MB);
+        dbOptions.max_total_wal_size         = cfg.get("max_total_wal_size", dbOptions.max_total_wal_size);
+
+        dbOptions.db_log_dir                 = cfg.get("db_log_dir", dbOptions.db_log_dir);
+        dbOptions.use_fsync                  = cfg.get("use_fsync", dbOptions.use_fsync);
+        dbOptions.max_background_jobs        = cfg.get("max_background_jobs", dbOptions.max_background_jobs);
+
+        dbOptions.max_subcompactions         = cfg.get("max_subcompactions", dbOptions.max_subcompactions);
+        dbOptions.use_direct_reads           = cfg.get("use_direct_reads", dbOptions.use_direct_reads);
+        dbOptions.use_direct_io_for_flush_and_compaction
+                                             = cfg.get("use_direct_io_flush_compaction", dbOptions.use_direct_io_for_flush_and_compaction);
+        dbOptions.stats_dump_period_sec      = cfg.get("stats_dump_period_sec", dbOptions.stats_dump_period_sec);
+        dbOptions.compaction_readahead_size  = cfg.get("compaction_readahead_size", dbOptions.compaction_readahead_size);
+        dbOptions.bytes_per_sync             = cfg.get("bytes_per_sync", dbOptions.bytes_per_sync);
+        dbOptions.wal_bytes_per_sync         = cfg.get("wal_bytes_per_sync", dbOptions.wal_bytes_per_sync);
+
+        dbOptions.enable_pipelined_write     = cfg.get("pipelined_write", dbOptions.enable_pipelined_write);
+
+        dbOptions.skip_stats_update_on_db_open 
+                                             = cfg.get("skip_stats_update_on_db_open", dbOptions.skip_stats_update_on_db_open);
+
+        if( cfg.has("del_obsolete_files_period") ) {
+            dbOptions.delete_obsolete_files_period_micros 
+                = cfg.get<uint64_t>("del_obsolete_files_period")* 1000000;
+        }
 
         dbOptions.create_if_missing          = true;
 
