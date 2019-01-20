@@ -7,6 +7,7 @@
  *  @github https://github.com/valmat/rocksserver
  */
 
+#pragma once
 
 namespace RocksServer {
 
@@ -20,27 +21,7 @@ namespace RocksServer {
          *  @param       protocol in object
          *  @param       protocol out object
          */
-        virtual void run(const ProtocolInPostKeys &in, const ProtocolOut &out) override
-        {
-            // Detect if current method is POST and any data transfered
-            if( !in.check(out) ) {
-                return;
-            }
-
-            bool rez;
-            auto it = in.begin();
-            auto key = *it;
-            ++it;
-
-            rez = ( in.end() !=  it) ? db.incr( key,  *it ) : db.incr( key );
-            
-            if( rez ) {
-                out.ok();
-            } else {
-                out.fail();
-                EvLogger::writeLog(db.getStatus().data());
-            }
-        }
+        virtual void run(const ProtocolInPostKeys &in, const ProtocolOut &out) override;
 
         virtual ~RequestIncr() {}
     private:

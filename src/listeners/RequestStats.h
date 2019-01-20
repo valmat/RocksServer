@@ -7,6 +7,7 @@
  *  @github https://github.com/valmat/rocksserver
  */
 
+#pragma once
 
 namespace RocksServer {
 
@@ -20,16 +21,7 @@ namespace RocksServer {
          *  @param       protocol in object
          *  @param       protocol out object
          */
-        virtual void run(const ProtocolInTrivial &in, const ProtocolOut &out) override
-        {
-            std::string stat;
-            if(db->GetProperty("rocksdb.stats", &stat)) {
-                out.setStr(stat);
-            } else {
-                out.fail();
-                EvLogger::writeLog(db.getStatus().data());
-            }
-        }
+        virtual void run(const ProtocolInTrivial &in, const ProtocolOut &out) override;
 
         virtual ~RequestStats() {}
     private:
