@@ -6,7 +6,7 @@ LD              = g++
 OPT_FLAG=-O3
 #OPT_FLAG=-g -O0
 
-NAME       = smpl_plug
+NAME       = simple_plugin
 
 CPP_FLAGS  = -I. -I"/usr/include/rocksserver/rocksdb" -Wall ${OPT_FLAG} -std=c++11 -fPIC -c
 LD_FLAGS   = -Wall -std=c++11 ${OPT_FLAG} -shared
@@ -14,18 +14,21 @@ LD_FLAGS   = -Wall -std=c++11 ${OPT_FLAG} -shared
 RESULT     = $(NAME).so
 
 SOURCES    = $(wildcard *.cpp)
-OBJECTS    = $(SOURCES:%.cpp=%.o)
+OBJECTS    = $(patsubst %.cpp,obj/%.o,$(SOURCES))
 
-all:	${OBJECTS} ${RESULT}
+all: ${RESULT}
 
 ${RESULT}: ${OBJECTS}
 	${LD} ${LD_FLAGS} -o $@ ${OBJECTS}
 
+${OBJECTS} : obj/%.o : %.cpp
+	${CPP} ${CPP_FLAGS} $< -o $@
+
+
+.PHONY: clean install uninstall
+
 clean:
 	rm -f ${OBJECTS} ${RESULT}
-
-${OBJECTS}: 
-	${CPP} ${CPP_FLAGS} -o $@ ${@:%.o=%.cpp}
 
 install:
 	cp -f ${RESULT} /usr/lib/rocksserver/plugins/${RESULT}

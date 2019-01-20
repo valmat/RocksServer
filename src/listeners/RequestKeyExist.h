@@ -7,6 +7,7 @@
  *  @github https://github.com/valmat/rocksserver
  */
 
+#pragma once
 
 namespace RocksServer {
 
@@ -20,21 +21,7 @@ namespace RocksServer {
          *  @param       protocol in object
          *  @param       protocol out object
          */
-        virtual void run(const ProtocolInGet &in, const ProtocolOut &out) override
-        {
-            if(!in.check()) {
-                out.fail();
-                return;
-            }
-                
-            std::string value;
-            if(db.keyExist(in.key(), value)) {
-                out.ok();
-                out.setValue(value);
-            } else {
-                out.fail();
-            }
-        }
+        virtual void run(const ProtocolInGet &in, const ProtocolOut &out) override;
 
         virtual ~RequestKeyExist() {}
     private:

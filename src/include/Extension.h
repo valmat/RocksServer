@@ -25,7 +25,7 @@ namespace RocksServer {
         Extension& bind(std::string path, RequestSuperBase* listener)
         {
             // create unique_ptr in plugin scope
-            bind(std::move(path), std::move(listener_ptr(listener)));
+            bind(std::move(path), listener_ptr(listener));
             return *this;
         }
 

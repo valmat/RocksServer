@@ -7,6 +7,7 @@
  *  @github https://github.com/valmat/rocksserver
  */
 
+#pragma once
 
 namespace RocksServer {
 
@@ -20,25 +21,7 @@ namespace RocksServer {
          *  @param       protocol in object
          *  @param       protocol out object
          */
-        virtual void run(const ProtocolInPostPairs &in, const ProtocolOut &out) override
-        {
-            // Detect if current method is POST
-            if( !in.check(out)) {
-                return;
-            }
-            
-            // create a RocksDB write batch
-            Batch batch;
-            batch.set(in);
-
-            // Set batch to the DB and filling output buffer
-            if(db.commit(batch)) {
-                out.ok();
-            } else {
-                out.fail(); 
-                EvLogger::writeLog(db.getStatus().data());
-            }
-        }
+        virtual void run(const ProtocolInPostPairs &in, const ProtocolOut &out) override;
 
         virtual ~RequestMset() {}
     private:

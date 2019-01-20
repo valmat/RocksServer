@@ -7,7 +7,7 @@ OPT_FLAGS=-O4
 #OPT_FLAGS=-g -O0
 
 #compiler flags
-CFLAGS	 = -std=c++11 $(OPT_FLAGS) -pedantic -Wall -Wextra -Wno-unused-parameter
+CFLAGS	 = -std=c++11 $(OPT_FLAGS) -pedantic -Wall -Wextra -Wno-unused-parameter -fno-rtti -fno-exceptions
 
 
 
@@ -16,7 +16,9 @@ BINFILE  = bin/$(NAME).bin
 # path to RocksDB source
 ROCKSPATH	 = $(PWD)/../deps/rocksdb
 
-ROCKSLIB = -lrocksdb -lpthread -lrt -lsnappy -lgflags -lz -lbz2
+# ROCKSLIB = -lrocksdb -lpthread -lrt -lsnappy -lgflags -lz -lbz2 -lzstd -lbz2 -llz4
+ROCKSLIB = -lrocksdb -lpthread -lsnappy -lz -lzstd -lbz2 -llz4
+
 
 # path to Libevent source
 LEVENTPATH	 = $(PWD)/../deps/libevent
@@ -78,8 +80,67 @@ bin/obj/restore_hr.o: utils/restore_hr.cpp
 bin/obj/human_readable.o: utils/human_readable.cpp
 	$(CC) utils/human_readable.cpp $(CFLAGS) -I. -I$(ROCKSPATH)/include -c -o bin/obj/human_readable.o
 
+# Main requests
+bin/obj/RequestKeyExist.rs.o: listeners/RequestKeyExist.cpp
+	$(CC) listeners/RequestKeyExist.cpp $(CFLAGS) -I. -I$(ROCKSPATH)/include -I$(LEVENTI) -c -o bin/obj/RequestKeyExist.rs.o
+
+bin/obj/RequestGet.rs.o: listeners/RequestGet.cpp
+	$(CC) listeners/RequestGet.cpp $(CFLAGS) -I. -I$(ROCKSPATH)/include -I$(LEVENTI) -c -o bin/obj/RequestGet.rs.o
+
+bin/obj/RequestMget.rs.o: listeners/RequestMget.cpp
+	$(CC) listeners/RequestMget.cpp $(CFLAGS) -I. -I$(ROCKSPATH)/include -I$(LEVENTI) -c -o bin/obj/RequestMget.rs.o
+
+bin/obj/RequestIncr.rs.o: listeners/RequestIncr.cpp
+	$(CC) listeners/RequestIncr.cpp $(CFLAGS) -I. -I$(ROCKSPATH)/include -I$(LEVENTI) -c -o bin/obj/RequestIncr.rs.o
+
+bin/obj/RequestPrefIt.rs.o: listeners/RequestPrefIt.cpp
+	$(CC) listeners/RequestPrefIt.cpp $(CFLAGS) -I. -I$(ROCKSPATH)/include -I$(LEVENTI) -c -o bin/obj/RequestPrefIt.rs.o
+
+bin/obj/RequestTailing.rs.o: listeners/RequestTailing.cpp
+	$(CC) listeners/RequestTailing.cpp $(CFLAGS) -I. -I$(ROCKSPATH)/include -I$(LEVENTI) -c -o bin/obj/RequestTailing.rs.o
+
+bin/obj/RequestSet.rs.o: listeners/RequestSet.cpp
+	$(CC) listeners/RequestSet.cpp $(CFLAGS) -I. -I$(ROCKSPATH)/include -I$(LEVENTI) -c -o bin/obj/RequestSet.rs.o
+
+bin/obj/RequestMset.rs.o: listeners/RequestMset.cpp
+	$(CC) listeners/RequestMset.cpp $(CFLAGS) -I. -I$(ROCKSPATH)/include -I$(LEVENTI) -c -o bin/obj/RequestMset.rs.o
+
+bin/obj/RequestDel.rs.o: listeners/RequestDel.cpp
+	$(CC) listeners/RequestDel.cpp $(CFLAGS) -I. -I$(ROCKSPATH)/include -I$(LEVENTI) -c -o bin/obj/RequestDel.rs.o
+
+bin/obj/RequestMdel.rs.o: listeners/RequestMdel.cpp
+	$(CC) listeners/RequestMdel.cpp $(CFLAGS) -I. -I$(ROCKSPATH)/include -I$(LEVENTI) -c -o bin/obj/RequestMdel.rs.o
+
+bin/obj/RequestMdelset.rs.o: listeners/RequestMdelset.cpp
+	$(CC) listeners/RequestMdelset.cpp $(CFLAGS) -I. -I$(ROCKSPATH)/include -I$(LEVENTI) -c -o bin/obj/RequestMdelset.rs.o
+
+bin/obj/RequestStats.rs.o: listeners/RequestStats.cpp
+	$(CC) listeners/RequestStats.cpp $(CFLAGS) -I. -I$(ROCKSPATH)/include -I$(LEVENTI) -c -o bin/obj/RequestStats.rs.o
+
+bin/obj/RequestBackup.rs.o: listeners/RequestBackup.cpp
+	$(CC) listeners/RequestBackup.cpp $(CFLAGS) -I. -I$(ROCKSPATH)/include -I$(LEVENTI) -c -o bin/obj/RequestBackup.rs.o
+
+bin/obj/RequestBackupDel.rs.o: listeners/RequestBackupDel.cpp
+	$(CC) listeners/RequestBackupDel.cpp $(CFLAGS) -I. -I$(ROCKSPATH)/include -I$(LEVENTI) -c -o bin/obj/RequestBackupDel.rs.o
+
+bin/obj/RequestBackupMdel.rs.o: listeners/RequestBackupMdel.cpp
+	$(CC) listeners/RequestBackupMdel.cpp $(CFLAGS) -I. -I$(ROCKSPATH)/include -I$(LEVENTI) -c -o bin/obj/RequestBackupMdel.rs.o
+
+bin/obj/RequestBackupInfo.rs.o: listeners/RequestBackupInfo.cpp
+	$(CC) listeners/RequestBackupInfo.cpp $(CFLAGS) -I. -I$(ROCKSPATH)/include -I$(LEVENTI) -c -o bin/obj/RequestBackupInfo.rs.o
+
+
 .PHONY: obj
-obj: RocksServer.h.gch bin/obj/$(NAME).rs.o bin/obj/EvLogger.rs.o bin/obj/EvServer.rs.o bin/obj/EvResponse.rs.o bin/obj/EvRequest.rs.o bin/obj/RocksDBWrapper.rs.o bin/obj/Extend.rs.o bin/obj/PlugContainer.rs.o bin/obj/Extension.rs.o bin/obj/IniConfigs.rs.o bin/obj/IniValue.rs.o bin/obj/restore.o bin/obj/restore_hr.o bin/obj/human_readable.o
+obj: RocksServer.h.gch bin/obj/$(NAME).rs.o bin/obj/EvLogger.rs.o bin/obj/EvServer.rs.o \
+bin/obj/EvResponse.rs.o bin/obj/EvRequest.rs.o bin/obj/RocksDBWrapper.rs.o bin/obj/Extend.rs.o \
+bin/obj/PlugContainer.rs.o bin/obj/Extension.rs.o bin/obj/IniConfigs.rs.o bin/obj/IniValue.rs.o \
+bin/obj/RequestKeyExist.rs.o \
+bin/obj/RequestGet.rs.o bin/obj/RequestMget.rs.o bin/obj/RequestIncr.rs.o \
+bin/obj/RequestPrefIt.rs.o bin/obj/RequestTailing.rs.o \
+bin/obj/RequestSet.rs.o bin/obj/RequestMset.rs.o \
+bin/obj/RequestDel.rs.o bin/obj/RequestMdel.rs.o bin/obj/RequestMdelset.rs.o \
+bin/obj/RequestStats.rs.o bin/obj/RequestBackup.rs.o bin/obj/RequestBackupInfo.rs.o \
+bin/obj/RequestBackupDel.rs.o bin/obj/RequestBackupMdel.rs.o
 
 
 bin/restore.bin: bin/obj/restore.o

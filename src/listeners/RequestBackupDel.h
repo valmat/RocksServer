@@ -1,7 +1,8 @@
 /**
- *  RequestSet.h
+ *  RequestBackupDel.h
  *
- *  Request listener for command "set"
+ *  Request listener for command "/backup/del"
+ *  Delete selected backup
  *
  *  @author valmat <ufabiz@gmail.com>
  *  @github https://github.com/valmat/rocksserver
@@ -11,10 +12,14 @@
 
 namespace RocksServer {
 
-    class RequestSet : public RequestBase<ProtocolInPost, ProtocolOut>
+    class RequestBackupDel : public RequestBase<ProtocolInPost, ProtocolOut>
     {
     public:
-        RequestSet(RocksDBWrapper &rdb) : db(rdb) {}
+
+        RequestBackupDel(RocksDBWrapper &db, const rocksdb::BackupableDBOptions &bkOptions) :
+            db(db),
+            bkOptions(bkOptions)
+        {}
 
         /**
          *  Runs request listener
@@ -23,9 +28,10 @@ namespace RocksServer {
          */
         virtual void run(const ProtocolInPost &in, const ProtocolOut &out) override;
 
-        virtual ~RequestSet() {}
+        virtual ~RequestBackupDel() {}
     private:
         RocksDBWrapper& db;
+        const rocksdb::BackupableDBOptions &bkOptions;
     };
 
 }

@@ -21,12 +21,26 @@ namespace RocksServer
          * Constructor
          * @param   location of DB backup
          */
+        BackupEngine(const rocksdb::BackupableDBOptions& options)
+        {
+            _status = rocksdb::BackupEngine::Open(
+                rocksdb::Env::Default(),
+                options,
+                &_engine
+            );
+        }
+
+        /**
+         * Constructor
+         * @param   location of DB backup
+         */
         BackupEngine(const std::string &bk_path) :
-            _engine( rocksdb::BackupEngine::NewBackupEngine(rocksdb::Env::Default(), rocksdb::BackupableDBOptions(bk_path)) ) {}
+            BackupEngine( rocksdb::BackupableDBOptions(bk_path) )
+        {}
 
         virtual ~BackupEngine()
         {
-            delete _engine;
+            if(_engine) delete _engine;
         }
 
         /**
@@ -34,9 +48,25 @@ namespace RocksServer
          * @param string path
          * @param location of DB log files
          */
-        rocksdb::Status createBackup(rocksdb::DB* db) const
+        rocksdb::Status createBackup(rocksdb::DB* db, bool flush_before_backup = false) const
         {
-            return _engine->CreateNewBackup(db);
+            return _engine->CreateNewBackup(db, flush_before_backup);
+        }
+
+        /**
+         * Get opening status
+         */
+        rocksdb::Status status() const
+        {
+            return _status;
+        }
+
+        /**
+         *  Check if engine is valid
+         */
+        operator bool () const
+        {
+            return _engine && _status.ok();
         }
 
         /**
@@ -69,6 +99,24 @@ namespace RocksServer
         }
 
         /**
+         * Deletes old backups
+         * @param       num_backups_to_keep   keeping latest num_backups_to_keep alive
+         */
+        rocksdb::Status purgeOldBackups(uint32_t num_backups_to_keep) const
+        {
+            return _engine->PurgeOldBackups(num_backups_to_keep);
+        }
+
+        /**
+         * Deletes backups by ID
+         * @param       backup_id
+         */
+        rocksdb::Status delBackup(uint32_t backup_id) const
+        {
+            return _engine->DeleteBackup(backup_id);
+        }
+
+        /**
          * Get backups list information
          */
         std::vector<rocksdb::BackupInfo> backupInfo() const
@@ -79,6 +127,7 @@ namespace RocksServer
         }
         
     private:
+        rocksdb::Status _status;
         rocksdb::BackupEngine* _engine;
     };
 

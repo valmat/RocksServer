@@ -9,9 +9,6 @@
  */
 
 #pragma once
-#include <time.h>
-
-using rocksdb::BackupableDB;
 
 namespace RocksServer {
 
@@ -19,34 +16,19 @@ namespace RocksServer {
     {
     public:
         
-        RequestBackupInfo(rocksdb::DB *rdb) : db(reinterpret_cast<BackupableDB*>(rdb)) {} 
+        RequestBackupInfo(const rocksdb::BackupableDBOptions &bkOptions) :
+            bkOptions(bkOptions)
+        {}
 
         /**
          *  Runs request listener
          *  @param       protocol in object
          *  @param       protocol out object
          */
-        virtual void run(const ProtocolInTrivial &in, const ProtocolOut &out) override
-        {
-            std::vector<rocksdb::BackupInfo> backup_info;
-            db->GetBackupInfo(&backup_info);
-            
-            out.setStr(backup_info.size());
-            struct tm * dt;
-            char buffer [26];            
-            for(auto inf: backup_info) {
-                dt = localtime(&inf.timestamp);
-                strftime(buffer, sizeof(buffer), "%d.%m.%Y %T %z", dt);
-
-                out.setStr(std::string("\nid: ") + std::to_string(inf.backup_id) + "\n");
-                out.setStr(std::string("timestamp: ") + std::to_string(inf.timestamp) + "\n");
-                out.setStr(std::string("time: ") + std::string(buffer) + "\n");
-                out.setStr(std::string("size: ") + std::to_string(inf.size) + "\n");
-            }
-        }
+        virtual void run(const ProtocolInTrivial &in, const ProtocolOut &out) override;
 
         virtual ~RequestBackupInfo() {}
     private:
-        BackupableDB* db;
+        const rocksdb::BackupableDBOptions &bkOptions;
     };
 }

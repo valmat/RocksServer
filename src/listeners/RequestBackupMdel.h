@@ -1,7 +1,8 @@
 /**
- *  RequestMdel.h
+ *  RequestBackupMdel.h
  *
- *  Request listener for command "mset" (multiset)
+ *  Request listener for command "/backup/del"
+ *  Delete selected backups
  *
  *  @author valmat <ufabiz@gmail.com>
  *  @github https://github.com/valmat/rocksserver
@@ -11,10 +12,14 @@
 
 namespace RocksServer {
 
-    class RequestMdel : public RequestBase<ProtocolInPostKeys, ProtocolOut>
+    class RequestBackupMdel : public RequestBase<ProtocolInPostKeys, ProtocolOut>
     {
     public:
-        RequestMdel(RocksDBWrapper &rdb) : db(rdb) {}
+
+        RequestBackupMdel(RocksDBWrapper &db, const rocksdb::BackupableDBOptions &bkOptions) :
+            db(db),
+            bkOptions(bkOptions)
+        {}
 
         /**
          *  Runs request listener
@@ -23,9 +28,10 @@ namespace RocksServer {
          */
         virtual void run(const ProtocolInPostKeys &in, const ProtocolOut &out) override;
 
-        virtual ~RequestMdel() {}
+        virtual ~RequestBackupMdel() {}
     private:
         RocksDBWrapper& db;
+        const rocksdb::BackupableDBOptions &bkOptions;
     };
 
 }
