@@ -20,7 +20,7 @@ operations  | description
 For more details see: [protocol description](protocol.md)
 
 ##Dependency
-[RocksDB](https://github.com/facebook/rocksdb/), 
+[RocksDB](https://github.com/facebook/rocksdb/),
 [LibEvent](http://libevent.org/)
 
 The compiler should support `C++11`
@@ -29,10 +29,7 @@ The compiler should support `C++11`
 First install [RocksDB dependences](https://github.com/facebook/rocksdb/blob/master/INSTALL.md#dependencies):
 
 ```
-sudo apt-get install libsnappy-dev
-sudo apt-get install zlib1g-dev
-sudo apt-get install libbz2-dev.
-sudo apt-get install libgflags-dev
+sudo apt install libgflags-dev libsnappy-dev zlib1g-dev libbz2-dev liblz4-dev libzstd-dev
 ```
 
 
@@ -113,7 +110,7 @@ PLUGIN(Extension &extension)
 ```
 Compile your plugin:
 ```
-g++ -I. -I"/usr/include/rocksserver/include" -Wall -O3 -std=c++11 -fPIC -c smpl_plug.cpp -o smpl_plug.o 
+g++ -I. -I"/usr/include/rocksserver/include" -Wall -O3 -std=c++11 -fPIC -c smpl_plug.cpp -o smpl_plug.o
 g++ -Wall -std=c++11 -O3 -shared smpl_plug.o -o smpl_plug.so
 ```
 and copy to `/usr/lib/rocksserver/plugins`
@@ -128,4 +125,3 @@ Just edit [config.ini](https://github.com/valmat/RocksServer/blob/master/src/con
 
 ## License
 [BSD](LICENSE)
-
