@@ -10,6 +10,8 @@
 #include <rocksserver/api.h>
 #include "RequestPing.h"
 #include "RequestWstats.h"
+#include "RequestSeekFirst.h"
+#include "RequestGetIncr.h"
 
 using namespace RocksServer;
 
@@ -18,8 +20,8 @@ using namespace RocksServer;
  * 
  * You can use one of the following forms of macro PLUGIN with one, two or three arguments:
  *
- * PLUGIN(Extension extension, RocksDBWrapper& rdb, const IniConfigs& cfg)
- * PLUGIN(Extension extension, RocksDBWrapper& rdb)
+ * PLUGIN(Extension extension, RocksDBWrapper& db, const IniConfigs& cfg)
+ * PLUGIN(Extension extension, RocksDBWrapper& db)
  * PLUGIN(Extension extension)
  *
  * The macro `PLUGIN` is defined in rocksserver/api.h. 
@@ -27,12 +29,13 @@ using namespace RocksServer;
  * `extern "C" void plugin(...)` if you like
  *
  * @param extension  object of Extension
- * @param rdb        wrapped object of RocksDB
+ * @param db         wrapped object of RocksDB
  * @param cfg        Reference to configuration settings
  */
-PLUGIN(Extension extension, RocksDBWrapper& rdb)
+PLUGIN(Extension extension, RocksDBWrapper& db)
 {
-    extension.bind("/ping",        new RequestPing())
-             .bind("/wstats",      new RequestWstats(rdb))
-             ;
+    extension.bind("/ping",       new RequestPing())
+             .bind("/wstats",     new RequestWstats(db))
+             .bind("/seek-first", new RequestSeekFirst(db))
+             .bind("/get-incr",   new RequestGetIncr(db));
 }
