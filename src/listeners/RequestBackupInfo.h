@@ -16,7 +16,9 @@ namespace RocksServer {
     {
     public:
         
-        RequestBackupInfo(RocksDBWrapper &rdb, const rocksdb::BackupableDBOptions &bkOptions);
+        RequestBackupInfo(const rocksdb::BackupableDBOptions &bkOptions) :
+            bkOptions(bkOptions)
+        {}
 
         /**
          *  Runs request listener
@@ -27,7 +29,6 @@ namespace RocksServer {
 
         virtual ~RequestBackupInfo() {}
     private:
-        RocksDBWrapper& db;
         const rocksdb::BackupableDBOptions &bkOptions;
     };
 }

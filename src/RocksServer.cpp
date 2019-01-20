@@ -210,7 +210,7 @@ int main(int argc, char **argv)
                 cfg.get("flush_before_backup", dfCfg.flush_before_backup)
             )
         );
-        server.bind("/backup/info", new RequestBackupInfo(rdb, bkOptions) );
+        server.bind("/backup/info", new RequestBackupInfo(bkOptions) );
     }
     
     // Load extentions

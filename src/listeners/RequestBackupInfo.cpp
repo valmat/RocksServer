@@ -13,11 +13,6 @@
 
 namespace RocksServer {
 
-    RequestBackupInfo::RequestBackupInfo(RocksDBWrapper &rdb, const rocksdb::BackupableDBOptions &bkOptions) :
-        db(rdb),
-        bkOptions(bkOptions)
-    {}
-
     /**
      *  Runs request listener
      *  @param       protocol in object
