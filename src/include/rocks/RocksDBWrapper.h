@@ -19,8 +19,8 @@ namespace RocksServer {
 
         /**
          * Constructor
-         * @param string path
-         * @param bool create_if_missing
+         * @param IniConfigs
+         * @param DefaultConfigs
          */
         RocksDBWrapper(const IniConfigs &cfg, const DefaultConfigs &dfCfg) noexcept;
 

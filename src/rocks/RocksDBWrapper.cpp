@@ -12,8 +12,8 @@ namespace RocksServer {
 
     /**
      * Constructor
-     * @param string path
-     * @param bool create_if_missing
+     * @param IniConfigs
+     * @param DefaultConfigs
      */
     RocksDBWrapper::RocksDBWrapper(const IniConfigs &cfg, const DefaultConfigs &dfCfg) noexcept
     {
@@ -24,9 +24,6 @@ namespace RocksServer {
         rocksdb::Options dbOptions;
 
         // Set options from ini-config
-        dbOptions.max_background_compactions = cfg.get("max_background_compactions", dbOptions.max_background_compactions);
-        dbOptions.max_background_flushes     = cfg.get("max_background_flushes", dbOptions.max_background_flushes);
-        // dbOptions.allow_os_buffer            = cfg.get("allow_os_buffer", dbOptions.allow_os_buffer);
         dbOptions.max_open_files             = cfg.get("max_open_files", dbOptions.max_open_files);
 
         dbOptions.write_buffer_size          = cfg.get("write_buffer_size", dbOptions.write_buffer_size);
@@ -36,7 +33,6 @@ namespace RocksServer {
 
         dbOptions.allow_mmap_reads           = cfg.get("allow_mmap_reads", dbOptions.allow_mmap_reads);
         dbOptions.allow_mmap_writes          = cfg.get("allow_mmap_writes", dbOptions.allow_mmap_writes);
-        // dbOptions.block_size                 = cfg.get("block_size", dbOptions.block_size);
 
         dbOptions.wal_dir                    = cfg.get("wal_dir", dbOptions.wal_dir);
         dbOptions.WAL_ttl_seconds            = cfg.get("wal_ttl_seconds", dbOptions.WAL_ttl_seconds);
