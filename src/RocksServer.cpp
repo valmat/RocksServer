@@ -197,7 +197,10 @@ int main(int argc, char **argv)
         // (See https://github.com/facebook/rocksdb/wiki/How-to-persist-in-memory-RocksDB-database%3F)
         // Default: true
         bkOptions.backup_log_files  = cfg.get("backup_log_files",   bkOptions.backup_log_files);
-
+        // Up to this many background threads will copy files for CreateNewBackup()
+        // and RestoreDBFromBackup()
+        // Default: 1
+        bkOptions.backup_threads    = cfg.get("backup_threads",     bkOptions.max_background_operations);
 
         server.bind("/backup", new RequestBackup(
                 rdb, 
