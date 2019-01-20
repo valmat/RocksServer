@@ -108,6 +108,15 @@ namespace RocksServer
         }
 
         /**
+         * Deletes backups by ID
+         * @param       backup_id
+         */
+        rocksdb::Status delBackup(uint32_t backup_id) const
+        {
+            return _engine->DeleteBackup(backup_id);
+        }
+
+        /**
          * Get backups list information
          */
         std::vector<rocksdb::BackupInfo> backupInfo() const

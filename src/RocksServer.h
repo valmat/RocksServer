@@ -88,6 +88,8 @@
 #include "listeners/RequestPrefIt.h"
 #include "listeners/RequestBackup.h"
 #include "listeners/RequestBackupInfo.h"
+#include "listeners/RequestBackupDel.h"
+#include "listeners/RequestBackupMdel.h"
 
 
 #include "include/evhttp/EvServer.h"

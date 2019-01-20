@@ -120,6 +120,12 @@ bin/obj/RequestStats.rs.o: listeners/RequestStats.cpp
 bin/obj/RequestBackup.rs.o: listeners/RequestBackup.cpp
 	$(CC) listeners/RequestBackup.cpp $(CFLAGS) -I. -I$(ROCKSPATH)/include -I$(LEVENTI) -c -o bin/obj/RequestBackup.rs.o
 
+bin/obj/RequestBackupDel.rs.o: listeners/RequestBackupDel.cpp
+	$(CC) listeners/RequestBackupDel.cpp $(CFLAGS) -I. -I$(ROCKSPATH)/include -I$(LEVENTI) -c -o bin/obj/RequestBackupDel.rs.o
+
+bin/obj/RequestBackupMdel.rs.o: listeners/RequestBackupMdel.cpp
+	$(CC) listeners/RequestBackupMdel.cpp $(CFLAGS) -I. -I$(ROCKSPATH)/include -I$(LEVENTI) -c -o bin/obj/RequestBackupMdel.rs.o
+
 bin/obj/RequestBackupInfo.rs.o: listeners/RequestBackupInfo.cpp
 	$(CC) listeners/RequestBackupInfo.cpp $(CFLAGS) -I. -I$(ROCKSPATH)/include -I$(LEVENTI) -c -o bin/obj/RequestBackupInfo.rs.o
 
@@ -133,7 +139,8 @@ bin/obj/RequestGet.rs.o bin/obj/RequestMget.rs.o bin/obj/RequestIncr.rs.o \
 bin/obj/RequestPrefIt.rs.o bin/obj/RequestTailing.rs.o \
 bin/obj/RequestSet.rs.o bin/obj/RequestMset.rs.o \
 bin/obj/RequestDel.rs.o bin/obj/RequestMdel.rs.o bin/obj/RequestMdelset.rs.o \
-bin/obj/RequestStats.rs.o bin/obj/RequestBackup.rs.o bin/obj/RequestBackupInfo.rs.o
+bin/obj/RequestStats.rs.o bin/obj/RequestBackup.rs.o bin/obj/RequestBackupInfo.rs.o \
+bin/obj/RequestBackupDel.rs.o bin/obj/RequestBackupMdel.rs.o
 
 
 bin/restore.bin: bin/obj/restore.o
