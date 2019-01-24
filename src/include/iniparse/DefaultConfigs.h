@@ -19,14 +19,14 @@ namespace RocksServer {
          */
 
         // HTTP server host
-        const char* server_host = "127.0.0.1";
+        std::string server_host = "127.0.0.1";
 
         // HTTP server port
         unsigned short server_port = 5577;
 
         // HTTP server content_type
         // Set the value to use for the Content-Type header
-        const char* content_type = "text/plain; charset=UTF-8";
+        std::string content_type = "text/plain; charset=UTF-8";
 
         // Limitations for body size
         // limit in bytes. 0 - unlimited

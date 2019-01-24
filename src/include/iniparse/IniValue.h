@@ -31,6 +31,11 @@ namespace RocksServer {
         {
             return _value;
         }
+
+        T get() const
+        {
+            return _value;
+        }
         
     private:
 
@@ -57,6 +62,16 @@ namespace RocksServer {
          *  Cast to a string
          */
         operator std::string () const
+        {
+            return _value;
+        }
+
+        std::string toString () const
+        {
+            return _value;
+        }
+
+        std::string get() const
         {
             return _value;
         }
