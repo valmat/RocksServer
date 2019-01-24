@@ -1,6 +1,6 @@
 ## RocksServer Protocol
 
-###Get
+### Get
 Get value by key
 
 Request:
@@ -18,7 +18,7 @@ If the key does not exist in the database, the reply will be:
 -1\n
 ```
 
-###Multi get
+### Multi get
 Get values by keys
 
 Request:
@@ -41,7 +41,7 @@ Reply:
 If the keyN does not exist, then `<valueN_len> = -1`, `<valueN>` -- is empty
 
 
-###Set
+### Set
 Set value by key
 
 Request:
@@ -65,7 +65,7 @@ FAIL
 on fail.
 
 
-###Multi set
+### Multi set
 Set values by keys
 
 Request:
@@ -94,7 +94,7 @@ FAIL
 ```
 on fail.
 
-###Delete key
+### Delete key
 Delete key from DB
 
 Request:
@@ -116,7 +116,7 @@ FAIL
 on fail.
 
 
-###Multi delete keys
+### Multi delete keys
 Delete keys from DB
 
 Request:
@@ -139,7 +139,7 @@ FAIL
 ```
 on fail.
 
-###Key exist?
+### Key exist?
 Check key existing
 
 Request:
@@ -168,7 +168,7 @@ FAIL
 ```
 if the key does not exist in the database.
 
-###Imcrement
+### Imcrement
 Imcrement value by key
 
 Request:
@@ -201,7 +201,7 @@ FAIL
 ```
 on fail.
 
-###Get all keys and values
+### Get all keys and values
 
 Request:
 ```
@@ -211,7 +211,7 @@ POST /tail
 Reply: same [multi get](https://github.com/valmat/RocksServer/blob/master/protocol.md#multi-get)
 
 
-###Get keys and values by key-prefix
+### Get keys and values by key-prefix
 
 Request:
 ```
@@ -221,7 +221,7 @@ GET /prefit?<prefix>
 Reply: same [multi get](https://github.com/valmat/RocksServer/blob/master/protocol.md#multi-get)
 
 
-###Backup
+### Backup
 Backup database
 
 Request:
@@ -241,7 +241,7 @@ Or reply:
 on fail.
 
 
-###Stats
+### Stats
 Usage statistics
 
 Request:
@@ -250,9 +250,3 @@ GET /stats
 ```
 
 Reply: stats output
-
-
---
-more details see  [src/Protocol.h](https://github.com/valmat/RocksServer/blob/master/src/Protocol.h)
-
-

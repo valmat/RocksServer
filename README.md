@@ -71,7 +71,11 @@ make install
 ```
 
 ## Usage
-Exemple of usage: [driver for php](https://github.com/valmat/rocksdbphp)
+Exemple of usage:
+* [PHP driver](https://github.com/valmat/rocksdbphp)
+* [Dlang driver](https://github.com/valmat/drocks) ([Dub package](https://code.dlang.org/packages/drocks))
+* [Nodejs driver](https://github.com/valmat/queueServer/tree/master/client/node_rocks)
+
 Or any your own implementation by [protocol description](protocol.md).
 
 
