@@ -1,7 +1,7 @@
 /**
  *  RequestBackupMdel.cpp
  *
- *  Request listener for command "/backup/del"
+ *  Request listener for command "/backup/mdel"
  *  Delete selected backups
  *
  *  @author valmat <ufabiz@gmail.com>
