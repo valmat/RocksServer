@@ -126,7 +126,7 @@ int main(int argc, char **argv)
      *  Init event http server
      *  
      */
-    EvServer server(cfg.get("server_host", dfCfg.server_host).get().c_str(), 
+    EvServer server(cfg.get("server_host", dfCfg.server_host), 
                     cfg.get("server_port", dfCfg.server_port));
 
     // Check if server started
@@ -143,15 +143,12 @@ int main(int argc, char **argv)
      */
     EvServerOptions serverOptions;
     //Set the value to use for the Content-Type header when none was provided. 
-    serverOptions.content_type = cfg.get("content_type", dfCfg.content_type).get().c_str();
-    // Sets the what HTTP methods are supported in requests accepted by this server
-    serverOptions.allowed_methods = EVHTTP_REQ_POST | EVHTTP_REQ_GET;
+    serverOptions.content_type     = cfg.get("content_type", dfCfg.content_type);
     // Limitations for body size (limit in bytes. 0 - unlimited)    
-    serverOptions.max_body_size = cfg.get("max_body_size", dfCfg.max_body_size);
+    serverOptions.max_body_size    = cfg.get("max_body_size", dfCfg.max_body_size);
     // Limitations for headers size (limit in bytes. 0 - unlimited)    
     serverOptions.max_headers_size = cfg.get("max_headers_size", dfCfg.max_headers_size);
     server.setOptions(serverOptions);
-
     
     /**
      *  

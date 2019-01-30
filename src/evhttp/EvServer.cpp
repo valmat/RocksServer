@@ -16,7 +16,7 @@ namespace RocksServer {
      *  @param  addr       IP addres, wich server will listen
      *  @param  port       port, wich server will listen
      */
-     EvServer::EvServer(const char *addr, unsigned short port) : 
+     EvServer::EvServer(const std::string& addr, unsigned short port) : 
         _base(event_base_new())
     {
         if (!_base) {
@@ -32,7 +32,7 @@ namespace RocksServer {
             return;
         }
 
-        if (evhttp_bind_socket(_http, addr, port) == -1) {
+        if (evhttp_bind_socket(_http, addr.c_str(), port) == -1) {
             std::cerr << "Couldn't bind to host " << addr << " port " << port << "." << std::endl;
             evhttp_free(_http);
             _http = nullptr;
@@ -73,8 +73,8 @@ namespace RocksServer {
      */
     void EvServer::setOptions(const EvServerOptions &options) const
     {
-        if(options.content_type) {
-            evhttp_set_default_content_type (_http, options.content_type);
+        if(!options.content_type.empty()) {
+            evhttp_set_default_content_type (_http, options.content_type.c_str());
         }
         if(options.max_body_size) {
             evhttp_set_max_body_size (_http, options.max_body_size);
