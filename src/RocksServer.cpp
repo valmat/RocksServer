@@ -144,6 +144,8 @@ int main(int argc, char **argv)
     EvServerOptions serverOptions;
     //Set the value to use for the Content-Type header when none was provided. 
     serverOptions.content_type     = cfg.get("content_type", dfCfg.content_type);
+    // Sets the what HTTP methods are supported in requests accepted by this server
+    serverOptions.allowed_methods  = EVHTTP_REQ_POST | EVHTTP_REQ_GET;
     // Limitations for body size (limit in bytes. 0 - unlimited)    
     serverOptions.max_body_size    = cfg.get("max_body_size", dfCfg.max_body_size);
     // Limitations for headers size (limit in bytes. 0 - unlimited)    

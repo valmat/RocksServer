@@ -25,7 +25,7 @@ namespace RocksServer {
         // Sets the what HTTP methods are supported in requests accepted by this server,
         // and passed to user callbacks.
         // If 0, allow all
-        uint16_t  allowed_methods = EVHTTP_REQ_POST | EVHTTP_REQ_GET;
+        uint16_t  allowed_methods = 0;
     };
 
 }
