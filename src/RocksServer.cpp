@@ -210,8 +210,8 @@ int main(int argc, char **argv)
             )
         );
         server.bind("/backup/info", new RequestBackupInfo(bkOptions) );
-        server.bind("/backup/del",  new RequestBackupDel (rdb, bkOptions) );
-        server.bind("/backup/mdel", new RequestBackupMdel(rdb, bkOptions) );
+        server.bind("/backup/del",  new RequestBackupDel (bkOptions) );
+        server.bind("/backup/mdel", new RequestBackupMdel(bkOptions) );
     }
     
     // Load extentions
