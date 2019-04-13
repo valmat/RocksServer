@@ -16,7 +16,7 @@ namespace RocksServer {
      *  @param       protocol in object
      *  @param       protocol out object
      */
-    void RequestGet::run(const ProtocolInGet &in, const ProtocolOut &out)
+    void RequestGet::run(const ProtocolInGet &in, const ProtocolOut &out) noexcept
     {
         // Check if any data transfered
         if(!in.check()) {

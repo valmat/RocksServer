@@ -17,7 +17,7 @@ namespace RocksServer {
         const rocksdb::BackupableDBOptions &bkOptions,
         uint32_t num_backups,
         bool flush_before_backup
-    ) : 
+    ) noexcept : 
         db(rdb),
         bkOptions(bkOptions),
         num_backups(num_backups),
@@ -29,7 +29,7 @@ namespace RocksServer {
      *  @param       protocol in object
      *  @param       protocol out object
      */
-    void RequestBackup::run(const ProtocolInPostSimple &in, const ProtocolOut &out)
+    void RequestBackup::run(const ProtocolInPostSimple &in, const ProtocolOut &out) noexcept
     {
         // Detect if current method is POST
         if( !in.check(out) ) {

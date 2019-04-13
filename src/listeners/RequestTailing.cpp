@@ -16,7 +16,7 @@ namespace RocksServer {
      *  @param       protocol in object
      *  @param       protocol out object
      */
-    void RequestTailing::run(const ProtocolInTrivial &in, const ProtocolOut &out)
+    void RequestTailing::run(const ProtocolInTrivial &in, const ProtocolOut &out) noexcept
     {
         auto rOpt = rocksdb::ReadOptions();
         rOpt.tailing = true;

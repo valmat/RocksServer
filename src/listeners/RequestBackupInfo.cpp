@@ -18,7 +18,7 @@ namespace RocksServer {
      *  @param       protocol in object
      *  @param       protocol out object
      */
-    void RequestBackupInfo::run(const ProtocolInTrivial &in, const ProtocolOut &out)
+    void RequestBackupInfo::run(const ProtocolInTrivial &in, const ProtocolOut &out) noexcept
     {
         BackupEngine bkEngine {bkOptions};
         // Check creating engine status

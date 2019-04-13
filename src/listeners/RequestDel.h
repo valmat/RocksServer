@@ -14,16 +14,16 @@ namespace RocksServer {
     class RequestDel : public RequestBase<ProtocolInPost, ProtocolOut>
     {
     public:
-        RequestDel(RocksDBWrapper &rdb) : db(rdb) {}
+        RequestDel(RocksDBWrapper &rdb) noexcept : db(rdb) {}
 
         /**
          *  Runs request listener
          *  @param       protocol in object
          *  @param       protocol out object
          */
-        virtual void run(const ProtocolInPost &in, const ProtocolOut &out) override;
+        virtual void run(const ProtocolInPost &in, const ProtocolOut &out) noexcept final;
 
-        virtual ~RequestDel() {}
+        virtual ~RequestDel() = default;
     private:
         RocksDBWrapper& db;
     };

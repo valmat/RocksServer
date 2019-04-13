@@ -16,7 +16,7 @@ namespace RocksServer {
      *  @param       protocol in object
      *  @param       protocol out object
      */
-    void RequestStats::run(const ProtocolInTrivial &in, const ProtocolOut &out)
+    void RequestStats::run(const ProtocolInTrivial &in, const ProtocolOut &out) noexcept
     {
         std::string stat;
         if(db->GetProperty("rocksdb.stats", &stat)) {

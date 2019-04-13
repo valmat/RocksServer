@@ -17,7 +17,7 @@ namespace RocksServer {
      *  @param       protocol in object
      *  @param       protocol out object
      */
-    void RequestPrefIt::run(const ProtocolInGet &in, const ProtocolOut &out)
+    void RequestPrefIt::run(const ProtocolInGet &in, const ProtocolOut &out) noexcept
     {
         // Check if any key is transferred
         if(!in.check()) {

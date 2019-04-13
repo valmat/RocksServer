@@ -7,7 +7,7 @@ OPT_FLAGS=-O4
 #OPT_FLAGS=-g -O0
 
 #compiler flags
-CFLAGS	 = -std=c++11 $(OPT_FLAGS) -pedantic -Wall -Wextra -Wno-unused-parameter -fno-rtti -fno-exceptions
+CFLAGS	 = -std=c++11 $(OPT_FLAGS) -pedantic -Wall -Wextra -Wno-unused-parameter -fno-rtti -fno-exceptions -flto
 
 
 
@@ -145,17 +145,21 @@ bin/obj/RequestBackupDel.rs.o bin/obj/RequestBackupMdel.rs.o
 
 bin/restore.bin: bin/obj/restore.o
 	$(CC) bin/obj/restore.o $(CFLAGS) -L$(ROCKSPATH) $(ROCKSLIB) -o bin/restore.bin
+	strip bin/restore.bin
 
 bin/restore_hr.bin: bin/obj/restore_hr.o
 	$(CC) bin/obj/restore_hr.o $(CFLAGS) -L$(ROCKSPATH) $(ROCKSLIB) -o bin/restore_hr.bin
+	strip bin/restore_hr.bin
 
 bin/human_readable.bin: bin/obj/human_readable.o
 	$(CC) bin/obj/human_readable.o $(CFLAGS) -L$(ROCKSPATH) $(ROCKSLIB) -o bin/human_readable.bin
+	strip bin/human_readable.bin
 
 
 #dynamic:
 ${BINFILE}: obj bin/restore.bin bin/restore_hr.bin bin/human_readable.bin
-	$(CC) bin/obj/*.rs.o $(CFLAGS) -levent -ldl -L$(ROCKSPATH) -L$(LEVENTL) $(ROCKSLIB) -rdynamic -o bin/$(NAME).bin
+	$(CC) bin/obj/*.rs.o $(CFLAGS) -levent -ldl -L$(ROCKSPATH) -L$(LEVENTL) $(ROCKSLIB) -rdynamic -o ${BINFILE}
+	strip ${BINFILE}
 	@echo
 	@echo "\033[1;36mBuild complite \033[0m"
 #	@echo "To start the server run ./bin/$(NAME).bin config.ini"
@@ -163,7 +167,8 @@ ${BINFILE}: obj bin/restore.bin bin/restore_hr.bin bin/human_readable.bin
 
 .PHONY: static
 static: obj bin/restore.bin bin/restore_hr.bin bin/human_readable.bin
-	$(CC) bin/obj/*.rs.o $(CFLAGS) $(LEVENTL)/libevent.a -ldl -L$(ROCKSPATH) $(ROCKSLIB) -rdynamic -o bin/$(NAME).bin
+	$(CC) bin/obj/*.rs.o $(CFLAGS) $(LEVENTL)/libevent.a -ldl -L$(ROCKSPATH) $(ROCKSLIB) -rdynamic -o ${BINFILE}
+	strip ${BINFILE}
 	@echo
 	@echo "\033[1;34mBuild complite \033[0m"
 

@@ -16,7 +16,7 @@ namespace RocksServer {
     {
     public:
 
-        RequestBackupMdel(const rocksdb::BackupableDBOptions &bkOptions) :
+        RequestBackupMdel(const rocksdb::BackupableDBOptions &bkOptions) noexcept :
             bkOptions(bkOptions)
         {}
 
@@ -25,9 +25,9 @@ namespace RocksServer {
          *  @param       protocol in object
          *  @param       protocol out object
          */
-        virtual void run(const ProtocolInPostKeys &in, const ProtocolOut &out) override;
+        virtual void run(const ProtocolInPostKeys &in, const ProtocolOut &out) noexcept final;
 
-        virtual ~RequestBackupMdel() {}
+        virtual ~RequestBackupMdel() = default;
     private:
         const rocksdb::BackupableDBOptions &bkOptions;
     };

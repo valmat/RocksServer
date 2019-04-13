@@ -14,16 +14,16 @@ namespace RocksServer {
     class RequestTailing : public RequestBase<ProtocolInTrivial, ProtocolOut>
     {
     public:
-        RequestTailing(RocksDBWrapper &rdb) : db(rdb) {}
+        RequestTailing(RocksDBWrapper &rdb) noexcept : db(rdb) {}
 
         /**
          *  Runs request listener
          *  @param       protocol in object
          *  @param       protocol out object
          */
-        virtual void run(const ProtocolInTrivial &in, const ProtocolOut &out) override;
+        virtual void run(const ProtocolInTrivial &in, const ProtocolOut &out) noexcept final;
 
-        virtual ~RequestTailing() {}
+        virtual ~RequestTailing() = default;
     private:
         RocksDBWrapper& db;
     };

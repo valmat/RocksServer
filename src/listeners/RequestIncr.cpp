@@ -16,7 +16,7 @@ namespace RocksServer {
      *  @param       protocol in object
      *  @param       protocol out object
      */
-    void RequestIncr::run(const ProtocolInPostKeys &in, const ProtocolOut &out)
+    void RequestIncr::run(const ProtocolInPostKeys &in, const ProtocolOut &out) noexcept
     {
         // Detect if current method is POST and any data transfered
         if( !in.check(out) ) {

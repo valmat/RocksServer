@@ -14,16 +14,16 @@ namespace RocksServer {
     class RequestSet : public RequestBase<ProtocolInPost, ProtocolOut>
     {
     public:
-        RequestSet(RocksDBWrapper &rdb) : db(rdb) {}
+        RequestSet(RocksDBWrapper &rdb) noexcept : db(rdb) {}
 
         /**
          *  Runs request listener
          *  @param       protocol in object
          *  @param       protocol out object
          */
-        virtual void run(const ProtocolInPost &in, const ProtocolOut &out) override;
+        virtual void run(const ProtocolInPost &in, const ProtocolOut &out) noexcept final;
 
-        virtual ~RequestSet() {}
+        virtual ~RequestSet() = default;
     private:
         RocksDBWrapper& db;
     };

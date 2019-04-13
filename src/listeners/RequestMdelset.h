@@ -15,16 +15,16 @@ namespace RocksServer {
     class RequestMdelset : public RequestBase<ProtocolInPostPairs, ProtocolOut>
     {
     public:
-        RequestMdelset(RocksDBWrapper &rdb) : db(rdb) {}
+        RequestMdelset(RocksDBWrapper &rdb) noexcept : db(rdb) {}
 
         /**
          *  Runs request listener
          *  @param       protocol in object
          *  @param       protocol out object
          */
-        virtual void run(const ProtocolInPostPairs &in, const ProtocolOut &out) override;
+        virtual void run(const ProtocolInPostPairs &in, const ProtocolOut &out) noexcept final;
 
-        virtual ~RequestMdelset() {}
+        virtual ~RequestMdelset() = default;
     private:
         RocksDBWrapper& db;
     };

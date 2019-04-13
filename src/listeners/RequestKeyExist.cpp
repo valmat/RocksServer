@@ -16,7 +16,7 @@ namespace RocksServer {
      *  @param       protocol in object
      *  @param       protocol out object
      */
-    void RequestKeyExist::run(const ProtocolInGet &in, const ProtocolOut &out)
+    void RequestKeyExist::run(const ProtocolInGet &in, const ProtocolOut &out) noexcept
     {
         if(!in.check()) {
             out.fail();

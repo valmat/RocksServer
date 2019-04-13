@@ -14,16 +14,16 @@ namespace RocksServer {
     class RequestIncr : public RequestBase<ProtocolInPostKeys, ProtocolOut>
     {
     public:
-        RequestIncr(RocksDBWrapper &rdb) : db(rdb) {}
+        RequestIncr(RocksDBWrapper &rdb) noexcept : db(rdb) {}
         
         /**
          *  Runs request listener
          *  @param       protocol in object
          *  @param       protocol out object
          */
-        virtual void run(const ProtocolInPostKeys &in, const ProtocolOut &out) override;
+        virtual void run(const ProtocolInPostKeys &in, const ProtocolOut &out) noexcept final;
 
-        virtual ~RequestIncr() {}
+        virtual ~RequestIncr() = default;
     private:
         RocksDBWrapper& db;
     };

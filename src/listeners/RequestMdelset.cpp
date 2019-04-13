@@ -17,7 +17,7 @@ namespace RocksServer {
      *  @param       protocol in object
      *  @param       protocol out object
      */
-    void RequestMdelset::run(const ProtocolInPostPairs &in, const ProtocolOut &out)
+    void RequestMdelset::run(const ProtocolInPostPairs &in, const ProtocolOut &out) noexcept
     {
         // Detect if current method is POST
         if( !in.check(out)) {

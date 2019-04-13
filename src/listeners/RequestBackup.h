@@ -21,16 +21,16 @@ namespace RocksServer {
             const rocksdb::BackupableDBOptions &bkOptions,
             uint32_t num_backups,
             bool flush_before_backup
-        );
+        ) noexcept ;
 
         /**
          *  Runs request listener
          *  @param       protocol in object
          *  @param       protocol out object
          */
-        virtual void run(const ProtocolInPostSimple &in, const ProtocolOut &out) override;
+        virtual void run(const ProtocolInPostSimple &in, const ProtocolOut &out) noexcept final;
 
-        virtual ~RequestBackup() {}
+        virtual ~RequestBackup() = default;
         
     private:
         RocksDBWrapper& db;
