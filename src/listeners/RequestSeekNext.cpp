@@ -31,11 +31,6 @@ namespace RocksServer {
             startsWith = *inIt;
         }
 
-
-        std::cout << "fromPrefix : " << fromPrefix.ToString() << std::endl;
-        std::cout << "startsWith : " << startsWith.ToString() << std::endl;
-        std::cout << "empty      : " << (startsWith.empty() ? 0 : 1)  << std::endl;
-
         std::unique_ptr<rocksdb::Iterator> iter(db->NewIterator(rocksdb::ReadOptions()));
         
         iter->SeekForPrev(fromPrefix);
@@ -45,12 +40,6 @@ namespace RocksServer {
             iter->Next();
         }
         
-
-        std::cout
-            << "\t Valid(): "             << iter->Valid()
-            << "\t status().ok(): "       << iter->status().ok()
-            << std::endl;
-
         if(startsWith.empty()) {
             for (; iter->Valid(); iter->Next()) {
                 if(iter->status().ok()) {
@@ -68,9 +57,5 @@ namespace RocksServer {
                 }
             }
         }
-
-
-
-
     }
 }
