@@ -102,6 +102,12 @@ bin/obj/RequestSeekPrev.rs.o: listeners/RequestSeekPrev.cpp
 bin/obj/RequestSeekNext.rs.o: listeners/RequestSeekNext.cpp
 	$(CC) listeners/RequestSeekNext.cpp $(CFLAGS) -I. -I$(ROCKSPATH)/include -I$(LEVENTI) -c -o bin/obj/RequestSeekNext.rs.o
 
+bin/obj/RequestSeekPrevRange.rs.o: listeners/RequestSeekPrevRange.cpp
+	$(CC) listeners/RequestSeekPrevRange.cpp $(CFLAGS) -I. -I$(ROCKSPATH)/include -I$(LEVENTI) -c -o bin/obj/RequestSeekPrevRange.rs.o
+
+bin/obj/RequestSeekNextRange.rs.o: listeners/RequestSeekNextRange.cpp
+	$(CC) listeners/RequestSeekNextRange.cpp $(CFLAGS) -I. -I$(ROCKSPATH)/include -I$(LEVENTI) -c -o bin/obj/RequestSeekNextRange.rs.o
+
 bin/obj/RequestTailing.rs.o: listeners/RequestTailing.cpp
 	$(CC) listeners/RequestTailing.cpp $(CFLAGS) -I. -I$(ROCKSPATH)/include -I$(LEVENTI) -c -o bin/obj/RequestTailing.rs.o
 
@@ -144,6 +150,7 @@ bin/obj/RequestKeyExist.rs.o \
 bin/obj/RequestGet.rs.o bin/obj/RequestMget.rs.o bin/obj/RequestIncr.rs.o \
 bin/obj/RequestPrefIt.rs.o bin/obj/RequestTailing.rs.o \
 bin/obj/RequestSeekPrev.rs.o bin/obj/RequestSeekNext.rs.o \
+bin/obj/RequestSeekPrevRange.rs.o bin/obj/RequestSeekNextRange.rs.o \
 bin/obj/RequestSet.rs.o bin/obj/RequestMset.rs.o \
 bin/obj/RequestDel.rs.o bin/obj/RequestMdel.rs.o bin/obj/RequestMdelset.rs.o \
 bin/obj/RequestStats.rs.o bin/obj/RequestBackup.rs.o bin/obj/RequestBackupInfo.rs.o \
