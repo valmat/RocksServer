@@ -24,8 +24,19 @@ namespace RocksServer {
             return;
         }
         
-        auto fromPrefix = in.key();
-        std::cout << fromPrefix.ToString() << std::endl;
+        auto inIt = in.begin();
+
+        rocksdb::Slice fromPrefix = *(inIt++), startsWith;
+        if(in.end() != inIt) {
+            startsWith = *inIt;
+            std::swap(startsWith, fromPrefix);
+        }
+
+
+        std::cout << "fromPrefix : " << fromPrefix.ToString() << std::endl;
+        std::cout << "startsWith : " << startsWith.ToString() << std::endl;
+        std::cout << "empty      : " << (startsWith.empty() ? 0 : 1)  << std::endl;
+
         std::unique_ptr<rocksdb::Iterator> iter(db->NewIterator(rocksdb::ReadOptions()));
         
         iter->SeekForPrev(fromPrefix);
@@ -40,14 +51,21 @@ namespace RocksServer {
             << "\t status().ok(): "       << iter->status().ok()
             << std::endl;
 
-        for (; iter->Valid(); iter->Next()) {
-            std::cout << "-------------------" << std::endl;
-            if(iter->status().ok()) {
-                std::cout << "\tkey: " << iter->key().ToString() << "\tvalue: " << iter->value().ToString() << std::endl;
-                out.setPair(iter->key(), iter->value());
-            } else {
-                out.setFailPair(iter->key());
-                std::cout << "setFailPair" << std::endl;
+        if(startsWith.empty()) {
+            for (; iter->Valid(); iter->Next()) {
+                if(iter->status().ok()) {
+                    out.setPair(iter->key(), iter->value());
+                } else {
+                    out.setFailPair(iter->key());
+                }
+            }
+        } else {
+            for (; iter->Valid() && iter->key().starts_with(startsWith); iter->Next()) {
+                if(iter->status().ok()) {
+                    out.setPair(iter->key(), iter->value());
+                } else {
+                    out.setFailPair(iter->key());
+                }
             }
         }
     }
