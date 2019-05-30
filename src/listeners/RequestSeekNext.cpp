@@ -1,7 +1,7 @@
 /**
- *  RequestSeekPrev.cpp
+ *  RequestSeekNext.cpp
  *
- *  Request listener for command "seekprev"
+ *  Request listener for command "seeknext"
  *  https://github.com/facebook/rocksdb/wiki/SeekForPrev
  *
  *  @author valmat <ufabiz@gmail.com>
@@ -17,7 +17,7 @@ namespace RocksServer {
      *  @param       protocol in object
      *  @param       protocol out object
      */
-    void RequestSeekPrev::run(const ProtocolInGet &in, const ProtocolOut &out) noexcept
+    void RequestSeekNext::run(const ProtocolInGet &in, const ProtocolOut &out) noexcept
     {
         // Check if any key is transferred
         if(!in.check()) {
@@ -27,11 +27,14 @@ namespace RocksServer {
         auto fromPrefix = in.key();
         std::cout << fromPrefix.ToString() << std::endl;
         std::unique_ptr<rocksdb::Iterator> iter(db->NewIterator(rocksdb::ReadOptions()));
+
+
         
         iter->SeekForPrev(fromPrefix);
-        // If is first entry
         if(!iter->Valid()) {
             iter->SeekToFirst();
+        } else {
+            iter->Next();
         }
         
 

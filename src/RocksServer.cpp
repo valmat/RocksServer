@@ -170,6 +170,7 @@ int main(int argc, char **argv)
     server.bind("/stats",    new RequestStats    (rdb));
     server.bind("/prefit",   new RequestPrefIt   (rdb));
     server.bind("/seekprev", new RequestSeekPrev (rdb));
+    server.bind("/seeknext", new RequestSeekNext (rdb));
 
     //
     // If is data base is backupable

@@ -87,11 +87,11 @@
 #include "listeners/RequestStats.h"
 #include "listeners/RequestPrefIt.h"
 #include "listeners/RequestSeekPrev.h"
+#include "listeners/RequestSeekNext.h"
 #include "listeners/RequestBackup.h"
 #include "listeners/RequestBackupInfo.h"
 #include "listeners/RequestBackupDel.h"
 #include "listeners/RequestBackupMdel.h"
-
 
 #include "include/evhttp/EvServer.h"
 
