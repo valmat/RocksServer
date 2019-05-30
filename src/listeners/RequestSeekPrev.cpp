@@ -29,9 +29,7 @@ namespace RocksServer {
         rocksdb::Slice fromPrefix = *(inIt++), startsWith;
         if(in.end() != inIt) {
             startsWith = *inIt;
-            std::swap(startsWith, fromPrefix);
         }
-
 
         std::cout << "fromPrefix : " << fromPrefix.ToString() << std::endl;
         std::cout << "startsWith : " << startsWith.ToString() << std::endl;

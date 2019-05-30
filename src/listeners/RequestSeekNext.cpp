@@ -29,7 +29,6 @@ namespace RocksServer {
         rocksdb::Slice fromPrefix = *(inIt++), startsWith;
         if(in.end() != inIt) {
             startsWith = *inIt;
-            std::swap(startsWith, fromPrefix);
         }
 
 
