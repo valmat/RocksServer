@@ -157,18 +157,20 @@ int main(int argc, char **argv)
      *  Bind request listeners
      *  
      */
-    server.bind("/get",     new RequestGet(rdb));
-    server.bind("/mget",    new RequestMget(rdb));
-    server.bind("/set",     new RequestSet(rdb));
-    server.bind("/mset",    new RequestMset(rdb));
-    server.bind("/exist",   new RequestKeyExist(rdb));
-    server.bind("/del",     new RequestDel(rdb));
-    server.bind("/mdel",    new RequestMdel(rdb));
-    server.bind("/mdelset", new RequestMdelset(rdb));
-    server.bind("/incr",    new RequestIncr(rdb));
-    server.bind("/tail",    new RequestTailing(rdb));
-    server.bind("/stats",   new RequestStats(rdb));
-    server.bind("/prefit",  new RequestPrefIt(rdb));
+    server.bind("/get",      new RequestGet      (rdb));
+    server.bind("/mget",     new RequestMget     (rdb));
+    server.bind("/set",      new RequestSet      (rdb));
+    server.bind("/mset",     new RequestMset     (rdb));
+    server.bind("/exist",    new RequestKeyExist (rdb));
+    server.bind("/del",      new RequestDel      (rdb));
+    server.bind("/mdel",     new RequestMdel     (rdb));
+    server.bind("/mdelset",  new RequestMdelset  (rdb));
+    server.bind("/incr",     new RequestIncr     (rdb));
+    server.bind("/tail",     new RequestTailing  (rdb));
+    server.bind("/stats",    new RequestStats    (rdb));
+    server.bind("/prefit",   new RequestPrefIt   (rdb));
+    server.bind("/seekprev", new RequestSeekPrev (rdb));
+
     //
     // If is data base is backupable
     //

@@ -3,8 +3,8 @@ CC 	 = g++
 
 NAME	 = RocksServer
 
-OPT_FLAGS=-O4
-#OPT_FLAGS=-g -O0
+# OPT_FLAGS=-O4
+OPT_FLAGS=-g -O0
 
 #compiler flags
 CFLAGS	 = -std=c++11 $(OPT_FLAGS) -pedantic -Wall -Wextra -Wno-unused-parameter -fno-rtti -fno-exceptions -flto
@@ -96,6 +96,9 @@ bin/obj/RequestIncr.rs.o: listeners/RequestIncr.cpp
 bin/obj/RequestPrefIt.rs.o: listeners/RequestPrefIt.cpp
 	$(CC) listeners/RequestPrefIt.cpp $(CFLAGS) -I. -I$(ROCKSPATH)/include -I$(LEVENTI) -c -o bin/obj/RequestPrefIt.rs.o
 
+bin/obj/RequestSeekPrev.rs.o: listeners/RequestSeekPrev.cpp
+	$(CC) listeners/RequestSeekPrev.cpp $(CFLAGS) -I. -I$(ROCKSPATH)/include -I$(LEVENTI) -c -o bin/obj/RequestSeekPrev.rs.o
+
 bin/obj/RequestTailing.rs.o: listeners/RequestTailing.cpp
 	$(CC) listeners/RequestTailing.cpp $(CFLAGS) -I. -I$(ROCKSPATH)/include -I$(LEVENTI) -c -o bin/obj/RequestTailing.rs.o
 
@@ -136,7 +139,7 @@ bin/obj/EvResponse.rs.o bin/obj/EvRequest.rs.o bin/obj/RocksDBWrapper.rs.o bin/o
 bin/obj/PlugContainer.rs.o bin/obj/Extension.rs.o bin/obj/IniConfigs.rs.o bin/obj/IniValue.rs.o \
 bin/obj/RequestKeyExist.rs.o \
 bin/obj/RequestGet.rs.o bin/obj/RequestMget.rs.o bin/obj/RequestIncr.rs.o \
-bin/obj/RequestPrefIt.rs.o bin/obj/RequestTailing.rs.o \
+bin/obj/RequestPrefIt.rs.o bin/obj/RequestSeekPrev.rs.o bin/obj/RequestTailing.rs.o \
 bin/obj/RequestSet.rs.o bin/obj/RequestMset.rs.o \
 bin/obj/RequestDel.rs.o bin/obj/RequestMdel.rs.o bin/obj/RequestMdelset.rs.o \
 bin/obj/RequestStats.rs.o bin/obj/RequestBackup.rs.o bin/obj/RequestBackupInfo.rs.o \

@@ -86,6 +86,7 @@
 #include "listeners/RequestTailing.h"
 #include "listeners/RequestStats.h"
 #include "listeners/RequestPrefIt.h"
+#include "listeners/RequestSeekPrev.h"
 #include "listeners/RequestBackup.h"
 #include "listeners/RequestBackupInfo.h"
 #include "listeners/RequestBackupDel.h"
