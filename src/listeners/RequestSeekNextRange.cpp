@@ -30,7 +30,7 @@ namespace RocksServer {
             startsWith = *inIt;
         }
 
-        std::unique_ptr<rocksdb::Iterator> iter(db->NewIterator(rocksdb::ReadOptions()));
+        auto iter(db.newIter());
         
         iter->SeekForPrev(fromPrefix);
         if(!iter->Valid()) {
