@@ -3,12 +3,11 @@
 ### Get
 Get value by key
 
-Request:
+__Request__:
 ```
 GET /get?key HTTP/1.1
 ```
-Reply:
-
+__Response__:
 ```
 <value_len>\n
 <value>
@@ -21,11 +20,11 @@ If the key does not exist in the database, the reply will be:
 ### Multi get
 Get values by keys
 
-Request:
+__Request__:
 ```
 GET /mget?key1&key2&key3 HTTP/1.1
 ```
-Reply:
+__Response__:
 
 ```
 <key1>\n
@@ -44,7 +43,7 @@ If the keyN does not exist, then `<valueN_len> = -1`, `<valueN>` -- is empty
 ### Set
 Set value by key
 
-Request:
+__Request__:
 ```
 POST /set HTTP/1.1
 Content-Length: <content_length>\r\n
@@ -53,7 +52,7 @@ Content-Length: <content_length>\r\n
 <value_len>\n
 <value>
 ```
-Reply:
+__Response__:
 ```
 OK
 ```
@@ -68,7 +67,7 @@ on fail.
 ### Multi set
 Set values by keys
 
-Request:
+__Request__:
 ```
 POST /mset HTTP/1.1
 Content-Length: <content_length>\r\n
@@ -83,7 +82,7 @@ Content-Length: <content_length>\r\n
 <value3_len>\n
 <value3>
 ```
-Reply:
+__Response__:
 ```
 OK
 ```
@@ -97,14 +96,14 @@ on fail.
 ### Delete key
 Delete key from DB
 
-Request:
+__Request__:
 ```
 POST /del HTTP/1.1
 Content-Length: <content_length>\r\n
 \r\n
 <key>
 ```
-Reply:
+__Response__:
 ```
 OK
 ```
@@ -119,7 +118,7 @@ on fail.
 ### Multi delete keys
 Delete keys from DB
 
-Request:
+__Request__:
 ```
 POST /mdel HTTP/1.1
 Content-Length: <content_length>\r\n
@@ -128,7 +127,7 @@ Content-Length: <content_length>\r\n
 <key2>\n
 <key3>
 ```
-Reply:
+__Response__:
 ```
 OK
 ```
@@ -139,14 +138,13 @@ FAIL
 ```
 on fail.
 
-### Key exist?
-Check key existing
+### Check if key exists
 
-Request:
+__Request__:
 ```
 GET /exist?key HTTP/1.1
 ```
-Reply:
+__Response__:
 
 ```
 OK
@@ -155,14 +153,14 @@ OK
 ```
 if the key exists and is able to retrieve its value.
 
-Reply:
+__Response__:
 ```
 OK
 -1\n
 ```
 if the key exists but was not able to retrieve its value.
 
-Reply:
+__Response__:
 ```
 FAIL
 ```
@@ -171,7 +169,7 @@ if the key does not exist in the database.
 ### Imcrement
 Imcrement value by key
 
-Request:
+__Request__:
 ```
 POST /incr HTTP/1.1
 Content-Length: <content_length>\r\n
@@ -180,7 +178,7 @@ Content-Length: <content_length>\r\n
 ```
 to increase the value on 1.
 
-Or request:
+Or __request__:
 ```
 POST /incr HTTP/1.1
 Content-Length: <content_length>\r\n
@@ -190,7 +188,7 @@ Content-Length: <content_length>\r\n
 ```
 to increase the value on `<value>`.
 
-Reply:
+__Response__:
 ```
 OK
 ```
@@ -203,27 +201,27 @@ on fail.
 
 ### Get all keys and values
 
-Request:
+__Request__:
 ```
 POST /tail
 ```
 
-Reply: the same as [multi get](https://github.com/valmat/RocksServer/blob/master/protocol.md#multi-get)
+__Response__: the same as [multi get](https://github.com/valmat/RocksServer/blob/master/protocol.md#multi-get)
 
 
 ### Get keys and values by key-prefix
 
-Request:
+__Request__:
 ```
 GET /prefit?<prefix>
 ```
 
-Reply: the same as [multi get](https://github.com/valmat/RocksServer/blob/master/protocol.md#multi-get)
+__Response__: the same as [multi get](https://github.com/valmat/RocksServer/blob/master/protocol.md#multi-get)
 
 
 ### Get keys and values by seek key-prefix
 
-Request:
+__Request__:
 ```
 GET /seekprev?<key-prefix-start>[&<starts-with>]
 ```
@@ -247,18 +245,18 @@ GET /seeknext-range?<key-prefix-start>&<key-prefix-end>[&<starts-with>]
 If optional parameter `<starts-with>` given iterate, while key starts with prefix `<starts-with>`
 
 
-Reply: the same as [multi get](https://github.com/valmat/RocksServer/blob/master/protocol.md#multi-get)
+__Response__: the same as [multi get](https://github.com/valmat/RocksServer/blob/master/protocol.md#multi-get)
 
 
 ### Backup
 Backup database
 
-Request:
+__Request__:
 ```
 POST /backup
 ```
 
-Reply:
+__Response__:
 ```
 OK
 ```
@@ -273,9 +271,9 @@ on fail.
 ### Stats
 Usage statistics
 
-Request:
+__Request__:
 ```
 GET /stats
 ```
 
-Reply: stats output
+__Response__: stats output
