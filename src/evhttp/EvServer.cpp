@@ -104,7 +104,7 @@ namespace RocksServer {
      *  @param  path       path to listen
      *  @param  req        listener
      */
-    void EvServer::bind(const char *path, std::unique_ptr<RequestSuperBase> &&pReq)
+    EvServer& EvServer::bind(const char *path, std::unique_ptr<RequestSuperBase> &&pReq)
     {
         evhttp_set_cb(_http, path, [] (evhttp_request *http_req, void *cb_arg) {
 
@@ -121,6 +121,7 @@ namespace RocksServer {
 
         // Store a pointer in the scope
         _reqList.push_front(std::move(pReq));
+        return *this;
     }
 
 }

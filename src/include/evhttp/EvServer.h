@@ -53,14 +53,23 @@ namespace RocksServer {
          *  @param  path       path to listen
          *  @param  req        listener
          */
-        void bind(const char *path, std::unique_ptr<RequestSuperBase> &&pReq);
+        EvServer& bind(const char *path, std::unique_ptr<RequestSuperBase> &&pReq);
 
         /**
          *  Bind request listener
          */
-        void bind(const char *path, RequestSuperBase *pReq)
+        EvServer& bind(const char *path, RequestSuperBase *pReq)
         {
-            bind(path, std::unique_ptr<RequestSuperBase>(pReq));
+            return bind(path, std::unique_ptr<RequestSuperBase>(pReq));
+        }
+        
+        /**
+         *  Bind request listener
+         */
+        template <typename listener_t, typename ...Args>
+        EvServer& bind(const char *path, Args &&... args)
+        {
+            return bind(path, std::unique_ptr<RequestSuperBase>(new listener_t(std::forward<Args>(args)...)));
         }
 
     private:

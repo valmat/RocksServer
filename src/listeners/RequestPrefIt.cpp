@@ -25,7 +25,7 @@ namespace RocksServer {
         }
         
         auto prefix = in.key();
-        std::unique_ptr<rocksdb::Iterator> iter(db->NewIterator(rocksdb::ReadOptions()));
+        auto iter(db.newIter());
         
         // Iterate over prefixed keys
         for (iter->Seek(prefix); iter->Valid() && iter->key().starts_with(prefix); iter->Next()) {
