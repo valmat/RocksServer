@@ -208,7 +208,7 @@ Request:
 POST /tail
 ```
 
-Reply: same [multi get](https://github.com/valmat/RocksServer/blob/master/protocol.md#multi-get)
+Reply: the same as [multi get](https://github.com/valmat/RocksServer/blob/master/protocol.md#multi-get)
 
 
 ### Get keys and values by key-prefix
@@ -218,7 +218,36 @@ Request:
 GET /prefit?<prefix>
 ```
 
-Reply: same [multi get](https://github.com/valmat/RocksServer/blob/master/protocol.md#multi-get)
+Reply: the same as [multi get](https://github.com/valmat/RocksServer/blob/master/protocol.md#multi-get)
+
+
+### Get keys and values by seek key-prefix
+
+Request:
+```
+GET /seekprev?<key-prefix-start>[&<starts-with>]
+```
+```
+GET /seekprev-range?<key-prefix-start>&<key-prefix-end>[&<starts-with>]
+```
+```
+GET /seeknext?<key-prefix-start>[&<starts-with>]
+```
+```
+GET /seeknext-range?<key-prefix-start>&<key-prefix-end>[&<starts-with>]
+```
+
+`seekprev` and `seekprev-range` seeks for first key less then `<key-prefix-start>`.
+
+`seeknext` and `seeknext-range` seeks for first key equal or more then `<key-prefix-start>`.
+
+
+`seekprev-range` and `seeknext-range` iterate while key less or equal `<key-prefix-end>`
+
+If optional parameter `<starts-with>` given iterate, while key starts with prefix `<starts-with>`
+
+
+Reply: the same as [multi get](https://github.com/valmat/RocksServer/blob/master/protocol.md#multi-get)
 
 
 ### Backup

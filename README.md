@@ -1,21 +1,16 @@
-#RocksServer is server for RocksDB
+# RocksServer is server for RocksDB
 
 
 Supports the following operations:
 
 
-operations  | description
-------------- | -------------
-**Get** | Get value by key
-**Multi get** | Get values by keys
-**Set** | Set value by key
-**Multi set** | Set values by keys
-**Delete key** | Delete key from DB
-**Multi delete keys** | Delete keys from DB
-**Check key exist** | Check key existing
-**Imcrement** | Imcrement value by key
-**Prefit** | Prefix iterator
-
+* Get value / multi-values by key / keys
+* Set value / multi-values by key / keys
+* Delete key/keys from DB
+* Check if key exists
+* Imcrement value by key
+* Itereate key-value pairs by key-prefix
+* Itereate key-value pairs by seek key or key-prefix
 
 For more details see: [protocol description](protocol.md)
 
