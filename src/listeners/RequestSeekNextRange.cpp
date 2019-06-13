@@ -36,7 +36,9 @@ namespace RocksServer {
         if(!iter->Valid()) {
             iter->SeekToFirst();
         } else {
-            iter->Next();
+            if(iter->key() != fromPrefix) {
+                iter->Next();
+            }
         }
         
         if(startsWith.empty()) {
