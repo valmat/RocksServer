@@ -1,5 +1,6 @@
 #!/bin/bash
 
+
 cd $(dirname $0)
 
 #
@@ -8,7 +9,7 @@ cd $(dirname $0)
 cd libevent
 ./autogen.sh
 ./configure
-make
+make -j$(nproc) 
 #make verify
 
 
@@ -19,6 +20,6 @@ cd ../rocksdb
 export LUA_PATH=
 export LUA_INCLUDE=
 make clean
-make static_lib
+make static_lib -j$(nproc)
 #make shared_lib
 # make check
