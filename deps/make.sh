@@ -9,6 +9,7 @@ cd $(dirname $0)
 cd libevent
 ./autogen.sh
 ./configure
+make clean
 make -j$(nproc) 
 #make verify
 

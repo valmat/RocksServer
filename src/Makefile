@@ -17,14 +17,18 @@ BINFILE  = bin/$(NAME).bin
 ROCKSPATH	 = $(PWD)/../deps/rocksdb
 
 # ROCKSLIB = -lrocksdb -lpthread -lrt -lsnappy -lgflags -lz -lbz2 -lzstd -lbz2 -llz4
-ROCKSLIB = -lrocksdb -lpthread -lsnappy -lz -lzstd -lbz2 -llz4
+ROCKSLIB = -lrocksdb -lpthread -lsnappy -lz -lzstd -lbz2 -llz4 -ldl
 
 
 # path to Libevent source
 LEVENTPATH	 = $(PWD)/../deps/libevent
 
-LEVENTI	 = $(LEVENTPATH)/include
+LEVENTI	 = 
 LEVENTL	 = $(LEVENTPATH)/.libs
+
+INCLUDES   = -I. -I"$(ROCKSPATH)/include" \
+             -I"$(LEVENTPATH)/include"
+
 
 CP = cp -f
 CPR = cp -fR
@@ -36,110 +40,110 @@ all: ${BINFILE}
 
 
 RocksServer.h.gch: RocksServer.h
-	g++ $(CFLAGS) -I. -I$(ROCKSPATH)/include -I$(LEVENTI) -c RocksServer.h -o RocksServer.h.gch
+	g++ $(CFLAGS) $(INCLUDES) -c RocksServer.h -o RocksServer.h.gch
 
 bin/obj/$(NAME).rs.o: $(NAME).cpp
-	$(CC) $(NAME).cpp $(CFLAGS) -I. -I$(ROCKSPATH)/include -I$(LEVENTI) -c -o bin/obj/$(NAME).rs.o
+	$(CC) $(NAME).cpp $(CFLAGS) $(INCLUDES) -c -o bin/obj/$(NAME).rs.o
 
 bin/obj/EvLogger.rs.o: evhttp/EvLogger.cpp
-	$(CC) evhttp/EvLogger.cpp $(CFLAGS) -I. -I$(ROCKSPATH)/include -I$(LEVENTI) -c -o bin/obj/EvLogger.rs.o
+	$(CC) evhttp/EvLogger.cpp $(CFLAGS) $(INCLUDES) -c -o bin/obj/EvLogger.rs.o
 
 bin/obj/EvServer.rs.o: evhttp/EvServer.cpp
-	$(CC) evhttp/EvServer.cpp $(CFLAGS) -I. -I$(ROCKSPATH)/include -I$(LEVENTI) -c -o bin/obj/EvServer.rs.o
+	$(CC) evhttp/EvServer.cpp $(CFLAGS) $(INCLUDES) -c -o bin/obj/EvServer.rs.o
 
 bin/obj/EvResponse.rs.o: evhttp/EvResponse.cpp
-	$(CC) evhttp/EvResponse.cpp $(CFLAGS) -I. -I$(ROCKSPATH)/include -I$(LEVENTI) -c -o bin/obj/EvResponse.rs.o
+	$(CC) evhttp/EvResponse.cpp $(CFLAGS) $(INCLUDES) -c -o bin/obj/EvResponse.rs.o
 
 bin/obj/EvRequest.rs.o: evhttp/EvRequest.cpp
-	$(CC) evhttp/EvRequest.cpp $(CFLAGS) -I. -I$(ROCKSPATH)/include -I$(LEVENTI) -c -o bin/obj/EvRequest.rs.o
+	$(CC) evhttp/EvRequest.cpp $(CFLAGS) $(INCLUDES) -c -o bin/obj/EvRequest.rs.o
 
 bin/obj/RocksDBWrapper.rs.o: rocks/RocksDBWrapper.cpp
-	$(CC) rocks/RocksDBWrapper.cpp $(CFLAGS) -I. -I$(ROCKSPATH)/include -I$(LEVENTI) -c -o bin/obj/RocksDBWrapper.rs.o
+	$(CC) rocks/RocksDBWrapper.cpp $(CFLAGS) $(INCLUDES) -c -o bin/obj/RocksDBWrapper.rs.o
 
 bin/obj/Extend.rs.o: extend/Extend.cpp
-	$(CC) extend/Extend.cpp $(CFLAGS) -I. -I$(ROCKSPATH)/include -I$(LEVENTI) -c -o bin/obj/Extend.rs.o
+	$(CC) extend/Extend.cpp $(CFLAGS) $(INCLUDES) -c -o bin/obj/Extend.rs.o
 
 bin/obj/PlugContainer.rs.o: extend/PlugContainer.cpp
-	$(CC) extend/PlugContainer.cpp $(CFLAGS) -I. -I$(ROCKSPATH)/include -I$(LEVENTI) -c -o bin/obj/PlugContainer.rs.o
+	$(CC) extend/PlugContainer.cpp $(CFLAGS) $(INCLUDES) -c -o bin/obj/PlugContainer.rs.o
 
 bin/obj/Extension.rs.o: extend/Extension.cpp
-	$(CC) extend/Extension.cpp $(CFLAGS) -I. -I$(ROCKSPATH)/include -I$(LEVENTI) -c -o bin/obj/Extension.rs.o
+	$(CC) extend/Extension.cpp $(CFLAGS) $(INCLUDES) -c -o bin/obj/Extension.rs.o
 
 bin/obj/IniConfigs.rs.o: iniparse/IniConfigs.cpp
-	$(CC) iniparse/IniConfigs.cpp $(CFLAGS) -I. -I$(ROCKSPATH)/include -I$(LEVENTI) -c -o bin/obj/IniConfigs.rs.o
+	$(CC) iniparse/IniConfigs.cpp $(CFLAGS) $(INCLUDES) -c -o bin/obj/IniConfigs.rs.o
 
 bin/obj/IniValue.rs.o: iniparse/IniValue.cpp
-	$(CC) iniparse/IniValue.cpp $(CFLAGS) -I. -I$(ROCKSPATH)/include -I$(LEVENTI) -c -o bin/obj/IniValue.rs.o
+	$(CC) iniparse/IniValue.cpp $(CFLAGS) $(INCLUDES) -c -o bin/obj/IniValue.rs.o
 
 bin/obj/restore.o: utils/restore.cpp
-	$(CC) utils/restore.cpp $(CFLAGS) -I. -I$(ROCKSPATH)/include -c -o bin/obj/restore.o
+	$(CC) utils/restore.cpp $(CFLAGS) $(INCLUDES) -c -o bin/obj/restore.o
 
 bin/obj/restore_hr.o: utils/restore_hr.cpp
-	$(CC) utils/restore_hr.cpp $(CFLAGS) -I. -I$(ROCKSPATH)/include -c -o bin/obj/restore_hr.o
+	$(CC) utils/restore_hr.cpp $(CFLAGS) $(INCLUDES) -c -o bin/obj/restore_hr.o
 
 bin/obj/human_readable.o: utils/human_readable.cpp
-	$(CC) utils/human_readable.cpp $(CFLAGS) -I. -I$(ROCKSPATH)/include -c -o bin/obj/human_readable.o
+	$(CC) utils/human_readable.cpp $(CFLAGS) $(INCLUDES) -c -o bin/obj/human_readable.o
 
 # Main requests
 bin/obj/RequestKeyExist.rs.o: listeners/RequestKeyExist.cpp
-	$(CC) listeners/RequestKeyExist.cpp $(CFLAGS) -I. -I$(ROCKSPATH)/include -I$(LEVENTI) -c -o bin/obj/RequestKeyExist.rs.o
+	$(CC) listeners/RequestKeyExist.cpp $(CFLAGS) $(INCLUDES) -c -o bin/obj/RequestKeyExist.rs.o
 
 bin/obj/RequestGet.rs.o: listeners/RequestGet.cpp
-	$(CC) listeners/RequestGet.cpp $(CFLAGS) -I. -I$(ROCKSPATH)/include -I$(LEVENTI) -c -o bin/obj/RequestGet.rs.o
+	$(CC) listeners/RequestGet.cpp $(CFLAGS) $(INCLUDES) -c -o bin/obj/RequestGet.rs.o
 
 bin/obj/RequestMget.rs.o: listeners/RequestMget.cpp
-	$(CC) listeners/RequestMget.cpp $(CFLAGS) -I. -I$(ROCKSPATH)/include -I$(LEVENTI) -c -o bin/obj/RequestMget.rs.o
+	$(CC) listeners/RequestMget.cpp $(CFLAGS) $(INCLUDES) -c -o bin/obj/RequestMget.rs.o
 
 bin/obj/RequestIncr.rs.o: listeners/RequestIncr.cpp
-	$(CC) listeners/RequestIncr.cpp $(CFLAGS) -I. -I$(ROCKSPATH)/include -I$(LEVENTI) -c -o bin/obj/RequestIncr.rs.o
+	$(CC) listeners/RequestIncr.cpp $(CFLAGS) $(INCLUDES) -c -o bin/obj/RequestIncr.rs.o
 
 bin/obj/RequestPrefIt.rs.o: listeners/RequestPrefIt.cpp
-	$(CC) listeners/RequestPrefIt.cpp $(CFLAGS) -I. -I$(ROCKSPATH)/include -I$(LEVENTI) -c -o bin/obj/RequestPrefIt.rs.o
+	$(CC) listeners/RequestPrefIt.cpp $(CFLAGS) $(INCLUDES) -c -o bin/obj/RequestPrefIt.rs.o
 
 bin/obj/RequestSeekPrev.rs.o: listeners/RequestSeekPrev.cpp
-	$(CC) listeners/RequestSeekPrev.cpp $(CFLAGS) -I. -I$(ROCKSPATH)/include -I$(LEVENTI) -c -o bin/obj/RequestSeekPrev.rs.o
+	$(CC) listeners/RequestSeekPrev.cpp $(CFLAGS) $(INCLUDES) -c -o bin/obj/RequestSeekPrev.rs.o
 
 bin/obj/RequestSeekNext.rs.o: listeners/RequestSeekNext.cpp
-	$(CC) listeners/RequestSeekNext.cpp $(CFLAGS) -I. -I$(ROCKSPATH)/include -I$(LEVENTI) -c -o bin/obj/RequestSeekNext.rs.o
+	$(CC) listeners/RequestSeekNext.cpp $(CFLAGS) $(INCLUDES) -c -o bin/obj/RequestSeekNext.rs.o
 
 bin/obj/RequestSeekPrevRange.rs.o: listeners/RequestSeekPrevRange.cpp
-	$(CC) listeners/RequestSeekPrevRange.cpp $(CFLAGS) -I. -I$(ROCKSPATH)/include -I$(LEVENTI) -c -o bin/obj/RequestSeekPrevRange.rs.o
+	$(CC) listeners/RequestSeekPrevRange.cpp $(CFLAGS) $(INCLUDES) -c -o bin/obj/RequestSeekPrevRange.rs.o
 
 bin/obj/RequestSeekNextRange.rs.o: listeners/RequestSeekNextRange.cpp
-	$(CC) listeners/RequestSeekNextRange.cpp $(CFLAGS) -I. -I$(ROCKSPATH)/include -I$(LEVENTI) -c -o bin/obj/RequestSeekNextRange.rs.o
+	$(CC) listeners/RequestSeekNextRange.cpp $(CFLAGS) $(INCLUDES) -c -o bin/obj/RequestSeekNextRange.rs.o
 
 bin/obj/RequestTailing.rs.o: listeners/RequestTailing.cpp
-	$(CC) listeners/RequestTailing.cpp $(CFLAGS) -I. -I$(ROCKSPATH)/include -I$(LEVENTI) -c -o bin/obj/RequestTailing.rs.o
+	$(CC) listeners/RequestTailing.cpp $(CFLAGS) $(INCLUDES) -c -o bin/obj/RequestTailing.rs.o
 
 bin/obj/RequestSet.rs.o: listeners/RequestSet.cpp
-	$(CC) listeners/RequestSet.cpp $(CFLAGS) -I. -I$(ROCKSPATH)/include -I$(LEVENTI) -c -o bin/obj/RequestSet.rs.o
+	$(CC) listeners/RequestSet.cpp $(CFLAGS) $(INCLUDES) -c -o bin/obj/RequestSet.rs.o
 
 bin/obj/RequestMset.rs.o: listeners/RequestMset.cpp
-	$(CC) listeners/RequestMset.cpp $(CFLAGS) -I. -I$(ROCKSPATH)/include -I$(LEVENTI) -c -o bin/obj/RequestMset.rs.o
+	$(CC) listeners/RequestMset.cpp $(CFLAGS) $(INCLUDES) -c -o bin/obj/RequestMset.rs.o
 
 bin/obj/RequestDel.rs.o: listeners/RequestDel.cpp
-	$(CC) listeners/RequestDel.cpp $(CFLAGS) -I. -I$(ROCKSPATH)/include -I$(LEVENTI) -c -o bin/obj/RequestDel.rs.o
+	$(CC) listeners/RequestDel.cpp $(CFLAGS) $(INCLUDES) -c -o bin/obj/RequestDel.rs.o
 
 bin/obj/RequestMdel.rs.o: listeners/RequestMdel.cpp
-	$(CC) listeners/RequestMdel.cpp $(CFLAGS) -I. -I$(ROCKSPATH)/include -I$(LEVENTI) -c -o bin/obj/RequestMdel.rs.o
+	$(CC) listeners/RequestMdel.cpp $(CFLAGS) $(INCLUDES) -c -o bin/obj/RequestMdel.rs.o
 
 bin/obj/RequestMdelset.rs.o: listeners/RequestMdelset.cpp
-	$(CC) listeners/RequestMdelset.cpp $(CFLAGS) -I. -I$(ROCKSPATH)/include -I$(LEVENTI) -c -o bin/obj/RequestMdelset.rs.o
+	$(CC) listeners/RequestMdelset.cpp $(CFLAGS) $(INCLUDES) -c -o bin/obj/RequestMdelset.rs.o
 
 bin/obj/RequestStats.rs.o: listeners/RequestStats.cpp
-	$(CC) listeners/RequestStats.cpp $(CFLAGS) -I. -I$(ROCKSPATH)/include -I$(LEVENTI) -c -o bin/obj/RequestStats.rs.o
+	$(CC) listeners/RequestStats.cpp $(CFLAGS) $(INCLUDES) -c -o bin/obj/RequestStats.rs.o
 
 bin/obj/RequestBackup.rs.o: listeners/RequestBackup.cpp
-	$(CC) listeners/RequestBackup.cpp $(CFLAGS) -I. -I$(ROCKSPATH)/include -I$(LEVENTI) -c -o bin/obj/RequestBackup.rs.o
+	$(CC) listeners/RequestBackup.cpp $(CFLAGS) $(INCLUDES) -c -o bin/obj/RequestBackup.rs.o
 
 bin/obj/RequestBackupDel.rs.o: listeners/RequestBackupDel.cpp
-	$(CC) listeners/RequestBackupDel.cpp $(CFLAGS) -I. -I$(ROCKSPATH)/include -I$(LEVENTI) -c -o bin/obj/RequestBackupDel.rs.o
+	$(CC) listeners/RequestBackupDel.cpp $(CFLAGS) $(INCLUDES) -c -o bin/obj/RequestBackupDel.rs.o
 
 bin/obj/RequestBackupMdel.rs.o: listeners/RequestBackupMdel.cpp
-	$(CC) listeners/RequestBackupMdel.cpp $(CFLAGS) -I. -I$(ROCKSPATH)/include -I$(LEVENTI) -c -o bin/obj/RequestBackupMdel.rs.o
+	$(CC) listeners/RequestBackupMdel.cpp $(CFLAGS) $(INCLUDES) -c -o bin/obj/RequestBackupMdel.rs.o
 
 bin/obj/RequestBackupInfo.rs.o: listeners/RequestBackupInfo.cpp
-	$(CC) listeners/RequestBackupInfo.cpp $(CFLAGS) -I. -I$(ROCKSPATH)/include -I$(LEVENTI) -c -o bin/obj/RequestBackupInfo.rs.o
+	$(CC) listeners/RequestBackupInfo.cpp $(CFLAGS) $(INCLUDES) -c -o bin/obj/RequestBackupInfo.rs.o
 
 
 .PHONY: obj
@@ -159,21 +163,21 @@ bin/obj/RequestBackupDel.rs.o bin/obj/RequestBackupMdel.rs.o
 
 bin/restore.bin: bin/obj/restore.o
 	$(CC) bin/obj/restore.o $(CFLAGS) -L$(ROCKSPATH) $(ROCKSLIB) -o bin/restore.bin
-	strip bin/restore.bin
+	strip --strip-all bin/restore.bin
 
 bin/restore_hr.bin: bin/obj/restore_hr.o
 	$(CC) bin/obj/restore_hr.o $(CFLAGS) -L$(ROCKSPATH) $(ROCKSLIB) -o bin/restore_hr.bin
-	strip bin/restore_hr.bin
+	strip --strip-all bin/restore_hr.bin
 
 bin/human_readable.bin: bin/obj/human_readable.o
 	$(CC) bin/obj/human_readable.o $(CFLAGS) -L$(ROCKSPATH) $(ROCKSLIB) -o bin/human_readable.bin
-	strip bin/human_readable.bin
+	strip --strip-all bin/human_readable.bin
 
 
 #dynamic:
 ${BINFILE}: obj bin/restore.bin bin/restore_hr.bin bin/human_readable.bin
 	$(CC) bin/obj/*.rs.o $(CFLAGS) -levent -ldl -L$(ROCKSPATH) -L$(LEVENTL) $(ROCKSLIB) -rdynamic -o ${BINFILE}
-	strip ${BINFILE}
+	strip --strip-all ${BINFILE}
 	@echo
 	@echo "\033[1;36mBuild complite \033[0m"
 #	@echo "To start the server run ./bin/$(NAME).bin config.ini"
@@ -182,7 +186,7 @@ ${BINFILE}: obj bin/restore.bin bin/restore_hr.bin bin/human_readable.bin
 .PHONY: static
 static: obj bin/restore.bin bin/restore_hr.bin bin/human_readable.bin
 	$(CC) bin/obj/*.rs.o $(CFLAGS) $(LEVENTL)/libevent.a -ldl -L$(ROCKSPATH) $(ROCKSLIB) -rdynamic -o ${BINFILE}
-	strip ${BINFILE}
+	strip --strip-all ${BINFILE}
 	@echo
 	@echo "\033[1;34mBuild complite \033[0m"
 
@@ -194,7 +198,7 @@ clean:
 	rm -f bin/obj/*.o bin/*.bin RocksServer.h.gch
 
 gch:
-	g++ $(CFLAGS) -I. -I$(ROCKSPATH)/include -I$(LEVENTI) -c RocksServer.h -o RocksServer.h.gch
+	g++ $(CFLAGS) $(INCLUDES) -c RocksServer.h -o RocksServer.h.gch
 
 
 install:
@@ -204,7 +208,7 @@ install:
 	$(CP) ${SRC}/bin/restore.bin /usr/local/bin/rocksrestore
 	$(CP) ${SRC}/bin/restore_hr.bin /usr/local/bin/rocksrestore_hr
 	$(CP) ${SRC}/bin/human_readable.bin /usr/local/bin/rocks_human_readable
-	$(CP) ${SRC}/../init.d/rocksserver /etc/init.d/rocksserver
+	$(CP) -L ${SRC}/../init.d/rocksserver /etc/init.d/rocksserver
 	mkdir -p /etc/rocksserver
 	$(CP) ${SRC}/config.ini /etc/rocksserver/config.ini
 	mkdir -p /usr/lib/rocksserver/plugins

@@ -17,7 +17,7 @@
 #
 
 NAME=RocksServer
-OWNER=nobody
+OWNER=rocksusr
 BINEXEC="/usr/local/bin/rocksserver"
 PIDFILE="/var/run/rocksserver.pid"
 CONF="/etc/rocksserver/config.ini"
