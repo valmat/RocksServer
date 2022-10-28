@@ -6,13 +6,13 @@ cd $CUR_DIR
 CUR_DIR="$(pwd)"
 
 # Make dependences
-# ../deps/make.sh
+../deps/make.sh
 
 # Make sources
-# cd ../src
-# make clean
-# make static -j`nproc`
-# cd $CUR_DIR
+cd ../src
+make clean
+make static -j`nproc`
+cd $CUR_DIR
 
 ##############################################
 SRCDIR="../src"
@@ -20,8 +20,6 @@ rm -rf pkg
 
 mkdir -p pkg/usr/local/bin
 mkdir -p pkg/usr/lib/rocksserver/plugins
-mkdir -p pkg/usr/include/rocksserver
-mkdir -p pkg/usr/include/rocksserver/rocksdb
 mkdir -p pkg/var/rocksserver
 mkdir -p pkg/etc/rocksserver
 mkdir -p pkg/var/log/rocksserver
@@ -33,9 +31,6 @@ cp "${SRCDIR}/bin/RocksServer.bin"    "pkg/usr/local/bin/rocksserver"
 cp "${SRCDIR}/bin/restore.bin"        "pkg/usr/local/bin/rocksrestore"
 cp "${SRCDIR}/bin/restore_hr.bin"     "pkg/usr/local/bin/rocksrestore_hr"
 cp "${SRCDIR}/bin/human_readable.bin" "pkg/usr/local/bin/rocks_human_readable"
-
-cp -r ${SRCDIR}/include/*                 pkg/usr/include/rocksserver/
-cp -r ${SRCDIR}/../deps/rocksdb/include/* pkg/usr/include/rocksserver/rocksdb/
 
 cp "${SRCDIR}/config.ini"           "pkg/etc/rocksserver/config.ini"
 cp "scripts/initd"                  "pkg/etc/init.d/rocksserver"
@@ -56,7 +51,7 @@ cat control \
     > pkg/DEBIAN/control
 
 ##############################################
-# список файлов конфигурации
+# configuration files list
 
 echo "/etc/rocksserver/config.ini" > pkg/DEBIAN/conffiles
 ##############################################

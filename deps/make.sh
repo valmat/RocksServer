@@ -9,7 +9,7 @@ cd $(dirname $0)
 cd libevent
 ./autogen.sh
 ./configure
-make clean
+# make clean
 make -j$(nproc) 
 #make verify
 
@@ -20,7 +20,7 @@ make -j$(nproc)
 cd ../rocksdb
 export LUA_PATH=
 export LUA_INCLUDE=
-make clean
+# make clean
 make static_lib -j$(nproc)
 #make shared_lib
 # make check
