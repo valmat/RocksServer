@@ -1,0 +1,12 @@
+Package: rocksserver
+Source: rocksdb
+Version: %version%
+Maintainer: valmat <ufabiz@gmail.com>
+Architecture: amd64
+Section: contrib
+Priority: optional
+Installed-Size: %InstalledSize%
+Depends: bash, libgflags-dev, libsnappy-dev, zlib1g-dev, libbz2-dev, liblz4-dev, libzstd-dev
+Description: RocksServer
+    RocksServer is a server wrapper for RocksDB https://github.com/valmat/RocksServer
+

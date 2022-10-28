@@ -1,0 +1,6 @@
+#!/bin/bash
+
+if [[ -x "/etc/init.d/rocksserver" ]]
+then
+    /etc/init.d/rocksserver stop
+fi

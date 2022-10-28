@@ -1,0 +1,21 @@
+#!/bin/bash
+
+# create a rocksusr group and user
+if ! getent passwd rocksusr > /dev/null; then
+    
+    adduser                      \
+        --system                 \
+        --group                  \
+        --shell="/bin/bash"      \
+        --no-create-home         \
+        --disabled-password      \
+        --disabled-login rocksusr
+fi
+
+chown -hR rocksusr:rocksusr /var/log/rocksserver
+chown -hR rocksusr:rocksusr /var/rocksserver
+
+update-rc.d rocksserver defaults
+/etc/init.d/rocksserver start
+
+
