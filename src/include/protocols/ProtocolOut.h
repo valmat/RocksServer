@@ -20,12 +20,13 @@ namespace RocksServer {
         template<typename T, typename = typename std::enable_if<traits::may_string<T>::value, void>::type>
         const ProtocolOut& setValue(T &&val) const
         {
-            resp.add_printf("%lu\n%s", val.size(), val.data());
+            resp.add_printf("%lu\n%.*s", val.size(), val.size(), val.data());
             return *this;
         }
         const ProtocolOut& setValue(const char *val) const
         {
-            resp.add_printf("%lu\n%s", strlen(val), val);
+            size_t len = strlen(val);
+            resp.add_printf("%lu\n%.*s", len, len, val);
             return *this;
         }
         
