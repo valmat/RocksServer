@@ -83,6 +83,11 @@ namespace RocksServer {
             resp.add("FAIL\n", 5);
             return *this;
         }
+        const ProtocolOut& ok(bool success) const
+        {
+            return success ? ok() : fail();
+        }
+        
         const ProtocolOut& endl() const
         {
             resp.endl();
