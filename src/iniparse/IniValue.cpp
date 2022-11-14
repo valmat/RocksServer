@@ -24,6 +24,11 @@ namespace RocksServer {
     IniValue<std::string>::operator IniValue<int16_t> () const {return std::stoi(_value);}
     IniValue<std::string>::operator IniValue<int8_t>  () const {return std::stoi(_value);}
 
+
+    IniValue<std::string>::operator IniValue<float>  () const { return std::stod(_value);}
+    IniValue<std::string>::operator IniValue<double> () const { return std::stod(_value);}
+
+
     /**
      *  Cast to a EvLogger::Level
      */

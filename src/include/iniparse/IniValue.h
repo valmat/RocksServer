@@ -89,6 +89,9 @@ namespace RocksServer {
         operator IniValue<int16_t> () const;
         operator IniValue<int8_t>  () const;
 
+        operator IniValue<float>   () const;
+        operator IniValue<double>  () const;
+
         /**
          *  Cast to a EvLogger::Level
          */
