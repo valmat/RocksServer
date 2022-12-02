@@ -145,6 +145,9 @@ bin/obj/RequestBackupMdel.rs.o: listeners/RequestBackupMdel.cpp
 bin/obj/RequestBackupInfo.rs.o: listeners/RequestBackupInfo.cpp
 	$(CC) listeners/RequestBackupInfo.cpp $(CFLAGS) $(INCLUDES) -c -o bin/obj/RequestBackupInfo.rs.o
 
+bin/obj/change_owner.rs.o: misc/change_owner.cpp
+	$(CC) misc/change_owner.cpp $(CFLAGS) $(INCLUDES) -c -o bin/obj/change_owner.rs.o
+
 
 .PHONY: obj
 obj: RocksServer.h.gch bin/obj/$(NAME).rs.o bin/obj/EvLogger.rs.o bin/obj/EvServer.rs.o \
@@ -158,7 +161,7 @@ bin/obj/RequestSeekPrevRange.rs.o bin/obj/RequestSeekNextRange.rs.o \
 bin/obj/RequestSet.rs.o bin/obj/RequestMset.rs.o \
 bin/obj/RequestDel.rs.o bin/obj/RequestMdel.rs.o bin/obj/RequestMdelset.rs.o \
 bin/obj/RequestStats.rs.o bin/obj/RequestBackup.rs.o bin/obj/RequestBackupInfo.rs.o \
-bin/obj/RequestBackupDel.rs.o bin/obj/RequestBackupMdel.rs.o
+bin/obj/RequestBackupDel.rs.o bin/obj/RequestBackupMdel.rs.o bin/obj/change_owner.rs.o
 
 
 bin/restore.bin: bin/obj/restore.o

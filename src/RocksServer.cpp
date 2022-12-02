@@ -43,6 +43,20 @@ int main(int argc, char **argv)
     }
     DefaultConfigs dfCfg;
 
+    /**
+     *  
+     *  Changing process owner (if required)
+     *  
+     *  If RocksServer has launched by unprivileged user this adjustment has no effect.
+     *  If RocksServer has launched by root you can change the process owner.
+     *  Specify uid if you would like to RocksServer changing process owner or keep it value 0 to stay as root.
+     *  
+     */
+    unsigned int owner_uid = cfg.get("owner_uid", 0u);
+    if(!change_owner(owner_uid)) {
+        std::cerr << "Can't change the owner to " << owner_uid << "!" << std::endl;
+        return 10;
+    }    
 
     /**
      *  
@@ -55,7 +69,6 @@ int main(int argc, char **argv)
      *  If for some reason the server will take a lot of connections,
      *  the number of which exceeds nofile_limit, then part of the connections will not be processed.
      *  Increase nofile_limit can solve the problem.
-     *  
      *  
      */
     auto nofile_limit = cfg.get("nofile_limit", dfCfg.nofile_limit);
