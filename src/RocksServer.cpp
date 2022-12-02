@@ -15,11 +15,10 @@ int main(int argc, char **argv)
 {
     
     if (argc < 2) {
-        std::cout << "Run as:" << std::endl << argv[0] << " <config.ini file name>" << std::endl;
+        std::cerr << "Run as:" << std::endl << argv[0] << " <config.ini file name>" << std::endl;
         return 1;
     }
-    std::cout << "RocksServer version is " << ROCKSSERVER_VERSION << std::endl;
-
+    std::cerr << "RocksServer version is " << ROCKSSERVER_VERSION << std::endl;
 
     /**
      *  
@@ -29,7 +28,6 @@ int main(int argc, char **argv)
     if (signal(SIGPIPE, SIG_IGN) == SIG_ERR) {
         return 1;
     }
-
 
     /**
      *  
@@ -42,21 +40,6 @@ int main(int argc, char **argv)
         return 1;
     }
     DefaultConfigs dfCfg;
-
-    /**
-     *  
-     *  Changing process owner (if required)
-     *  
-     *  If RocksServer has launched by unprivileged user this adjustment has no effect.
-     *  If RocksServer has launched by root you can change the process owner.
-     *  Specify uid if you would like to RocksServer changing process owner or keep it value 0 to stay as root.
-     *  
-     */
-    unsigned int owner_uid = cfg.get("owner_uid", 0u);
-    if(!change_owner(owner_uid)) {
-        std::cerr << "Can't change the owner to " << owner_uid << "!" << std::endl;
-        return 10;
-    }    
 
     /**
      *  
@@ -85,6 +68,20 @@ int main(int argc, char **argv)
         }
     }
     
+    /**
+     *  
+     *  Changing process owner (if required)
+     *  
+     *  If RocksServer has launched by unprivileged user this adjustment has no effect.
+     *  If RocksServer has launched by root you can change the process owner.
+     *  Specify uid if you would like to RocksServer changing process owner or keep it value 0 to stay as root.
+     *  
+     */
+    unsigned int owner_uid = cfg.get("owner_uid", 0u);
+    if(!change_owner(owner_uid)) {
+        std::cerr << "Can't change the owner to " << owner_uid << "!" << std::endl;
+        return 10;
+    }
 
     /**
      *  
@@ -92,7 +89,6 @@ int main(int argc, char **argv)
      *  
      */
     Extend ext;
-
 
     /**
      *  
@@ -105,7 +101,7 @@ int main(int argc, char **argv)
         std::cerr << "RocksDB start error:" << std::endl << rdb.getStatus() << std::endl;
         return 1;
     }
-    std::cout << "RocksDB version is " << ROCKSDB_MAJOR << "." << ROCKSDB_MINOR << "." << ROCKSDB_PATCH << std::endl;
+    std::cerr << "RocksDB version is " << ROCKSDB_MAJOR << "." << ROCKSDB_MINOR << "." << ROCKSDB_PATCH << std::endl;
 
 
     /**
@@ -122,7 +118,6 @@ int main(int argc, char **argv)
         return 1;
     }
 
-
     /**
      *  
      *  Init libevent
@@ -132,7 +127,6 @@ int main(int argc, char **argv)
         std::cerr << "Failed to init libevent." << std::endl;
         return 1;
     }
-
 
     /**
      *  
@@ -147,7 +141,6 @@ int main(int argc, char **argv)
         std::cerr << "Failed to init http server." << std::endl;
         return 1;
     }
-
 
     /**
      *  

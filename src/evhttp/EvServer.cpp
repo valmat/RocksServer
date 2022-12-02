@@ -40,8 +40,8 @@ namespace RocksServer {
         }
 
         // Print versions
-        std::cout << "Libevent version is " << event_get_version() << " ( " << event_get_version_number() << " ) " << std::endl;
-        std::cout << "The server is successfully running on " << addr << " port " << port << "." << std::endl;
+        std::cerr << "Libevent version is " << event_get_version() << " ( " << event_get_version_number() << " ) " << std::endl;
+        std::cerr << "The server is successfully running on " << addr << " port " << port << "." << std::endl;
 
         // Set signal handlers to safely shut down.
         auto sig_cb = [](evutil_socket_t fd, short what, void *arg) {
