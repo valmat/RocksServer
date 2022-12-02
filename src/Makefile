@@ -37,8 +37,6 @@ CPR = cp -fR
 SRC=`pwd`
 
 VERSION=$(shell git -C "." describe --tags --candidates=1)
-CFLAGS := $(CFLAGS) -DROCKSSERVER_VERSION="\"$(VERSION)\""
-
 
 all: ${BINFILE}
 
@@ -47,7 +45,7 @@ RocksServer.h.gch: RocksServer.h
 	g++ $(CFLAGS) $(INCLUDES) -c RocksServer.h -o RocksServer.h.gch
 
 bin/obj/$(NAME).rs.o: $(NAME).cpp
-	$(CC) $(NAME).cpp $(CFLAGS) $(INCLUDES) -c -o bin/obj/$(NAME).rs.o
+	$(CC) $(NAME).cpp $(CFLAGS) -DROCKSSERVER_VERSION="\"$(VERSION)\"" $(INCLUDES) -c -o bin/obj/$(NAME).rs.o
 
 bin/obj/EvLogger.rs.o: evhttp/EvLogger.cpp
 	$(CC) evhttp/EvLogger.cpp $(CFLAGS) $(INCLUDES) -c -o bin/obj/EvLogger.rs.o
@@ -155,6 +153,9 @@ bin/obj/change_owner.rs.o: misc/change_owner.cpp
 bin/obj/change_files_limit.rs.o: misc/change_files_limit.cpp
 	$(CC) misc/change_files_limit.cpp $(CFLAGS) $(INCLUDES) -c -o bin/obj/change_files_limit.rs.o
 
+bin/obj/version.rs.o: misc/version.cpp
+	$(CC) misc/version.cpp $(CFLAGS) -DROCKSSERVER_VERSION="\"$(VERSION)\"" $(INCLUDES) -c -o bin/obj/version.rs.o
+
 
 .PHONY: obj
 obj: RocksServer.h.gch bin/obj/$(NAME).rs.o bin/obj/EvLogger.rs.o bin/obj/EvServer.rs.o \
@@ -169,7 +170,7 @@ bin/obj/RequestSet.rs.o bin/obj/RequestMset.rs.o \
 bin/obj/RequestDel.rs.o bin/obj/RequestMdel.rs.o bin/obj/RequestMdelset.rs.o \
 bin/obj/RequestStats.rs.o bin/obj/RequestBackup.rs.o bin/obj/RequestBackupInfo.rs.o \
 bin/obj/RequestBackupDel.rs.o bin/obj/RequestBackupMdel.rs.o bin/obj/change_owner.rs.o \
-bin/obj/change_files_limit.rs.o
+bin/obj/change_files_limit.rs.o bin/obj/version.rs.o
 
 
 bin/restore.bin: bin/obj/restore.o
