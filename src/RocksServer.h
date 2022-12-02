@@ -22,8 +22,6 @@
 // C headers
 #include <string.h>
 #include <signal.h>
-// C headers for `getrlimit()`
-#include <sys/resource.h>
 
 // Libevent
 #include <event.h>
@@ -104,3 +102,4 @@
 
 // Miscellaneous
 #include "misc/change_owner.h"
+#include "misc/change_files_limit.h"

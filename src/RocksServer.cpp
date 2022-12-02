@@ -26,7 +26,7 @@ int main(int argc, char **argv)
      *  
      */    
     if (signal(SIGPIPE, SIG_IGN) == SIG_ERR) {
-        return 1;
+        return 2;
     }
 
     /**
@@ -37,7 +37,7 @@ int main(int argc, char **argv)
     IniConfigs cfg(argv[1]);
     if(!cfg) {
         std::cerr<<"Error with open file "<< argv[1] << std::endl;
-        return 1;
+        return 3;
     }
     DefaultConfigs dfCfg;
 
@@ -52,20 +52,14 @@ int main(int argc, char **argv)
      *  If for some reason the server will take a lot of connections,
      *  the number of which exceeds nofile_limit, then part of the connections will not be processed.
      *  Increase nofile_limit can solve the problem.
+     *  if nofile_limit is 0 leaves as default
      *  
      */
     auto nofile_limit = cfg.get("nofile_limit", dfCfg.nofile_limit);
-    // if 0 then leave as default
-    if(nofile_limit) {
-        rlimit rlim;
-        getrlimit(RLIMIT_NOFILE, &rlim);
-        const rlimit i_rlimit {nofile_limit, rlim.rlim_max};
-        if(-1 == setrlimit(RLIMIT_NOFILE, &i_rlimit)) {
-            std::cerr << "You tried to set the nofile soft limit to " << nofile_limit << "." << std::endl;
-            std::cerr << "Current  nofile soft limit value is " << rlim.rlim_cur << "." << std::endl;
-            std::cerr << "Current  nofile hard limit value is " << rlim.rlim_max << "." << std::endl;
-            
-        }
+    if(auto flim_chng_result = change_files_limit(nofile_limit); !flim_chng_result) {
+        std::cerr << "You tried to set the nofile soft limit to " << nofile_limit << "." << std::endl;
+        std::cerr << "Current nofile soft limit value is " << flim_chng_result.soft_limit << "." << std::endl;
+        std::cerr << "Current nofile hard limit value is " << flim_chng_result.hard_limit << "." << std::endl;
     }
     
     /**
@@ -77,10 +71,9 @@ int main(int argc, char **argv)
      *  Specify uid if you would like to RocksServer changing process owner or keep it value 0 to stay as root.
      *  
      */
-    unsigned int owner_uid = cfg.get("owner_uid", 0u);
-    if(!change_owner(owner_uid)) {
+    if(unsigned int owner_uid = cfg.get("owner_uid", 0u); !change_owner(owner_uid)) {
         std::cerr << "Can't change the owner to " << owner_uid << "!" << std::endl;
-        return 10;
+        return 5;
     }
 
     /**
@@ -99,7 +92,7 @@ int main(int argc, char **argv)
     // Check RocksDB started
     if (!rdb.status()) {
         std::cerr << "RocksDB start error:" << std::endl << rdb.getStatus() << std::endl;
-        return 1;
+        return 6;
     }
     std::cerr << "RocksDB version is " << ROCKSDB_MAJOR << "." << ROCKSDB_MINOR << "." << ROCKSDB_PATCH << std::endl;
 
@@ -115,7 +108,7 @@ int main(int argc, char **argv)
     // Check if logger started
     if (!logger) {
         std::cerr<<"Can't open log file" << std::endl;
-        return 1;
+        return 7;
     }
 
     /**
@@ -125,7 +118,7 @@ int main(int argc, char **argv)
      */
     if (!event_init()) {
         std::cerr << "Failed to init libevent." << std::endl;
-        return 1;
+        return 8;
     }
 
     /**
@@ -139,7 +132,7 @@ int main(int argc, char **argv)
     // Check if server started
     if (!server) {
         std::cerr << "Failed to init http server." << std::endl;
-        return 1;
+        return 9;
     }
 
     /**
@@ -236,7 +229,7 @@ int main(int argc, char **argv)
      */
     if (!server.dispatch()) {
         std::cerr << "Failed to run message loop." << std::endl;
-        return 1;
+        return 10;
     }
 
     return 0;
