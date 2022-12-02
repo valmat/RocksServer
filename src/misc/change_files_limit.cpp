@@ -1,7 +1,4 @@
-// #include <unistd.h>
 #include <sys/resource.h> // C headers for `getrlimit()`
-
-
 #include "change_files_limit.h"
 
 ChangingFilesLimitResult change_files_limit(unsigned short nofile_limit) noexcept

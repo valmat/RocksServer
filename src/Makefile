@@ -36,6 +36,10 @@ CPR = cp -fR
 #CP = ln -sf
 SRC=`pwd`
 
+VERSION=$(shell git -C "." describe --tags --candidates=1)
+CFLAGS := $(CFLAGS) -DROCKSSERVER_VERSION="\"$(VERSION)\""
+
+
 all: ${BINFILE}
 
 
