@@ -89,6 +89,9 @@ bin/obj/human_readable.o: utils/human_readable.cpp
 bin/obj/human_readable_batches.o: utils/human_readable_batches.cpp
 	$(CC) utils/human_readable_batches.cpp $(CFLAGS) $(INCLUDES) -c -o bin/obj/human_readable_batches.o
 
+bin/obj/rows_number.o: utils/rows_number.cpp
+	$(CC) utils/rows_number.cpp $(CFLAGS) $(INCLUDES) -c -o bin/obj/rows_number.o
+
 # Main requests
 bin/obj/RequestKeyExist.rs.o: listeners/RequestKeyExist.cpp
 	$(CC) listeners/RequestKeyExist.cpp $(CFLAGS) $(INCLUDES) -c -o bin/obj/RequestKeyExist.rs.o
@@ -192,9 +195,13 @@ bin/human_readable_batches.bin: bin/obj/human_readable_batches.o
 	$(CC) bin/obj/human_readable_batches.o $(CFLAGS) -L$(ROCKSPATH) $(ROCKSLIB) -o bin/human_readable_batches.bin
 	strip --strip-all bin/human_readable_batches.bin
 
+bin/rows_number.bin: bin/obj/rows_number.o
+	$(CC) bin/obj/rows_number.o $(CFLAGS) -L$(ROCKSPATH) $(ROCKSLIB) -o bin/rows_number.bin
+	strip --strip-all bin/rows_number.bin
+
 
 #dynamic:
-${BINFILE}: obj bin/restore.bin bin/restore_hr.bin bin/human_readable.bin bin/human_readable_batches.bin
+${BINFILE}: obj bin/restore.bin bin/restore_hr.bin bin/human_readable.bin bin/human_readable_batches.bin bin/rows_number.bin
 	$(CC) bin/obj/*.rs.o $(CFLAGS) -levent -ldl -L$(ROCKSPATH) -L$(LEVENTL) $(ROCKSLIB) -rdynamic -o ${BINFILE}
 	strip --strip-all ${BINFILE}
 	@echo
@@ -203,7 +210,7 @@ ${BINFILE}: obj bin/restore.bin bin/restore_hr.bin bin/human_readable.bin bin/hu
 
 
 .PHONY: static
-static: obj bin/restore.bin bin/restore_hr.bin bin/human_readable.bin bin/human_readable_batches.bin
+static: obj bin/restore.bin bin/restore_hr.bin bin/human_readable.bin bin/human_readable_batches.bin bin/rows_number.bin
 	$(CC) bin/obj/*.rs.o $(CFLAGS) $(LEVENTL)/libevent.a -ldl -L$(ROCKSPATH) $(ROCKSLIB) -rdynamic -o ${BINFILE}
 	strip --strip-all ${BINFILE}
 	@echo
@@ -228,6 +235,7 @@ install:
 	$(CP) ${SRC}/bin/restore_hr.bin /usr/local/bin/rocksrestore_hr
 	$(CP) ${SRC}/bin/human_readable.bin /usr/local/bin/rocks_human_readable
 	$(CP) ${SRC}/bin/human_readable_batches.bin /usr/local/bin/rocks_human_readable_batches
+	$(CP) ${SRC}/bin/rows_number.bin /usr/local/bin/rocks_rows_number
 	$(CP) -L ${SRC}/../init.d/rocksserver /etc/init.d/rocksserver
 	mkdir -p /etc/rocksserver
 	$(CP) ${SRC}/config.ini /etc/rocksserver/config.ini
@@ -248,6 +256,7 @@ uninstall:
 	rm -f /usr/local/bin/rocksserver
 	rm -f /usr/local/bin/rocks_human_readable
 	rm -f /usr/local/bin/rocks_human_readable_batches
+	rm -f /usr/local/bin/rocks_rows_number
 	rm -f /etc/init.d/rocksserver
 
 uninstall-clean:
@@ -260,6 +269,7 @@ uninstall-clean:
 	rm -f /usr/local/bin/rocksrestore_hr
 	rm -f /usr/local/bin/rocks_human_readable
 	rm -f /usr/local/bin/rocks_human_readable_batches
+	rm -f /usr/local/bin/rocks_rows_number
 	rm -f /etc/init.d/rocksserver
 
 
