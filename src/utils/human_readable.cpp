@@ -37,31 +37,28 @@ public:
         rocksdb::Options dbOptions;
         dbOptions.merge_operator.reset(new RocksServer::Int64Incrementor);
 
-        auto status = rocksdb::DB::OpenForReadOnly(dbOptions, database_dir, &_db );
+        rocksdb::DB* raw_db;
+        auto status = rocksdb::DB::OpenForReadOnly(dbOptions, database_dir, &raw_db);
         
-        _valid = status.ok();
-        if (!_valid) {
+        if (status.ok()) {
+            _db.reset(raw_db);
+            _valid = true;
+        } else {
             std::cerr << "RocksDB start error:" << std::endl << status.ToString() << std::endl;
             std::cerr << "RocksDB version is " << ROCKSDB_MAJOR << "." << ROCKSDB_MINOR << "." << ROCKSDB_PATCH << std::endl;
         }
     }
 
-    operator bool()
-    {
+    operator bool() {
         return _valid;
     }
 
-    std::unique_ptr<rocksdb::Iterator> keyIterator()
-    {
-        return std::unique_ptr<rocksdb::Iterator>(_db->NewIterator(rocksdb::ReadOptions()));;
+    std::unique_ptr<rocksdb::Iterator> keyIterator() {
+        return std::unique_ptr<rocksdb::Iterator>(_db->NewIterator(rocksdb::ReadOptions()));
     }
 
-    ~RocksDbContainer()
-    {
-        delete _db;
-    }
 private:
-    rocksdb::DB* _db = nullptr;
+    std::unique_ptr<rocksdb::DB> _db;
     bool _valid = false;
 };
 
