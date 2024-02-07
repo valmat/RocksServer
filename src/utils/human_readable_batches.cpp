@@ -84,22 +84,14 @@ int main(int argc, char **argv)
     // Check if RocksDB is started
     if (!db) {return 2;} 
 
-    std::cerr << "batch_num " << batch_num << std::endl;
-
-    std::fstream file;
-    // file.open(output_prefix, std::ios::out | std::ios::binary);
-    // if (!file) {
-    //     std::cerr << "Can't open file \"" << output_prefix << '"' << std::endl;
-    //     return 3;
-    // }
-
     auto it = db.keyIterator();
     it->SeekToFirst();
-
+    
     if(shift > 0) {
         for (size_t index = 0; it->Valid() && index < shift; ++index, it->Next()) {}
     }
     
+    std::fstream file;
     std::string file_name;
     size_t batch_index = 0;
     for (size_t index = 0; it->Valid() && index < limit; ++index, it->Next()) {
@@ -119,15 +111,6 @@ int main(int argc, char **argv)
             << it->value().ToStringView() << std::endl;
     }
 
-
-
-    // auto it = db.keyIterator();
-    // for (it->SeekToFirst(); it->Valid(); it->Next()) {
-    //     file << '[' << it->key().ToStringView() << "]\n" 
-    //         << it->value().ToStringView().size() << "\n"
-    //         << it->value().ToStringView() << std::endl;
-    // }
-
     if (!it->status().ok()) {
         std::cerr << it->status().ToString() << std::endl;
         return 4;
@@ -135,7 +118,6 @@ int main(int argc, char **argv)
 
     return 0;
 }
-
 // 
 // bin/human_readable_batches.bin -f"/path/to/db" -b10000 -t"/path/to/hr_dumps/b_" -e".db" -s1000 -l2000
 // 
