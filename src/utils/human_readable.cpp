@@ -28,7 +28,6 @@ int main(int argc, char **argv)
             case 'h':
                 print_help(*argv);
                 return 1;
-            break;
             case 'f':
                 database_dir = optarg;
             break;
@@ -38,7 +37,6 @@ int main(int argc, char **argv)
             case '?':
                 print_help(*argv);
                 return 1;
-            break;
         };
     };
 
@@ -56,9 +54,9 @@ int main(int argc, char **argv)
     std::ofstream ofs;
 
     if (!output_fname.empty()) {
-        ofs.open(output_fname);
+        ofs.open(output_fname, std::ios::out | std::ios::binary);
         if (!ofs) {
-            std::cerr << "Can't open file \"" << output_fname << "\": " << strerror(errno) << std::endl;
+            std::cerr << "Can't open file \"" << output_fname << '"' << std::endl;
             return 3;
         }
         out = &ofs;
