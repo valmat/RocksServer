@@ -18,11 +18,13 @@
 void print_help(const char *script_name) {
     std::cout << "Usage: " << script_name << " -f<database dir> [-t<output file name>]\n"
               << "Convert RocksDB database to human readable format\n\n"
-              << "-f \tdatabase dir\n"
-              << "-t \toutput file name prefix\n"
-              << "-s \toutput file name sufix (default: .txt)\n"
-              << "-b \tbatch size (number of rows)\n"
-              << "-h \tprint current help and exit\n";
+              << "-f \tDatabase dir\n"
+              << "-t \tOutput file name prefix\n"
+              << "-e \tOutput file name sufix (default: .txt)\n"
+              << "-b \tBatch size (number of rows)\n"
+              << "-s \tShift from the beginning (number of rows, default: 0)\n"
+              << "-l \tLimit on processing (number of rows, default unlimited)\n"
+              << "-h \tPrint current help and exit\n";
 }
 
 std::string gen_name(const std::string& prefix, const std::string& sufix, size_t index, int zeros = 10)
@@ -40,8 +42,10 @@ int main(int argc, char **argv)
     std::string database_dir{}, output_prefix{};
     std::string sufix = ".txt";
     size_t batch_num = 50000;
+    size_t limit = std::numeric_limits<size_t>::max();
+    size_t shift = 0;
 
-    while ( (copt = getopt(argc,argv,"f:t:b:s::h")) != -1) {
+    while ( (copt = getopt(argc,argv,"f:t:b:e::l::s::h")) != -1) {
         switch (copt){
             case 'h':
                 print_help(*argv);
@@ -52,12 +56,18 @@ int main(int argc, char **argv)
             case 't':
                 output_prefix = optarg;
             break;
-            case 's':
+            case 'e':
                 sufix = optarg;
-            break;            
+            break;
             case 'b':
-                batch_num = std::stoul(optarg);;
-            break;            
+                batch_num = std::stoul(optarg);
+            break;
+            case 'l':
+                limit = std::stoul(optarg);
+            break;
+            case 's':
+                shift = std::stoul(optarg);
+            break;
             case '?':
                 print_help(*argv);
                 return 1;
@@ -85,9 +95,14 @@ int main(int argc, char **argv)
 
     auto it = db.keyIterator();
     it->SeekToFirst();
+
+    if(shift > 0) {
+        for (size_t index = 0; it->Valid() && index < shift; ++index, it->Next()) {}
+    }
+    
     std::string file_name;
     size_t batch_index = 0;
-    for (size_t index = 0; it->Valid(); ++index, it->Next()) {
+    for (size_t index = 0; it->Valid() && index < limit; ++index, it->Next()) {
         if(index % batch_num == 0) {
             file_name = gen_name(output_prefix, sufix, batch_index);
             std::cerr << file_name << std::endl;
@@ -122,5 +137,5 @@ int main(int argc, char **argv)
 }
 
 // 
-// bin/human_readable_batches.bin -f"/path/to/db" -b 10000 -t"/path/to/hr_dumps/b_" -s".db"
+// bin/human_readable_batches.bin -f"/path/to/db" -b10000 -t"/path/to/hr_dumps/b_" -e".db" -s1000 -l2000
 // 

@@ -13,9 +13,9 @@
 void print_help(const char *script_name) {
     std::cout << "Usage: " << script_name << " -f<database dir> [-t<output file name>]\n"
               << "Convert RocksDB database to human readable format\n\n"
-              << "-f \tdatabase dir\n"
-              << "-t \toutput file name\n"
-              << "-h \tprint current help and exit\n";
+              << "-f \tDatabase dir\n"
+              << "-t \tOutput file name\n"
+              << "-h \tPrint current help and exit\n";
 }
 
 int main(int argc, char **argv)
