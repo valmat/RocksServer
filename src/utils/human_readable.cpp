@@ -8,6 +8,8 @@
 
 #include <iostream>
 #include <fstream>
+#include <string>
+#include <memory>
 #include <unistd.h>  // getopt
 
 // RocksDB
@@ -17,21 +19,15 @@
 // RocksDB Incrementor
 #include "include/rocks/Int64Incrementor.h"
 
-
-#define HELP_EXIT()  print_help(*argv); return 0;
-
-void print_help(const char *script_name)
-{
-    std::cout << "usege: " << script_name << " -f<database dir> [-t<output file name>]";
-    std::cout << std::endl << "Convert RocksDB database to human readable format";
-    std::cout << std::endl << "";
-    std::cout << std::endl << "-f \tdatabase dir";
-    std::cout << std::endl << "-t \toutput file name";
-    std::cout << std::endl << "-h \tprint current help and exit";
-    std::cout << std::endl;
+void print_help(const char *script_name) {
+    std::cout << "Usage: " << script_name << " -f<database dir> [-t<output file name>]\n"
+              << "Convert RocksDB database to human readable format\n\n"
+              << "-f \tdatabase dir\n"
+              << "-t \toutput file name\n"
+              << "-h \tprint current help and exit\n";
 }
 
-// Simplest RocksDB wrapper container
+// RAII wrapper for RocksDB
 class RocksDbContainer
 {
 public:
@@ -65,16 +61,12 @@ public:
         delete _db;
     }
 private:
-    rocksdb::DB* _db;
+    rocksdb::DB* _db = nullptr;
     bool _valid = false;
 };
 
-
 int main(int argc, char **argv)
 {
-    /*
-     * Get options
-     */
     char copt=0;
     unsigned optcnt = 0;
     std::string database_dir, output_fname = "";
@@ -84,7 +76,8 @@ int main(int argc, char **argv)
         ++optcnt;
         switch (copt){
             case 'h':
-                HELP_EXIT();
+                print_help(*argv);
+                return 1;
             break;
             case 'f':
                 database_dir = optarg;
@@ -93,54 +86,45 @@ int main(int argc, char **argv)
                 output_fname = optarg;
             break;
             case '?':
-                HELP_EXIT();
+                print_help(*argv);
+                return 1;
             break;
         };
     };
 
     // Check if input data are valid
     if(optcnt < 1 || output_fname.empty() || database_dir.empty()) {
-        HELP_EXIT();
+        print_help(*argv);
+        return 1;
     }
 
-    /*
-     * Init RocksDB
-     */
     RocksDbContainer db(database_dir);
-
     // Check if RocksDB is started
-    if (!db) {
-        return 1;
+    if (!db) {return 2;}        
+
+    std::ostream* out = &std::cout;
+    std::ofstream ofs;
+
+    if (!output_fname.empty()) {
+        ofs.open(output_fname);
+        if (!ofs) {
+            std::cerr << "Can't open file \"" << output_fname << "\": " << strerror(errno) << std::endl;
+            return 3;
+        }
+        out = &ofs;
     }
 
-    // Redirected stdout to the file
-    FILE *fp = freopen(output_fname.c_str(), "w", stdout);
-    if ( !fp ) {
-        std::cerr<<"Can't open file \""<< output_fname 
-                 << "\":\n" << strerror(errno) << std::endl;
-        return 1;
-    }
-
-    /*
-     * Iterate over all db keys
-     */
-    std::string key, value;
     auto it = db.keyIterator();
-
     for (it->SeekToFirst(); it->Valid(); it->Next()) {
-        key   = it->key().ToString();
-        value = it->value().ToString();
-        std::cout << '[' << key << ']' << std::endl;
-        std::cout << value.size() << std::endl;
-        std::cout << value << std::endl;
+        *out << '[' << it->key().ToStringView() << "]\n" 
+            << it->value().ToStringView().size() << "\n"
+            << it->value().ToStringView() << std::endl;
     }
 
-    // Check for any errors found during the scan
-    if(!it->status().ok()) {
-        std::cerr<< it->status().ToString() << std::endl;
+    if (!it->status().ok()) {
+        std::cerr << it->status().ToString() << std::endl;
+        return 4;
     }
-    
-    fclose(fp);
 
     return 0;
 }
