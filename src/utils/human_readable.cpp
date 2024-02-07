@@ -21,12 +21,9 @@ void print_help(const char *script_name) {
 int main(int argc, char **argv)
 {
     char copt=0;
-    unsigned optcnt = 0;
-    std::string database_dir, output_fname = "";
+    std::string database_dir{}, output_fname{};
 
-    opterr=0;
     while ( (copt = getopt(argc,argv,"f:t::h")) != -1) {
-        ++optcnt;
         switch (copt){
             case 'h':
                 print_help(*argv);
@@ -45,8 +42,8 @@ int main(int argc, char **argv)
         };
     };
 
-    // Check if input data are valid
-    if(optcnt < 1 || database_dir.empty()) {
+    // Check if input data is valid
+    if(database_dir.empty()) {
         print_help(*argv);
         return 1;
     }
