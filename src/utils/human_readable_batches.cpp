@@ -93,10 +93,9 @@ int main(int argc, char **argv)
     
     std::fstream file;
     std::string file_name;
-    size_t batch_index = 0;
     for (size_t index = 0; it->Valid() && index < limit; ++index, it->Next()) {
         if(index % batch_num == 0) {
-            file_name = gen_name(output_prefix, sufix, batch_index);
+            file_name = gen_name(output_prefix, sufix, index + shift);
             std::cerr << file_name << std::endl;
             file.close();
             file.open(file_name, std::ios::out | std::ios::binary);
@@ -104,7 +103,6 @@ int main(int argc, char **argv)
                 std::cerr << "Can't open file \"" << file_name << '"' << std::endl;
                 return 3;
             }
-            ++batch_index;
         }
         file << '[' << it->key().ToStringView() << "]\n" 
             << it->value().ToStringView().size() << "\n"
