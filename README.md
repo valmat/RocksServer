@@ -1,83 +1,86 @@
-# RocksServer is server for RocksDB
+# RocksServer: A Server for RocksDB
 
+RocksServer supports the following operations:
 
-Supports the following operations:
+* Get a value or multiple values by key or keys
+* Set a value or multiple values by key or keys
+* Delete key or keys from the database
+* Check if a key exists
+* Increment a value by key
+* Iterate over key-value pairs by key prefix
+* Iterate over key-value pairs by seek key or key prefix
 
+For more details, see: [protocol description](protocol.md)
 
-* Get value / multi-values by key / keys
-* Set value / multi-values by key / keys
-* Delete key/keys from DB
-* Check if key exists
-* Imcrement value by key
-* Itereate key-value pairs by key-prefix
-* Itereate key-value pairs by seek key or key-prefix
+## Dependency
+RocksServer depends on [RocksDB](https://github.com/facebook/rocksdb/) and [LibEvent](http://libevent.org/).
 
-For more details see: [protocol description](protocol.md)
-
-##Dependency
-[RocksDB](https://github.com/facebook/rocksdb/),
-[LibEvent](http://libevent.org/)
-
-The compiler should support `C++11`
+The compiler should support `C++11`.
 
 ## Install & Run
-First install [RocksDB dependences](https://github.com/facebook/rocksdb/blob/master/INSTALL.md#dependencies):
 
-```
+First, install [RocksDB dependencies](https://github.com/facebook/rocksdb/blob/master/INSTALL.md#dependencies):
+
+```sh
 sudo apt install libgflags-dev libsnappy-dev zlib1g-dev libbz2-dev liblz4-dev libzstd-dev
 ```
 
-
 Then clone the repository:
-```
+
+```sh
 git clone --recursive https://github.com/valmat/RocksServer
 cd RocksServer
 ```
-or
-```
+
+Or:
+
+```sh
 git clone https://github.com/valmat/RocksServer
 cd RocksServer
-git submodule update
+git submodule update --init
 ```
-After then compile dependencies:
-```
+
+After that, compile the dependencies:
+
+```sh
 ./deps/make.sh
 ```
 
+Compile the server:
 
-Compile:
-```
+```sh
 cd src
 make
 ```
 
-After:
-edit config.ini and run
+Then, edit `config.ini` and run:
 
-```
+```sh
 ./RocksServer.bin config.ini
 ```
 
-Or you can install it:
+Alternatively, you can install it:
 
-switch to root and run
-```
+Switch to root and run:
+
+```sh
 make install
 ```
 
 ## Usage
-Exemple of usage:
+
+Examples of usage:
 * [PHP driver](https://github.com/valmat/rocksdbphp)
 * [Dlang driver](https://github.com/valmat/drocks) ([Dub package](https://code.dlang.org/packages/drocks))
-* [Nodejs driver](https://github.com/valmat/queueServer/tree/master/client/node_rocks)
+* [Node.js driver](https://github.com/valmat/queueServer/tree/master/client/node_rocks)
 
-Or any your own implementation by [protocol description](protocol.md).
+You can also implement your own client based on the [protocol description](protocol.md).
 
+## How to Extend
 
-## How to extend
-First you need implement your own request listener.
-To do this, you should to implement the interface
-```c
+To extend RocksServer, you should first implement your own request listener by implementing the following interface:
+
+```cpp
 template<typename ProtIn, typename ProtOut>
 struct RequestBase: public RequestSuperBase
 {
@@ -85,9 +88,11 @@ struct RequestBase: public RequestSuperBase
 };
 ```
 
-For example:
+Example:
+
 `RequestPing.h`
-```c
+
+```cpp
 struct RequestPing : public RequestBase<ProtocolInTrivial, ProtocolOut>
 {
     virtual void run(const ProtocolInTrivial &in, const ProtocolOut &out) override
@@ -96,9 +101,12 @@ struct RequestPing : public RequestBase<ProtocolInTrivial, ProtocolOut>
     }
 };
 ```
-After that, you need to implement a plugin:
+
+Then, implement a plugin:
+
 `smpl_plug.cpp`
-```c
+
+```cpp
 #include <rocksserver/api.h>
 #include "RequestPing.h"
 
@@ -107,20 +115,26 @@ PLUGIN(Extension &extension)
     extension.bind("/ping", new RequestPing());
 }
 ```
+
 Compile your plugin:
-```
+
+```sh
 g++ -I. -I"/usr/include/rocksserver/include" -Wall -O3 -std=c++11 -fPIC -c smpl_plug.cpp -o smpl_plug.o
 g++ -Wall -std=c++11 -O3 -shared smpl_plug.o -o smpl_plug.so
 ```
-and copy to `/usr/lib/rocksserver/plugins`
-```
+
+Copy it to `/usr/lib/rocksserver/plugins`:
+
+```sh
 cp -f smpl_plug.so /usr/lib/rocksserver/plugins/smpl_plug.so
 ```
-Restart RocksServer.
-See [example](https://github.com/valmat/RocksServer/tree/master/extension_example) how to extend RocksServer.
 
-## How to customize
-Just edit [config.ini](https://github.com/valmat/RocksServer/blob/master/src/config.ini)
+Restart RocksServer. See this [example](https://github.com/valmat/RocksServer/tree/master/extension_example) for how to extend RocksServer.
+
+## How to Customize
+
+To customize RocksServer, edit [config.ini](https://github.com/valmat/RocksServer/blob/master/src/config.ini).
 
 ## License
-[BSD](LICENSE)
+
+RocksServer is licensed under the [BSD License](LICENSE).
