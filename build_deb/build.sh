@@ -31,10 +31,12 @@ cp "${SRCDIR}/bin/RocksServer.bin"    "pkg/usr/local/bin/rocksserver"
 cp "${SRCDIR}/bin/restore.bin"        "pkg/usr/local/bin/rocksrestore"
 cp "${SRCDIR}/bin/restore_hr.bin"     "pkg/usr/local/bin/rocksrestore_hr"
 cp "${SRCDIR}/bin/human_readable.bin" "pkg/usr/local/bin/rocks_human_readable"
+cp "${SRCDIR}/bin/rows_number.bin"    "pkg/usr/local/bin/rocks_rows_number"
+cp "${SRCDIR}/bin/human_readable_batches.bin" "pkg/usr/local/bin/rocks_human_readable_batches"
 
-cp "${SRCDIR}/config.ini"           "pkg/etc/rocksserver/config.ini"
-cp "scripts/initd"                  "pkg/etc/init.d/rocksserver"
-cp "scripts/crond"                  "pkg/etc/cron.d/rocksserver"
+cp "${SRCDIR}/config.ini" "pkg/etc/rocksserver/config.ini"
+cp "scripts/initd"        "pkg/etc/init.d/rocksserver"
+cp "scripts/crond"        "pkg/etc/cron.d/rocksserver"
 
 ##############################################
 last_tag=$(git -C "." describe --tags --candidates=1)
