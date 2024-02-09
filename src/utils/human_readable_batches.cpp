@@ -20,7 +20,7 @@ void print_help(const char *script_name) {
               << "Convert RocksDB database to human readable format\n\n"
               << "-f \tDatabase dir\n"
               << "-t \tOutput file name prefix\n"
-              << "-e \tOutput file name sufix (default: .txt)\n"
+              << "-e \tOutput file name suffix (default: .txt)\n"
               << "-b \tBatch size (number of rows)\n"
               << "-s \tShift from the beginning (number of rows, default: 0)\n"
               << "-l \tLimit on processing (number of rows, default unlimited)\n"
@@ -28,11 +28,11 @@ void print_help(const char *script_name) {
               << "-h \tPrint current help and exit\n";
 }
 
-std::string gen_name(const std::string& prefix, const std::string& sufix, size_t index, int zeros = 10)
+std::string gen_name(const std::string& prefix, const std::string& suffix, size_t index, int zeros = 10)
 {
     std::ostringstream ss;
     ss << prefix;
-    ss << std::setw(zeros) << std::setfill('0') << index << sufix;
+    ss << std::setw(zeros) << std::setfill('0') << index << suffix;
     return ss.str();
 }
 
@@ -57,9 +57,9 @@ bool run_cmd(std::string cmd, const std::string& file_name)
 
 int main(int argc, char **argv)
 {
-    char copt=0;
+    int copt=0;
     std::string database_dir{}, output_prefix{}, cmd{};
-    std::string sufix = ".txt";
+    std::string suffix = ".txt";
     size_t batch_num = 50000;
     size_t limit = std::numeric_limits<size_t>::max();
     size_t shift = 0;
@@ -76,7 +76,7 @@ int main(int argc, char **argv)
                 output_prefix = optarg;
             break;
             case 'e':
-                sufix = optarg;
+                suffix = optarg;
             break;
             case 'b':
                 batch_num = std::stoul(optarg);
@@ -115,42 +115,42 @@ int main(int argc, char **argv)
     
     std::fstream file;
     std::string file_name;
-    bool are_lines_written = false;
+    bool has_written_lines = false;
     for (size_t index = 0; it->Valid() && index < limit; ++index, it->Next()) {
         if(index % batch_num == 0) {
             file.flush();
             file.close();
             if(!run_cmd(cmd, file_name)) {
-                std::cerr << "Run '" << cmd << "' on file '" << file_name << "' failed." << std::endl;
+                std::cerr << "Failed to run '" << cmd << "' on file '" << file_name << "'" << std::endl;
                 return 3;
             }
 
-            file_name = gen_name(output_prefix, sufix, index + shift);
+            file_name = gen_name(output_prefix, suffix, index + shift);
             std::cerr << file_name << std::endl;
             file.open(file_name, std::ios::out | std::ios::binary);
             if (!file) {
-                std::cerr << "Can't open file \"" << file_name << '"' << std::endl;
+                std::cerr << "Failed to open file: \"" << file_name << '"' << std::endl;
                 return 4;
             }
-            are_lines_written = false;
+            has_written_lines = false;
         }
         file << '[' << it->key().ToStringView() << "]\n" 
             << it->value().ToStringView().size() << "\n"
             << it->value().ToStringView() << std::endl;
 
-        are_lines_written = true;
+        has_written_lines = true;
         if (file.fail()) {
-            std::cerr << "Can't write file \"" << file_name << '"' << std::endl;
+            std::cerr << "Failed to write to file: \"" << file_name << '"' << std::endl;
             file.flush();
             file.close();
             return 5;
         }            
     }
 
-    if (are_lines_written) {
+    if (has_written_lines) {
         file.close();
         if(!run_cmd(cmd, file_name)) {
-            std::cerr << "Run '" << cmd << "' on file '" << file_name << "' failed." << std::endl;
+            std::cerr << "Failed to run '" << cmd << "' on file '" << file_name << "'" << std::endl;
             return 6;
         }
     }    
