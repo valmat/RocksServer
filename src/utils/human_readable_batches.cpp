@@ -107,11 +107,17 @@ int main(int argc, char **argv)
         file << '[' << it->key().ToStringView() << "]\n" 
             << it->value().ToStringView().size() << "\n"
             << it->value().ToStringView() << std::endl;
+
+        if (file.fail()) {
+            std::cerr << "Can't write file \"" << file_name << '"' << std::endl;
+            file.close();
+            return 4;
+        }            
     }
 
     if (!it->status().ok()) {
         std::cerr << it->status().ToString() << std::endl;
-        return 4;
+        return 5;
     }
 
     return 0;
