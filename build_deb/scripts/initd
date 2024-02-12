@@ -32,8 +32,8 @@ fi
 
 do_start() {
     RUNCMD="$BINEXEC $CONF"
-    su -c "$RUNCMD &" $OWNER
-    ps -aef | grep $OWNER | grep "$RUNCMD" | grep -v grep | awk '{print $2}' > $PIDFILE
+    $RUNCMD &
+    ps -aef | grep "$RUNCMD" | grep -v grep | awk '{print $2}' > $PIDFILE
 }
 
 do_stop() {
