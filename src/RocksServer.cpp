@@ -71,9 +71,13 @@ int main(int argc, char **argv)
      *  Specify uid if you would like to RocksServer changing process owner or keep it value 0 to stay as root.
      *  
      */
-    if(unsigned int owner_uid = cfg.get("owner_uid", 0u); !change_owner(owner_uid)) {
-        std::cerr << "Can't change the owner to " << owner_uid << "!" << std::endl;
-        return 5;
+    {
+        unsigned int owner_uid = cfg.get("owner_uid", 0u);
+        unsigned int owner_gid = cfg.get("owner_gid", owner_uid);
+        if(!change_owner(owner_uid, owner_gid)) {
+            std::cerr << "Failed to change the owner to " << owner_uid << ':' << owner_uid << "." << std::endl;
+            return 5;
+        }
     }
 
     /**
