@@ -23,20 +23,30 @@ namespace RocksServer {
         bool check(const ProtocolOut &out) const
         {
             // Detect if current method is POST
-            if(!request.isPost()) {
+            if(!isPost()) {
                 EvLogger::writeLog("Request method should be POST");
                 out.fail();
                 return false;
             }
 
             // Check if POST data is empty
-            if(!raw.size()) {
+            if(isEmpty()) {
                 EvLogger::writeLog("Request POST data is empty");
                 out.fail();
                 return false;
             }
 
             return true;
+        }
+
+        bool isPost() const
+        {
+            return request.isPost();
+        }
+
+        bool isEmpty() const
+        {
+            return !raw.size();
         }
 
         // retrive key
