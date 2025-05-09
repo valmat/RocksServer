@@ -91,11 +91,17 @@ namespace RocksServer {
          */
         void send() const;
 
+        void set_code(int code, const char* reason);
+        void set_code(int code);
+        int code() const { return _code; }
+        const char* reason() const { return _reason; }
+
     private:
         evbuffer *_evb;
         evhttp_request *_req;
         mutable bool _reply_sent = false;
-        
+        int _code = 200;
+        const char* _reason = "OK";
     };
 
     //typedef EvResponse EvBuffer;

@@ -1,5 +1,5 @@
 /**
- *  EvResponse.h
+ *  EvResponse.cpp
  *
  *  This is a simple wrapper around evbuffer_* functions
  *
@@ -51,6 +51,26 @@ namespace RocksServer {
         return *this;
     }
 
+    void EvResponse::set_code(int code, const char* reason)
+    {
+        _code = code;
+        _reason = reason;
+    }
+
+    void EvResponse::set_code(int code)
+    {
+        _code = code;
+        switch(code) {
+            case 200: _reason = "OK"; break;
+            case 400: _reason = "Bad Request"; break;
+            case 401: _reason = "Unauthorized"; break;
+            case 403: _reason = "Forbidden"; break;
+            case 404: _reason = "Not Found"; break;
+            case 500: _reason = "Internal Server Error"; break;
+            default:  _reason = "Unknown Status"; break;
+        }
+    }    
+    
     /**
      *  Send buffer as server reply
      *  @param       event buffer wrapper
@@ -58,7 +78,7 @@ namespace RocksServer {
     void EvResponse::send() const
     {
         if(!_reply_sent && _evb) {
-            evhttp_send_reply(_req, HTTP_OK, "OK", _evb);
+            evhttp_send_reply(_req, _code, _reason, _evb);
             _reply_sent = true;
         }
     }
