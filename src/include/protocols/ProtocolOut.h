@@ -94,6 +94,17 @@ namespace RocksServer {
             return *this;
         }
 
+        const ProtocolOut& setCode(int code, const char* reason) const
+        {
+            resp.set_code(code, reason);
+            return *this;
+        }
+        const ProtocolOut& setCode(int code) const
+        {
+            resp.set_code(code);
+            return *this;
+        }
+
     private:
         const EvResponse &resp;
     };

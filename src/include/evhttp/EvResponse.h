@@ -91,8 +91,8 @@ namespace RocksServer {
          */
         void send() const;
 
-        void set_code(int code, const char* reason);
-        void set_code(int code);
+        void set_code(int code, const char* reason) const;
+        void set_code(int code) const;
         int code() const { return _code; }
         const char* reason() const { return _reason; }
 
@@ -100,8 +100,9 @@ namespace RocksServer {
         evbuffer *_evb;
         evhttp_request *_req;
         mutable bool _reply_sent = false;
-        int _code = 200;
-        const char* _reason = "OK";
+        // mutable for backward compatibility
+        mutable int _code = 200;
+        mutable const char* _reason = "OK";
     };
 
     //typedef EvResponse EvBuffer;
