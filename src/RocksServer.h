@@ -97,6 +97,7 @@
 
 // Extensions
 #include "include/Extension.h"
+#include "include/PluginABI.h"
 #include "extend/PlugContainer.h"
 #include "extend/Extend.h"
 

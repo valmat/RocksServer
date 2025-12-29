@@ -29,11 +29,10 @@ namespace RocksServer {
             }
             
             std::string plug_file = extdir + "/" + dirp->d_name;
-            std::cerr << "Loaded extension: " << dirp->d_name << std::endl;
+            std::cerr << "Load extension: " << dirp->d_name << std::endl;
 
             handles.emplace_front(std::move(plug_file), server, rdb, cfg);
         }
         closedir(dp);
     }
-
 }
