@@ -53,6 +53,11 @@ namespace RocksServer {
             return add(data, strlen(data));
         }
 
+        const EvResponse& add() const
+        {
+            return *this;
+        }
+
         /**
          *  add string to buffer
          *  @param      string

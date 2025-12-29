@@ -11,6 +11,16 @@
 
 namespace RocksServer {
 
+    template<class T>
+    struct is_optional : std::false_type {};
+
+    template<class U>
+    struct is_optional<std::optional<U>> : std::true_type {};
+
+    template<class T>
+    inline constexpr bool is_optional_v = is_optional<std::remove_cvref_t<T>>::value;
+
+
     class ProtocolOut
     {
     public:
@@ -64,6 +74,56 @@ namespace RocksServer {
         {
             resp.add(std::forward<ValueType>(val)...);
             return *this;
+        }
+
+        const ProtocolOut& setStr() const
+        {
+            return *this;
+        }
+
+        // optional
+        template<class Opt>
+            requires is_optional_v<Opt>
+        const ProtocolOut& setStr(Opt&& opt) const
+        {
+            if (!opt) {return setStr();}
+            return setStr(std::forward<Opt>(opt).value());
+        }
+
+        template<class... Opt>
+            requires (is_optional_v<Opt> && ...)
+        const ProtocolOut& setStr(Opt&&... opt) const
+        {
+            if (!(... || static_cast<bool>(opt)))
+                return setStr();
+
+            ((opt ? (void)setStr(std::forward<Opt>(opt).value())
+                  : (void)setStr()),
+             ...);
+
+            return *this;
+        }
+
+        template<typename KeyType, class Opt>
+            requires is_optional_v<Opt>
+        const ProtocolOut& setPair(const KeyType& key, Opt&& opt) const
+        {
+            if (opt) {
+                return setPair(key, std::forward<Opt>(opt).value());
+            }
+
+            return setFailPair(key);
+        }
+
+        template<class Opt>
+            requires is_optional_v<Opt>
+        const ProtocolOut& setValue(Opt&& opt) const
+        {
+            if (opt) {
+                return setValue(std::forward<Opt>(opt).value());
+            }
+
+            return setFailValue();
         }
 
         template<typename ValueType>

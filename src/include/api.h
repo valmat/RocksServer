@@ -13,8 +13,16 @@
 #include <unordered_map>
 #include <forward_list>
 
+#include <memory>
+#include <optional>
+#include <span>
+#include <string>
+#include <string_view>
+#include <type_traits>
+#include <utility>
+
 // C headers
-#include <string.h>
+#include <cstring>
 
 // Type traits
 #include <rocksserver/traits.h>
