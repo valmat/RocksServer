@@ -77,25 +77,6 @@ namespace RocksServer {
         _db.reset(raw);
     }
 
-    // --- Status-oriented implementations ---
-
-    /*rocksdb::Status RocksDBWrapper::setStatus(rocksdb::Slice key, rocksdb::Slice value)
-    {
-        if (!_db) {
-            return rocksdb::Status::InvalidArgument("DB is not open");
-        }
-        return _db->Put(rocksdb::WriteOptions(), key, value);
-    }
-
-    rocksdb::Status RocksDBWrapper::getStatus(rocksdb::Slice key, std::string& value) const
-    {
-        value.clear();
-        if (!_db) {
-            return rocksdb::Status::InvalidArgument("DB is not open");
-        }
-        return _db->Get(rocksdb::ReadOptions(), key, &value);
-    }*/
-
     // 
     // legacy methods
     // 
@@ -197,44 +178,32 @@ namespace RocksServer {
         return keyExistImpl(_db.get(), key, value, nullptr, _status);
     }
 
-    // new optional-mget
-    /*
+    // 
+    // NEW API
+    // 
     std::vector<std::optional<std::string>>
-    RocksDBWrapper::mget(std::span<const std::string_view> keys,
-                         std::vector<rocksdb::Status>* statuses_out) const
+    RocksDBWrapper::mget(const std::vector<rocksdb::Slice>& keys,
+         std::vector<rocksdb::Status>* statuses_out) const
     {
         std::vector<std::optional<std::string>> out;
         out.resize(keys.size());
 
-        if (!_db) {
-            if (statuses_out) {
-                statuses_out->assign(keys.size(), rocksdb::Status::InvalidArgument("DB is not open"));
-            }
-            return out;
-        }
-
-        std::vector<rocksdb::Slice> slices;
-        slices.reserve(keys.size());
-        for (auto k : keys) {
-            slices.emplace_back(k.data(), k.size());
-        }
-
         std::vector<std::string> values;
         values.reserve(keys.size());
 
-        auto statuses = _db->MultiGet(rocksdb::ReadOptions(), slices, &values);
+        auto statuses = _db->MultiGet(rocksdb::ReadOptions(), keys, &values);
 
         if (statuses_out) {
             *statuses_out = statuses;
         }
 
         for (size_t i = 0; i < keys.size(); ++i) {
-            if (statuses[i].ok()) {
+            if (statuses[i].ok()) [[likely]] {
                 out[i] = std::move(values[i]);
             } else if (statuses[i].IsNotFound()) {
                 out[i] = std::nullopt;
             } else {
-                // ошибка: оставляем nullopt, а конкретику можно взять из statuses_out
+                // error: leave nullopt, but the specifics can be taken from statuses_out
                 out[i] = std::nullopt;
             }
         }
@@ -243,16 +212,30 @@ namespace RocksServer {
     }
 
     std::vector<std::optional<std::string>>
+    RocksDBWrapper::mget(std::span<const std::string_view> keys,
+                         std::vector<rocksdb::Status>* statuses_out) const
+    {
+        std::vector<rocksdb::Slice> slices;
+        slices.reserve(keys.size());
+        for (auto k : keys) {
+            slices.emplace_back(k.data(), k.size());
+        }
+
+        return mget(slices, statuses_out);
+    }
+
+    std::vector<std::optional<std::string>>
     RocksDBWrapper::mget(const std::vector<std::string>& keys,
                          std::vector<rocksdb::Status>* statuses_out) const
     {
-        std::vector<std::string_view> views;
-        views.reserve(keys.size());
-        for (const auto& s : keys) {
-            views.emplace_back(s);
+        std::vector<rocksdb::Slice> slices;
+        slices.reserve(keys.size());
+        for (auto k : keys) {
+            slices.emplace_back(k.data(), k.size());
         }
-        return mget(std::span<const std::string_view>(views), statuses_out);
+
+        return mget(slices, statuses_out);
     }
-    */
+    
 
 } // namespace RocksServer

@@ -197,26 +197,13 @@ namespace RocksServer {
             return _status.ok();
         }
 
+        // 
         // NEW API
-        /*
+        // 
+        std::vector<std::optional<std::string>>
+        mget(const std::vector<rocksdb::Slice>& keys,
+             std::vector<rocksdb::Status>* statuses_out = nullptr) const;
 
-        // Status-ориентированные методы (предпочтительнее для нового кода)
-        // rocksdb::Status setStatus(rocksdb::Slice key, rocksdb::Slice value);
-        // rocksdb::Status getStatus(rocksdb::Slice key, std::string& value) const;
-
-        // string_view удобство
-        // rocksdb::Status setStatus(std::string_view key, std::string_view value)
-        // {
-        //     return setStatus(rocksdb::Slice(key.data(), key.size()),
-        //                      rocksdb::Slice(value.data(), value.size()));
-        // }
-
-        // rocksdb::Status getStatus(std::string_view key, std::string& value) const
-        // {
-        //     return getStatus(rocksdb::Slice(key.data(), key.size()), value);
-        // }
-
-        // optional-mget (с возможностью забрать статусы при необходимости)
         std::vector<std::optional<std::string>>
         mget(std::span<const std::string_view> keys,
              std::vector<rocksdb::Status>* statuses_out = nullptr) const;
@@ -224,8 +211,7 @@ namespace RocksServer {
         std::vector<std::optional<std::string>>
         mget(const std::vector<std::string>& keys,
              std::vector<rocksdb::Status>* statuses_out = nullptr) const;
-        */
-
+        
     private:
         std::unique_ptr<rocksdb::DB> _db;
         mutable rocksdb::Status _status;

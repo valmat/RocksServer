@@ -11,9 +11,9 @@
 namespace RocksServer {
 
     struct PluginAbiVersion final {
-        std::uint8_t  major = 0;
-        std::uint8_t  minor = 5;
-        std::uint16_t patch = 4;
+        std::uint8_t  major = 1;
+        std::uint8_t  minor = 0;
+        std::uint16_t patch = 0;
 
         consteval std::uint32_t value() const noexcept
         {
