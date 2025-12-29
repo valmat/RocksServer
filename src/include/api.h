@@ -63,8 +63,12 @@
 
 // Extensions
 #include <rocksserver/Extension.h>
+#include "rocksserver/PluginABI.h"
 
+#define PLUGIN                                                         \
+    extern "C" std::uint32_t rocksserver_plugin_abi_version() noexcept \
+    {return RocksServer::pluginAbiVersion;}                            \
+    extern "C" void rocksserver_plugin
 
-#define PLUGIN extern "C" void plugin
 
 #endif // ROCKSSERVER_API_H

@@ -25,6 +25,6 @@ namespace RocksServer {
         // A function pointer obtained through dlopen
         void* handle;
         // Plugin function name
-        const char* plug_fname = "plugin";
+        const char* plug_fname = "rocksserver_plugin";
     };
 }
