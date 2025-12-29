@@ -211,6 +211,12 @@ namespace RocksServer {
         std::vector<std::optional<std::string>>
         mget(const std::vector<std::string>& keys,
              std::vector<rocksdb::Status>* statuses_out = nullptr) const;
+
+        bool set(std::string_view key, std::string_view value);
+
+        std::optional<std::string> get(std::string_view key) const;
+
+        bool del(std::string_view key);
         
     private:
         std::unique_ptr<rocksdb::DB> _db;

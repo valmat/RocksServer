@@ -217,7 +217,7 @@ namespace RocksServer {
     {
         std::vector<rocksdb::Slice> slices;
         slices.reserve(keys.size());
-        for (auto k : keys) {
+        for (auto&& k : keys) {
             slices.emplace_back(k.data(), k.size());
         }
 
@@ -230,11 +230,34 @@ namespace RocksServer {
     {
         std::vector<rocksdb::Slice> slices;
         slices.reserve(keys.size());
-        for (auto k : keys) {
+        for (const auto& k : keys) {
             slices.emplace_back(k.data(), k.size());
         }
 
         return mget(slices, statuses_out);
+    }
+
+    bool RocksDBWrapper::set(std::string_view key, std::string_view value)
+    {
+        _status = _db->Put(rocksdb::WriteOptions(), key, value);
+        return _status.ok();
+    }
+
+    std::optional<std::string> RocksDBWrapper::get(std::string_view key) const
+    {
+        std::string value;
+        _status = _db->Get(rocksdb::ReadOptions(), key, &value);
+        if (!_status.ok()) {
+            return std::nullopt;
+        }
+
+        return std::optional<std::string>{std::move(value)};
+    }
+
+    bool RocksDBWrapper::del(std::string_view key)
+    {
+        _status = _db->Delete(rocksdb::WriteOptions(), key);
+        return _status.ok();
     }
     
 
