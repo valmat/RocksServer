@@ -15,7 +15,8 @@ namespace RocksServer {
      * @param IniConfigs
      * @param DefaultConfigs
      */
-    RocksDBWrapper::RocksDBWrapper(const IniConfigs &cfg, const DefaultConfigs &dfCfg) noexcept
+    RocksDBWrapper::RocksDBWrapper(const IniConfigs& cfg, const DefaultConfigs& dfCfg)
+        : _db(nullptr)
     {
         // DB path distantion
         std::string dbpath = cfg.get("db_path", dfCfg.db_path);
@@ -63,15 +64,41 @@ namespace RocksServer {
 
         if( cfg.has("del_obsolete_files_period") ) {
             dbOptions.delete_obsolete_files_period_micros 
-                = cfg.get<uint64_t>("del_obsolete_files_period")* 1000000;
+                = cfg.get<uint64_t>("del_obsolete_files_period")* 1000000ULL;
         }
 
-        dbOptions.create_if_missing          = true;
+        dbOptions.create_if_missing = true;
 
-        dbOptions.merge_operator.reset(new Int64Incrementor);
+        // rocksdb::Options::merge_operator is a shared_ptr
+        dbOptions.merge_operator = std::make_shared<Int64Incrementor>();
 
-        _status = rocksdb::DB::Open(dbOptions, dbpath, &_db);
+        rocksdb::DB* raw = nullptr;
+        _status = rocksdb::DB::Open(dbOptions, dbpath, &raw);
+        _db.reset(raw);
     }
+
+    // --- Status-oriented implementations ---
+
+    /*rocksdb::Status RocksDBWrapper::setStatus(rocksdb::Slice key, rocksdb::Slice value)
+    {
+        if (!_db) {
+            return rocksdb::Status::InvalidArgument("DB is not open");
+        }
+        return _db->Put(rocksdb::WriteOptions(), key, value);
+    }
+
+    rocksdb::Status RocksDBWrapper::getStatus(rocksdb::Slice key, std::string& value) const
+    {
+        value.clear();
+        if (!_db) {
+            return rocksdb::Status::InvalidArgument("DB is not open");
+        }
+        return _db->Get(rocksdb::ReadOptions(), key, &value);
+    }*/
+
+    // 
+    // legacy methods
+    // 
 
     /**
      * Get array values by array keys
@@ -79,16 +106,13 @@ namespace RocksServer {
      * @param statuses
      * @return values
      */
-    std::vector<std::string> RocksDBWrapper::mget(const std::vector<rocksdb::Slice> &keys, std::vector<rocksdb::Status> &statuses) const
+    std::vector<std::string> RocksDBWrapper::mget(
+        const std::vector<rocksdb::Slice>& keys,
+        std::vector<rocksdb::Status>& statuses) const
     {
-        // result values
         std::vector<std::string> values;
         values.reserve(keys.size());
-        
-        // result statuses
-        statuses.reserve(keys.size());
 
-        // filling values
         statuses = _db->MultiGet(rocksdb::ReadOptions(), keys, &values);
         return values;
     }
@@ -99,13 +123,14 @@ namespace RocksServer {
      * @param statuses
      * @return values
      */
-    std::vector<std::string> RocksDBWrapper::mget(const std::vector<std::string> &keys, std::vector<rocksdb::Status> &statuses) const
+    std::vector<std::string> RocksDBWrapper::mget(
+        const std::vector<std::string>& keys,
+        std::vector<rocksdb::Status>& statuses) const
     {
         std::vector<rocksdb::Slice> slice_keys;
         slice_keys.reserve(keys.size());
 
-        // filling slices vector
-        for(auto& key: keys) {
+        for (const auto& key : keys) {
             slice_keys.emplace_back(key);
         }
 
@@ -116,34 +141,36 @@ namespace RocksServer {
      * commit batch
      * @param   RocksDB write batch
      */
-    bool RocksDBWrapper::commit(Batch &batch)
+    bool RocksDBWrapper::commit(Batch& batch)
     {
         _status = _db->Write(rocksdb::WriteOptions(), &batch.batch);
         return _status.ok();
     }
 
-    /**
-     * Fast check exist key
-     * @param string key
-     * @param string value. If the value exists, it can be retrieved. But there is no guarantee that it will be retrieved
-     * @param bool value_found.
-     * @return bool (true if key exist)
-     */
-    bool RocksDBWrapper::keyExist(const rocksdb::Slice &key, std::string &value, bool &value_found) const
+    static bool keyExistImpl(rocksdb::DB* db,
+                             const rocksdb::Slice& key,
+                             std::string& value,
+                             bool* value_found,
+                             rocksdb::Status& last_status)
     {
-        bool isExist = _db->KeyMayExist(rocksdb::ReadOptions(), key, &value, &value_found);
-        if(!isExist) {
+        bool local_found = false;
+        bool* found_ptr = value_found ? value_found : &local_found;
+
+        bool may_exist = db->KeyMayExist(rocksdb::ReadOptions(), key, &value, found_ptr);
+        if (!may_exist) {
+            last_status = rocksdb::Status::NotFound();
             return false;
-        } else if(isExist && value_found) {
+        }
+        if (*found_ptr) {
+            last_status = rocksdb::Status::OK();
             return true;
         }
-        // else
 
         // If Bloom Filter says that the key is found, it is necessary to further check
         // See: https://github.com/facebook/rocksdb/wiki/RocksDB-Bloom-Filter
         // See: http://rocksdb.org/blog/1427/new-bloom-filter-format/
-        _status = _db->Get(rocksdb::ReadOptions(), key, &value);
-        return _status.ok();
+        last_status = db->Get(rocksdb::ReadOptions(), key, &value);
+        return last_status.ok();
     }
 
     /**
@@ -153,22 +180,79 @@ namespace RocksServer {
      * @param bool value_found.
      * @return bool (true if key exist)
      */
-    bool RocksDBWrapper::keyExist(const rocksdb::Slice &key, std::string &value) const
+    bool RocksDBWrapper::keyExist(const rocksdb::Slice& key, std::string& value, bool& value_found) const
     {
-        bool value_found;
-        bool isExist = _db->KeyMayExist(rocksdb::ReadOptions(), key, &value, &value_found);
-        if(!isExist) {
-            return false;
-        } else if(isExist && value_found) {
-            return true;
-        }
-        // else
-
-        // If Bloom Filter says that the key is found, it is necessary to further check
-        // See: https://github.com/facebook/rocksdb/wiki/RocksDB-Bloom-Filter
-        // See: http://rocksdb.org/blog/1427/new-bloom-filter-format/
-        _status = _db->Get(rocksdb::ReadOptions(), key, &value);
-        return _status.ok();
+        return keyExistImpl(_db.get(), key, value, &value_found, _status);
     }
 
-}
+    /**
+     * Fast check exist key
+     * @param string key
+     * @param string value. If the value exists, it can be retrieved. But there is no guarantee that it will be retrieved
+     * @param bool value_found.
+     * @return bool (true if key exist)
+     */
+    bool RocksDBWrapper::keyExist(const rocksdb::Slice& key, std::string& value) const
+    {
+        return keyExistImpl(_db.get(), key, value, nullptr, _status);
+    }
+
+    // new optional-mget
+    /*
+    std::vector<std::optional<std::string>>
+    RocksDBWrapper::mget(std::span<const std::string_view> keys,
+                         std::vector<rocksdb::Status>* statuses_out) const
+    {
+        std::vector<std::optional<std::string>> out;
+        out.resize(keys.size());
+
+        if (!_db) {
+            if (statuses_out) {
+                statuses_out->assign(keys.size(), rocksdb::Status::InvalidArgument("DB is not open"));
+            }
+            return out;
+        }
+
+        std::vector<rocksdb::Slice> slices;
+        slices.reserve(keys.size());
+        for (auto k : keys) {
+            slices.emplace_back(k.data(), k.size());
+        }
+
+        std::vector<std::string> values;
+        values.reserve(keys.size());
+
+        auto statuses = _db->MultiGet(rocksdb::ReadOptions(), slices, &values);
+
+        if (statuses_out) {
+            *statuses_out = statuses;
+        }
+
+        for (size_t i = 0; i < keys.size(); ++i) {
+            if (statuses[i].ok()) {
+                out[i] = std::move(values[i]);
+            } else if (statuses[i].IsNotFound()) {
+                out[i] = std::nullopt;
+            } else {
+                // ошибка: оставляем nullopt, а конкретику можно взять из statuses_out
+                out[i] = std::nullopt;
+            }
+        }
+
+        return out;
+    }
+
+    std::vector<std::optional<std::string>>
+    RocksDBWrapper::mget(const std::vector<std::string>& keys,
+                         std::vector<rocksdb::Status>* statuses_out) const
+    {
+        std::vector<std::string_view> views;
+        views.reserve(keys.size());
+        for (const auto& s : keys) {
+            views.emplace_back(s);
+        }
+        return mget(std::span<const std::string_view>(views), statuses_out);
+    }
+    */
+
+} // namespace RocksServer
