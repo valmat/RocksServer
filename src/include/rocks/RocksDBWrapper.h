@@ -225,25 +225,19 @@ namespace RocksServer {
         {
             constexpr std::size_t N = sizeof...(Keys);
 
-            std::array<std::string_view, N> views{
-                std::string_view{std::forward<Keys>(keys)}...
+            std::vector<rocksdb::Slice> slices{
+                rocksdb::Slice{std::forward<Keys>(keys)}...
             };
-
-            std::vector<rocksdb::Slice> slices;
-            slices.reserve(N);
-            for (auto v : views) {
-                slices.emplace_back(v.data(), v.size());
-            }
 
             std::vector<std::string> values;
             values.resize(N);
 
-            auto st_vec = _db->MultiGet(rocksdb::ReadOptions(), slices, &values);
+            auto statuses = _db->MultiGet(rocksdb::ReadOptions(), slices, &values);
 
             std::array<std::optional<std::string>, N> result{};
 
             for (std::size_t i = 0; i < N; ++i) {
-                if (st_vec[i].ok()) [[likely]] {
+                if (statuses[i].ok()) [[likely]] {
                     result[i] = std::move(values[i]);
                 } else {
                     result[i] = std::nullopt;
