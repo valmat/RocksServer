@@ -23,10 +23,13 @@ namespace RocksServer {
 
         // Set a key-value pairs to the batch
         template <typename T>
-        typename std::enable_if<traits::may_iterable<T>::value, Batch &>::type
+        typename std::enable_if<
+            traits::may_iterable<T>::value && !traits::may_string<T>::value,
+            Batch &
+        >::type
         set(T &&iterable)
         {
-            for(auto &&it : iterable) {
+            for (auto &&it : iterable) {
                 set(it);
             }
             return *this;
@@ -45,23 +48,41 @@ namespace RocksServer {
             return set(std::move(pair.first), std::move(pair.second));
         }
 
+        Batch & set(std::string_view key, std::string_view value)
+        {
+            batch.Put(key, value);
+            return *this;
+        }
+
         // Delete a key
         template <typename T>
-        typename std::enable_if<!traits::may_iterable<T>::value, Batch &>::type
+        typename std::enable_if<
+            !traits::may_iterable<T>::value || traits::may_string<T>::value,
+            Batch &
+        >::type
         del(T &&key)
         {
             batch.Delete(std::forward<T>(key));
             return *this;
         }
 
-        // Delete a keys
+        // Delete keys
         template <typename T>
-        typename std::enable_if<traits::may_iterable<T>::value, Batch &>::type
+        typename std::enable_if<
+            traits::may_iterable<T>::value && !traits::may_string<T>::value,
+            Batch &
+        >::type
         del(T &&iterable)
         {
-            for(auto &&it : iterable) {
-                del(it);
+            for (auto &&it : iterable) {
+                del(std::forward<decltype(it)>(it));
             }
+            return *this;
+        }
+
+        Batch & del(std::string_view key)
+        {
+            batch.Delete(key);
             return *this;
         }
 
