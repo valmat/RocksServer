@@ -27,18 +27,33 @@ namespace RocksServer {
         ProtocolOut(const EvResponse &r) :resp(r) {}
         ProtocolOut(EvResponse &&r) :resp(std::move(r)) {}
 
-        template<typename T, typename = typename std::enable_if<traits::may_string<T>::value, void>::type>
+        // template<typename T, typename = typename std::enable_if<traits::may_string<T>::value, void>::type>
+        template <typename T>
+            requires traits::string_arg_c<T>
         const ProtocolOut& setValue(T &&val) const
         {
-            resp.add_printf("%lu\n%.*s\n", val.size(), val.size(), val.data());
+            resp.add_printf("%zu\n%.*s\n", val.size(), val.size(), val.data());
+            return *this;
+        }
+        const ProtocolOut& setValue(std::string_view val) const
+        {
+            resp.add_printf("%zu\n%.*s\n", val.size(), val.size(), val.data());
             return *this;
         }
         const ProtocolOut& setValue(const char *val) const
         {
             size_t len = strlen(val);
-            resp.add_printf("%lu\n%.*s\n", len, len, val);
+            resp.add_printf("%zu\n%.*s\n", len, len, val);
             return *this;
         }
+        template <size_t N>
+        const ProtocolOut& setValue(const char (&val)[N]) const
+        {
+            // N includes the terminating '\0' in the string literal
+            constexpr size_t len = (N > 0) ? (N - 1) : 0;
+            resp.add_printf("%zu\n%.*s\n", len, (int)len, val);
+            return *this;
+        }        
         
         const ProtocolOut& setFailValue() const
         {
@@ -50,7 +65,7 @@ namespace RocksServer {
         const ProtocolOut& setPair(const KeyType &key, const ValueType &val) const
         {
             resp.add(key.data(), key.size())
-                .add_printf("\n%lu\n", val.size())
+                .add_printf("\n%zu\n", val.size())
                 .add(val.data(), val.size())
                 .endl();
             return *this;
