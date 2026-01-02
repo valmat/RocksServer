@@ -8,8 +8,8 @@ OPT_FLAG=-O3
 
 NAME       = simple_plugin
 
-CPP_FLAGS  = -I. -I"/usr/include/rocksserver/rocksdb" -Wall ${OPT_FLAG} -std=c++11 -fPIC -c
-LD_FLAGS   = -Wall -std=c++11 ${OPT_FLAG} -shared
+CPP_FLAGS  = -I. -I"/usr/include/rocksserver/rocksdb" -Wall ${OPT_FLAG} -std=c++20 -fPIC -c
+LD_FLAGS   = -Wall -std=c++20 ${OPT_FLAG} -shared
 
 RESULT     = $(NAME).so
 
