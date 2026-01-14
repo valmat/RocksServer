@@ -57,6 +57,7 @@
 #include <rocksserver/protocols/ProtocolInPostSimple.h>
 #include <rocksserver/protocols/ProtocolInTrivial.h>
 #include <rocksserver/protocols/ProtocolInGetIterator.h>
+#include <rocksserver/protocols/ProtocolInPostStream.h>
 #include <rocksserver/protocols/ProtocolInGet.h>
 #include <rocksserver/protocols/ProtocolInPost.h>
 #include <rocksserver/protocols/ProtocolInPostKeysIterator.h>

@@ -71,6 +71,7 @@
 #include "include/protocols/ProtocolInTrivial.h"
 #include "include/protocols/ProtocolInGetIterator.h"
 #include "include/protocols/ProtocolInGet.h"
+#include "include/protocols/ProtocolInPostStream.h"
 #include "include/protocols/ProtocolInPost.h"
 #include "include/protocols/ProtocolInPostKeysIterator.h"
 #include "include/protocols/ProtocolInPostKeys.h"

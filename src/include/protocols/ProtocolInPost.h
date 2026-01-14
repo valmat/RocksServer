@@ -39,24 +39,24 @@ namespace RocksServer {
             return true;
         }
 
-        bool isPost() const
+        bool isPost() const noexcept
         {
             return request.isPost();
         }
 
-        bool isEmpty() const
+        bool isEmpty() const noexcept
         {
             return !raw.size();
         }
 
         // retrive key
-        rocksdb::Slice key() const
+        rocksdb::Slice key() const noexcept
         {
             return rocksdb::Slice(raw, raw.size());
         }
 
         // retrive key and value
-        std::pair<rocksdb::Slice, rocksdb::Slice> pair() const
+        std::pair<rocksdb::Slice, rocksdb::Slice> pair() const noexcept
         {
             std::string::size_type lpos = 0;
             std::string::size_type rpos = raw.find('\n');
@@ -69,6 +69,11 @@ namespace RocksServer {
             rocksdb::Slice value((const char *)raw + lpos, vallen);
 
             return std::make_pair(key, value);
+        }
+
+        ProtocolInPostStream stream() const noexcept
+        {
+            return ProtocolInPostStream(std::string_view(raw.data(), raw.size()));
         }
 
     protected:
