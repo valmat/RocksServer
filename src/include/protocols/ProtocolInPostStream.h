@@ -1,12 +1,11 @@
- /**
+/**
  *  ProtocolInPostStream.h
  *
- *  Cursor to walk across post-data 
+ *  Cursor to walk across post-data
  *
  *  @author valmat <ufabiz@gmail.com>
  *  @github https://github.com/valmat/rocksserver
  */
-
 
 #pragma once
 
@@ -14,6 +13,7 @@
 #include <utility>
 #include <string_view>
 #include <charconv>
+#include <system_error>
 
 namespace RocksServer {
 
@@ -22,6 +22,14 @@ namespace RocksServer {
     public:
         using size_type = std::string_view::size_type;
 
+        enum class Error : unsigned char
+        {
+            None = 0,
+            ExpectedLengthLineEof,
+            InvalidLengthLine,
+            NotEnoughBytesForDeclaredLength,
+        };
+
         explicit ProtocolInPostStream(std::string_view raw) noexcept
             : _raw(raw)
         {}
@@ -29,7 +37,7 @@ namespace RocksServer {
         void reset() noexcept
         {
             _pos = 0;
-            _err.clear();
+            _err = Error::None;
         }
 
         bool eof() const noexcept
@@ -42,17 +50,22 @@ namespace RocksServer {
             return _pos;
         }
 
-        const std::string& error() const
+        Error errorCode() const noexcept
         {
             return _err;
         }
 
-        std::optional<rocksdb::Slice> key()
+        std::string_view error() const noexcept
+        {
+            return errorMessage(_err);
+        }
+
+        std::optional<rocksdb::Slice> key() noexcept
         {
             return readLine();
         }
 
-        std::optional<rocksdb::Slice> value()
+        std::optional<rocksdb::Slice> value() noexcept
         {
             auto lenOpt = readLengthLine();
             if (!lenOpt) return std::nullopt;
@@ -60,7 +73,7 @@ namespace RocksServer {
             const size_t len = *lenOpt;
 
             if (_raw.size() - _pos < len) {
-                setError("value(): not enough bytes for declared length");
+                setError(Error::NotEnoughBytesForDeclaredLength);
                 return std::nullopt;
             }
 
@@ -75,7 +88,7 @@ namespace RocksServer {
             return v;
         }
 
-        std::optional<std::pair<rocksdb::Slice, rocksdb::Slice>> pair()
+        std::optional<std::pair<rocksdb::Slice, rocksdb::Slice>> pair() noexcept
         {
             auto k = key();
             if (!k) return std::nullopt;
@@ -87,7 +100,22 @@ namespace RocksServer {
         }
 
     private:
-        std::optional<rocksdb::Slice> readLine()
+        static constexpr std::string_view errorMessage(Error e) noexcept
+        {
+            switch (e) {
+                case Error::None:
+                    return {};
+                case Error::ExpectedLengthLineEof:
+                    return "value(): expected length line, got EOF";
+                case Error::InvalidLengthLine:
+                    return "value(): invalid length line";
+                case Error::NotEnoughBytesForDeclaredLength:
+                    return "value(): not enough bytes for declared length";
+            }
+            return "unknown error";
+        }
+
+        std::optional<rocksdb::Slice> readLine() noexcept
         {
             if (_pos >= _raw.size()) {
                 return std::nullopt;
@@ -105,11 +133,11 @@ namespace RocksServer {
             return rocksdb::Slice(_raw.data() + lpos, rpos - lpos);
         }
 
-        std::optional<size_t> readLengthLine()
+        std::optional<size_t> readLengthLine() noexcept
         {
             auto line = readLine();
             if (!line) {
-                setError("value(): expected length line, got EOF");
+                setError(Error::ExpectedLengthLineEof);
                 return std::nullopt;
             }
 
@@ -119,21 +147,21 @@ namespace RocksServer {
 
             auto [ptr, ec] = std::from_chars(b, e, len);
             if (ec != std::errc{} || ptr != e) {
-                setError("value(): invalid length line");
+                setError(Error::InvalidLengthLine);
                 return std::nullopt;
             }
 
             return len;
         }
 
-        void setError(const char* msg)
+        void setError(Error e) noexcept
         {
-            _err = msg;
+            _err = e;
         }
 
         std::string_view _raw;
         size_type _pos = 0;
-        std::string _err;
+        Error _err = Error::None;
     };
 
 } // namespace RocksServer
